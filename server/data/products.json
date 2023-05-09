@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Red Heel",
+    "price": 200,
+    "description": "Elevate your style with these striking red heels. Made with premium materials for comfort and durability.",
+    "ratings": 4.5,
+    "images": [
+      {
+        "public_id": "dmagni/image/women-s-red-high-heel-shoes-formal-fashion_jofmil",
+        "url": "https://res.cloudinary.com/dwpebdy5z/image/upload/v1682735603/dmagni/image/women-s-red-high-heel-shoes-formal-fashion_jofmil.jpg"
+      }
+    ],
+    "category": "Shoes",
+    "seller": "Amazon",
+    "stock": 122,
+    "numOfReviews": 112,
+    "reviews": []
+  },
+  {
+    "name": "White Canvas",
+    "price": 29.99,
+    "description": "Keep it casual and comfortable with these classic white canvas shoes. Perfect for everyday wear.",
+    "ratings": 4.2,
+    "images": [
+      {
+        "public_id": "dmagni/image/pexels-ray-piedra-1461048_ehqqif",
+        "url": "https://res.cloudinary.com/dwpebdy5z/image/upload/v1682735618/dmagni/image/pexels-ray-piedra-1461048_ehqqif.jpg"
+      }
+    ],
+    "category": "Shoes",
+    "seller": "Amazon",
+    "stock": 122,
+    "numOfReviews": 112,
+    "reviews": []
+  },
+  {
+    "name": "Black Shoe",
+    "price": 59.99,
+    "description": "Step up your style game with these sophisticated black shoes. Crafted from the finest leather for a luxurious feel.",
+    "ratings": 4.8,
+    "images": [
+      {
+        "public_id": "dmagni/image/pexels-ray-piedra-1464624_ugynn5",
+        "url": "https://res.cloudinary.com/dwpebdy5z/image/upload/v1682735619/dmagni/image/pexels-ray-piedra-1464624_ugynn5.jpg"
+      }
+    ],
+    "category": "Shoes",
+    "seller": "Amazon",
+    "stock": 122,
+    "numOfReviews": 112,
+    "reviews": []
+  },
+  {
+    "name": "Leather Shoe",
+    "price": 79.99,
+    "description": "Make a statement with these sleek leather shoes. Designed for both style and comfort.",
+    "ratings": 4.6,
+    "images": [
+      {
+        "public_id": "dmagni/image/brown-leather-shoes_dmsfc8",
+        "url": "https://res.cloudinary.com/dwpebdy5z/image/upload/v1682735596/dmagni/image/brown-leather-shoes_dmsfc8.jpg"
+      }
+    ],
+    "category": "Shoes",
+    "seller": "Amazon",
+    "stock": 122,
+    "numOfReviews": 112,
+    "reviews": []
+  },
+  {
+    "name": "Sandal",
+    "price": 9.99,
+    "description": "Stay cool and comfortable with these versatile sandals. Perfect for any summer occasion.",
+    "ratings": 4.0,
+    "images": [
+      {
+        "public_id": "dmagni/image/man-two-background-accessory-velcro_lncl16",
+        "url": "https://res.cloudinary.com/dwpebdy5z/image/upload/v1682735572/dmagni/image/man-two-background-accessory-velcro_lncl16.jpg"
+      }
+    ],
+    "category": "Shoes",
+    "seller": "Amazon",
+    "stock": 122,
+    "numOfReviews": 112,
+    "reviews": []
+  }
+]
