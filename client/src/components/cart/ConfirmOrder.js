@@ -3,18 +3,39 @@ import { useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
 import { Link, useNavigate } from "react-router-dom";
 import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3"; 
-
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { useAlert } from "react-alert";
 import CheckoutSteps from "./CheckoutSteps";
+import { createOrder, clearErrors } from '../../actions/orderActions'
 
 const ConfirmOrder = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [flutterwaveApiKey, setFlutterwaveApiKey] = useState(null);
-
+   const alert = useAlert();
+   const dispatch = useDispatch();
   const { cartItems, shippingInfo } = useSelector((state) => state.cart);
   const { user } = useSelector((state) => state.auth);
+  const { error } = useSelector(state => state.newOrder)
+
+
+    // Calculate order prices
+    const itemsPrice = Number(cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)).toFixed(2);
+    const shippingPrice = itemsPrice > 200 ? 0 : 25;
+    const taxPrice = Number((0.05 * itemsPrice).toFixed(2));
+    const totalPrice = (Number(itemsPrice) + Number(shippingPrice) + Number(taxPrice)).toFixed(2);
+  
+    
   // Fetch Flutterwave public key from backend
   useEffect(() => {
+
+
+    if (error) {
+      alert.error(error);
+      dispatch(clearErrors()) 
+  
+  }
     const fetchFlutterwaveApiKey = async () => {
       try {
         const response = await fetch('/api/v1/flutterwaveapi');
@@ -26,25 +47,33 @@ const ConfirmOrder = () => {
     };
 
     fetchFlutterwaveApiKey();
-  }, []);
-  //Calculate order prices
-  const itemsPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
-
-  const shippingPrice = itemsPrice > 200 ? 0 : 25 
-  const taxPrice = Number((0.05 * itemsPrice).toFixed(2))
-  const totalPrice = (Number(itemsPrice) + Number(shippingPrice) + Number(taxPrice)).toFixed(2)
   
+    
+  }, [dispatch, error, alert]);
+
 
   useEffect(() => {
+    const itemsPrice = Number(
+      cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+    ).toFixed(2);
+    const shippingPrice = itemsPrice > 200 ? 0 : 25;
+    const taxPrice = Number((0.05 * itemsPrice).toFixed(2));
+    const totalPrice = (
+      Number(itemsPrice) + Number(shippingPrice) + Number(taxPrice)
+    ).toFixed(2);
+  
+    const orderInfo = {
+      itemsPrice,
+      shippingPrice,
+      taxPrice,
+      totalPrice,
+    };
+    sessionStorage.setItem("orderInfo", JSON.stringify(orderInfo));
+  }, [cartItems]);
 
-  }, [])
 
-  const orderInfo = JSON.parse(sessionStorage.getItem('orderInfo'));
-  const paymentData = {
-    
-  }
 
-   const config = {
+  const config = {
     public_key: flutterwaveApiKey,
     tx_ref: Date.now(),
     amount: totalPrice,
@@ -52,27 +81,55 @@ const ConfirmOrder = () => {
     payment_options: "card,mobilemoney,ussd",
     customer: {
       phone_number: shippingInfo.phoneNo,
-      email: 'sarahossai6@gmail.com',
-
+      email: user.email,
     },
     customizations: {
-      title: "My Store",
+      title: "D'Magni",
       description: "Payment for items in cart",
-      logo: "https://assets.piedpiper.com/logo.png",
+      logo: "https://tinyurl.com/yc3zadhf",
     },
   };
-  const handleFlutterPayment = useFlutterwave(config); 
 
+  const handleFlutterPayment = useFlutterwave(config);
   const proceedToPayment = async () => {
     setLoading(true);
+
+  
+    const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
+    const order = {
+      orderItems: cartItems,
+      shippingInfo,
+      ...orderInfo,
+    };
+  
+  
     try {
       await handleFlutterPayment({
-        callback: (response) => {
-          console.log(response); 
+        callback: async (response) => {
+          console.log(response);
           setLoading(false);
+  
+          const axiosConfig = {
+            headers: {
+              "Content-type": "application/json",
+            },
+          };
+    
+   
+          if (response.status === "completed") {
+            try {
+
+
+              dispatch(createOrder(order));
+            } catch (error) {
+              alert.error(error.response.data.message);
+            }
+          } else {
+            alert.error("Payment failed");
+          }
         },
         onClose: () => {
-          console.log("Payment closed"); 
+          console.log("Payment closed");
           setLoading(false);
         },
       });
@@ -81,13 +138,18 @@ const ConfirmOrder = () => {
       setLoading(false);
     }
   };
+  
+  
+  
+
+
 
   return (
     <Fragment>
       <MetaData title={"Shipping Info"} />
       <CheckoutSteps shipping  ConfirmOrder/>
 
-      <div className="px-7 md: md:px-36">
+      <div className="px-7 md: md:px-36 pb-36">
         
         <div className="flex flex-col  md:flex-row justify-between gap-24">
             <div className=" mt-5 flex-1">
@@ -110,7 +172,7 @@ const ConfirmOrder = () => {
                     <div className="flex place-items-center justify-between">
                       <div className="flex gap-6 flex-1">
                         <div className="col-4 col-lg-2">
-                            <img src={item.image} alt={item.name} height="45" width="65"/>
+                            <img src={item.image} alt={item.name} className="w-24 h-24"/>
                         </div>
                         <div className="col-5 col-lg-6">
                             <Link to={`/product/${item.product}`}>{item.name}</Link>
@@ -119,7 +181,7 @@ const ConfirmOrder = () => {
 
                         <div className="col-4 col-lg-4 mt-4 mt-lg-0 text-sm">
                           <p>Quantiy: {item.quantity}</p>
-                          <p className="font-bold">N{item.quantity * item.price}</p>
+                          <p className="font-bold">N{(item.quantity * item.price).toFixed(2)}</p>
                         </div>
 
                     </div>

@@ -19,6 +19,9 @@ const UpdatePassword = () => {
   const dispatch = useDispatch();
 
   const { error, isUpdated, loading } = useSelector((state) => state.user);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     if (error) {
@@ -57,7 +60,7 @@ const UpdatePassword = () => {
               </h1>
 
               <div className="flex flex-col space-y-10 pt-10">
-                <div className="border-2 border-gray-300 w-full hover:border-green-600 py-2 px-3 rounded-md flex justify-between">
+              <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
                   <input
                     type="password"
                     id="old_password_field"
@@ -69,7 +72,7 @@ const UpdatePassword = () => {
                   <VisibilityOff className="text-gray-400" />
                 </div>
 
-                <div className="border-2 border-gray-300 w-full hover:border-green-600 py-2 px-3 rounded-md flex justify-between">
+                <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
                   <input
                     type="password"
                     id="new_password_field"
@@ -83,7 +86,7 @@ const UpdatePassword = () => {
 
                 <button
                   type="submit"
-                  className="bg-green-600 text-white rounded-md font-bold hover:bg-gray-500 py-3 "
+                  className="bg-blue-900 text-white rounded-md font-bold hover:bg-gray-500 py-3 "
                   onClick={submitHandler}
                   disabled={loading ? true : false}
                 >

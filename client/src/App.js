@@ -21,6 +21,10 @@ import axios from "axios";
 
 //Admin Imports
 import Dashboard from "./components/admin/Dashboard";
+import Success from "./components/cart/Success";
+import ListOrders from "./components/order/ListOrders";
+import OrderDetails from "./components/order/OrderDetails";
+import ProductList from "./components/admin/ProductList";
 
 function App() {
 
@@ -52,16 +56,18 @@ function App() {
         <Route path="/password/update" element={<UpdatePassword />} exact />
         <Route path="/password/forgot" element={<ForgotPassword />} exact />
         <Route path="/password/reset/:token" element={<NewPassword />} exact />
-
-
+        <Route path="/success" element={<Success />} />
+        <Route path="/orders/me" element={<ListOrders/>}/>
+        
         <Route path="/cart" element={<Cart />} />
         <Route path="/shipping" element={<Shipping/>} />
         <Route path='/order/confirm' element={<ConfirmOrder/>}/>
-
+        <Route path="/order/:id" element={<OrderDetails/>} exact/>
+         
         <Route path="/product/:id" element={<ProductDetails />} exact />
         <Route path="/search/:keyword" element={<Homepage />} exact />
         <Route path="/dashboard" element={<Dashboard/>} exact/>
-
+        <Route path="/admin/products" element={<ProductList/>}/>
       </Routes>
 
     </Router>

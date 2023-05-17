@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
 import { saveShippingInfo } from "../../actions/cartActions";
@@ -17,11 +17,15 @@ const Shipping = () => {
   const [country, setCountry] = useState(shippingInfo.country);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const submitHandler = (e) => {
     e.preventDefault();
 
     dispatch(saveShippingInfo({ address, city, phoneNo, postalCode, country }));
+    
     navigate("/order/confirm");
   };
 
@@ -31,9 +35,9 @@ const Shipping = () => {
 
       <CheckoutSteps shipping />
 
-      <div className="md:grid place-items-center">
+      <div className="md:grid place-items-center pb-36">
         <div className="flex flex-col ">
-          <form className="shadow-lg p-5 md:p-16 flex flex-col space-y-5">
+          <form className="md:shadow-lg p-5 md:p-16 flex flex-col space-y-5">
             <h1 className="mb-4 text-2xl font-bold">Shipping Info</h1>
             <div className="htmlForm-group">
               <label htmlFor="address_field" className="font-bold">Address</label>

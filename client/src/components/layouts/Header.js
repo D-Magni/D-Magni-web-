@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from "react";
 import {  useNavigate, Link } from "react-router-dom";
 //Icons
-import SearchIcon from "@mui/icons-material/Search";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ContactSupportIcon from "@mui/icons-material/ContactSupport";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
@@ -60,10 +59,10 @@ const Header = () => {
   return (
     <Fragment>
       {/* Header for view above 1024px screens */}
-      <nav className="bg-primary-color hidden lg:flex justify-around space-x-12 text-white  lg:px-24 py-5 fixed w-full z-10 top-0">
+      <nav className="bg-primary-color hidden lg:flex justify-around space-x-12 text-white  lg:px-24 py-5 fixed w-full z-10 top-0 place-items-center">
         <div className=" flex-1">
           <Link to="/">
-            <p className="text-3xl font-bold"> D'Magni</p>
+            <img src="/images/logo.png" width={200}/>
           </Link>
     
         </div>
@@ -115,16 +114,16 @@ const Header = () => {
                   open={Boolean(anchorUserEl)}
                   onClose={handleUserClose}
                 >
-                  {user && user.role !== "admin" ? (
-                    <Link to="/orders/me">
+                  {user && user.role === "admin" && (
+                   <Link to="/dashboard">
+                   <MenuItem onClick={handleUserClose}>Dashboard</MenuItem>
+                 </Link>
+                  )} 
+                     <Link to="/orders/me">
                       <MenuItem onClick={handleUserClose}>Orders</MenuItem>
                     </Link>
-                  ) : (
-                    <Link to="/dashboard">
-                      <MenuItem onClick={handleUserClose}>Dashboard</MenuItem>
-                    </Link>
-                  )}
                   <Link to="/me">
+                    
                     <MenuItem onClick={handleUserClose}>Profile</MenuItem>
                   </Link>
                   <Link to="/" onClick={logoutHandler}>
@@ -167,14 +166,14 @@ const Header = () => {
 
       <nav className="lg:hidden grid gap-5 px-8 py-5 bg-primary-color text-white fixed w-full z-10 top-0">
         <div>
-          <div className="flex justify-between place-itesm-center">
+          <div className="flex justify-between place-items-center">
             <div>
               <NotesIcon className="cursor-pointer" onClick={handleOpenMenu} />
             </div>
 
             <div>
               <Link to="/">
-                <p className="text-2xl font-bold"> D'Magni</p>
+              <img src="/images/logo.png" width={130}/>
               </Link>{" "}
             </div>
 

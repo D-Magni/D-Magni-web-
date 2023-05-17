@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
@@ -6,6 +6,9 @@ import Loader from "../layouts/Loader";
 
 const Profile = () => {
   const { user, loading } = useSelector((state) => state.auth);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <Fragment>
@@ -34,7 +37,7 @@ const Profile = () => {
                   id="edit_profile"
                   className="btn btn-primary btn-block my-5"
                 >
-                  <button className="bg-green-600 w-full py-3 px-16  font-medium text-white rounded-md hover:bg-green-700">
+                  <button className="bg-blue-900 w-full py-3 px-16  font-medium text-white rounded-md hover:bg-blue-800">
                     Edit Profile
                   </button>
                 </Link>
@@ -58,7 +61,7 @@ const Profile = () => {
                 {user.role !== "admin" && (
                   <Link
                     to="/orders/me"
-                    className="btn btn-danger btn-block mt-5"
+                    className=" btn-block mt-5"
                   >
                     <button>
                     My Orders

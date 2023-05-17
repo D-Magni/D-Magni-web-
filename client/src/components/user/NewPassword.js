@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect } from "react";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
-import Avatar from "@mui/material/Avatar";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { resetPassword, clearErrors } from "../../actions/userActions";
@@ -18,6 +17,9 @@ const NewPassword = () => {
   const dispatch = useDispatch();
 
   const { error, success } = useSelector((state) => state.forgotPassword);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     if (error) {
@@ -52,7 +54,7 @@ const NewPassword = () => {
                 <div className="flex flex-col space-y-10 pt-10">
 
 
-                <div className="border-2 border-gray-300 w-full hover:border-green-600 py-2 px-3 rounded-md flex justify-between">
+                <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
                 <input
                   type="password"
                   id="password_field"
@@ -64,7 +66,7 @@ const NewPassword = () => {
                   <VisibilityOff className="text-gray-400" />
               </div>
 
-              <div className="border-2 border-gray-300 w-full hover:border-green-600 py-2 px-3 rounded-md flex justify-between">
+              <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
                 <input
                   type="password"
                   id="confirm_password_field"
@@ -80,7 +82,7 @@ const NewPassword = () => {
               <button
                 id="new_password_button"
                 type="submit"
-                className="bg-green-600 text-white rounded-md font-bold hover:bg-gray-500 py-3 "
+                className="bg-blue-900 text-white rounded-md font-bold hover:bg-gray-500 py-3 "
                 onClick={submitHandler}
               >
                 Set Password

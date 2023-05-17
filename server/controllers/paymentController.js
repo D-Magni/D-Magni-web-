@@ -33,7 +33,7 @@ exports.processPayment = catchAsyncErrors(async (req, res, next) => {
 
     res.status(200).json({
         success: true,
-        client_secret: paymentIntent.data.link
+        client_secret: paymentIntent.client_secret
     })
 
 });

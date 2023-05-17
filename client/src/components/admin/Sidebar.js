@@ -23,8 +23,8 @@ const Sidebar = () => {
                         <Link to="/dashboard"><DashboardIcon/> Dashboard</Link>
                     </li>
                     <li>
-                        <Link href="#productSubmenu" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle"> <StorefrontIcon/> Products</Link>
-                        <ul className="collapse list-unstyled" id="productSubmenu">
+                        <Link href="#productSubmenu"> <StorefrontIcon/> Products</Link>
+                        <ul >
                             <li>
                             <Link to="/admin/products"><CategoryIcon/> All</Link>
                             </li>

@@ -29,6 +29,9 @@ const UpdateProfile = () => {
 
   const { user } = useSelector((state) => state.auth);
   const { error, isUpdated, loading } = useSelector((state) => state.user);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -187,7 +190,7 @@ const UpdateProfile = () => {
               <button
                 id="update_button"
                 type="submit"
-                className="w-full rounded py-3 bg-green-700  hover:bg-zinc-600 text-white"
+                className="w-full rounded py-3 bg-blue-900  hover:bg-zinc-600 text-white"
                 disabled={loading ? true : false}
                 onClick={submitHandler}
               >

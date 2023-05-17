@@ -20,6 +20,9 @@ const Register = () => {
   });
 
   const { firstName, lastName, email, password } = user;
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const [avatar, setAvatar] = useState("");
   const [avatarPreview, setAvatarPreview] = useState("");
@@ -86,7 +89,7 @@ const Register = () => {
                 Create a New Account
               </h1>
               <div className="flex flex-col space-y-10 pt-10">
-                <div className="border-2 border-gray-300 w-full hover:border-green-600 py-2 px-3 rounded-md flex justify-between">
+              <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
                   <input
                     type="name"
                     id="firstName"
@@ -99,7 +102,7 @@ const Register = () => {
                   <Person className="text-gray-400" />
                 </div>
 
-                <div className="border-2 border-gray-300 w-full hover:border-green-600 py-2 px-3 rounded-md flex justify-between">
+                <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
                   <input
                     type="name"
                     id="lastName"
@@ -112,7 +115,7 @@ const Register = () => {
                   <Person className="text-gray-400" />
                 </div>
 
-                <div className="border-2 border-gray-300 w-full hover:border-green-600 py-2 px-3 rounded-md flex justify-between">
+                <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
                   <input
                     type="email"
                     id="email_field"
@@ -125,7 +128,7 @@ const Register = () => {
                   <Mail className="text-gray-400" />
                 </div>
 
-                <div className="border-2 border-gray-300 w-full hover:border-green-600 py-2 px-3 rounded-md flex justify-between">
+                <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
                   <input
                     type="password"
                     id="password_field"
@@ -143,7 +146,7 @@ const Register = () => {
                     <div>
                       <Avatar alt="Avatar Preview" src={avatarPreview} />
                     </div>
-                    <div className="relative border-2 hover:border-green-600 border-gray-300 rounded-md py-2 w-full bg-white">
+                    <div className="relative border-2 hover:border-blue-700 border-gray-300 rounded-md py-2 w-full bg-white">
                       <input
                         type="file"
                         name="avatar"
@@ -162,7 +165,7 @@ const Register = () => {
                 <button
                   id="register_button"
                   type="submit"
-                  className="bg-green-600 text-white rounded-md font-bold hover:bg-gray-500 py-3"
+                  className="bg-blue-900 text-white rounded-md font-bold hover:bg-gray-500 py-3"
                   disabled={loading ? true : false}
                 >
                   REGISTER

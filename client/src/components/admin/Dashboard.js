@@ -4,21 +4,38 @@ import { Link } from "react-router-dom";
 import MetaData from "../layouts/MetaData";
 import Loader from "../layouts/Loader";
 import Sidebar from "./Sidebar";
+import { getAdminProducts, clearErrors } from "../../actions/productActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const Dashboard = () => {
+
+  const dispatch = useDispatch();
+   const { products } = useSelector(state => state.products)
+   let outOfStock = 0;
+
+   products.forEach(product => {
+    if(product.stock === 0) {
+      outOfStock += 1;
+    }
+   })
+
+   useEffect(() => {
+    dispatch(getAdminProducts)
+   }, [dispatch])
   return (
     <Fragment>
       <div className="flex">
         <div className="">
-          <Sidebar />
+          <Sidebar className="fixed left-0 to0-0"/>
         </div>
+        <div className="flex flex-1 justify-center">
 
-        <div className="col-12 col-md-10 py-40">
+        <div className="col-12 col-md-10 py-40 flex-1">
           <h1 className="my-4">Dashboard</h1>
-          <div className="row pr-4">
-            <div className="col-xl-12 col-sm-12 mb-3">
-              <div className="card text-white bg-primary o-hidden h-100">
-                <div className="card-body">
+          <div className="flex pr-4">
+            <div className="col-xl-12 flex col-sm-12 mb-3">
+              <div className="card flex  bg-primary o-hidden h-100">
+                <div className="card-body flex">
                   <div className="text-center card-font-size">
                     Total Amount
                     <br /> <b>$4567</b>
@@ -29,15 +46,15 @@ const Dashboard = () => {
           </div>
           <div className="row pr-4">
             <div className="col-xl-3 col-sm-6 mb-3">
-              <div className="card text-white bg-success o-hidden h-100">
+              <div className="card  bg-success o-hidden h-100">
                 <div className="card-body">
                   <div className="text-center card-font-size">
                     Products
-                    <br /> <b>56</b>
+                    <br /> <b>{products && products.length}</b>
                   </div>
                 </div>
                 <Link
-                  className="card-footer text-white clearfix small z-1"
+                  className="card-footer clearfix small z-1"
                   to="/admin/products"
                 >
                   <span className="float-left">View Details</span>
@@ -48,7 +65,7 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="col-xl-3 col-sm-6 mb-3">
-              <div className="card text-white bg-danger o-hidden h-100">
+              <div className="card  bg-danger o-hidden h-100">
                 <div className="card-body">
                   <div className="text-center card-font-size">
                     Orders
@@ -56,7 +73,7 @@ const Dashboard = () => {
                   </div>
                 </div>
                 <Link
-                  className="card-footer text-white clearfix small z-1"
+                  className="card-footer clearfix small z-1"
                   to="/admin/orders"
                 >
                   <span className="float-left">View Details</span>
@@ -90,13 +107,14 @@ const Dashboard = () => {
                 <div className="card-body">
                   <div className="text-center card-font-size">
                     Out of Stock
-                    <br /> <b>4</b>
+                    <br /> <b>{outOfStock}</b>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
       </div>
     </Fragment>
   );

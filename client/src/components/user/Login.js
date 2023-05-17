@@ -5,7 +5,7 @@ import Loader from "../layouts/Loader";
 import MetaData from "../layouts/MetaData";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Mail from "@mui/icons-material/Mail";
-import VisibilityOff from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 import { login, clearErrors } from "../../actions/userActions";
 
@@ -22,6 +22,10 @@ const Login = () => {
   );
   const location = useLocation();
   const redirect = location.search ? location.search.split("=")[1] : "/";
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+ 
   useEffect(() => {
     if (isAuthenticated) {
       navigate(redirect);
@@ -54,7 +58,7 @@ const Login = () => {
                   </h1>
 
                   <div className="flex flex-col space-y-10 pt-10">
-                    <div className="border-2 border-gray-300 w-full hover:border-green-600 py-2 px-3 rounded-md flex justify-between">
+                  <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
                       <input
                         type="email"
                         id="email_field"
@@ -66,7 +70,7 @@ const Login = () => {
                       <Mail className="text-gray-400" />
                     </div>
 
-                    <div className="border-2 border-gray-300 w-full hover:border-green-600 py-2 px-3 rounded-md flex justify-between">
+                    <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
                       <input
                         type="password"
                         id="password_field"
@@ -78,14 +82,14 @@ const Login = () => {
                       <VisibilityOff className="text-gray-400" />
                     </div>
 
-                    <Link to="/password/forgot" className="float-right mb-4 text-green-800 underline flex justify-end">
+                    <Link to="/password/forgot" className="float-right mb-4 text-blue-900 underline flex justify-end">
                       Forgot Password?
                     </Link>
 
                     <button
                       id="login_button"
                       type="submit"
-                      className="bg-green-600 text-white rounded-md font-bold hover:bg-gray-500 py-3 w-full"
+                      className="bg-blue-900 text-white rounded-md font-bold hover:bg-gray-500 py-3 w-full"
                     >
                       LOGIN
                     </button>

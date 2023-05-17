@@ -47,6 +47,25 @@ exports.getProducts = catchAsyncErrors( async (req, res, next) => {
 
 })
 
+//Get all product - ADMIN  => /api/v1/admin/products
+
+exports.getAdminProducts = catchAsyncErrors( async (req, res, next) => {
+
+
+
+    const products = await Product.find();;
+
+    setTimeout(() => {
+        
+    res.status(200).json({
+        success: true,
+        products
+    })
+    }, 2000);
+
+
+})
+
 // Get single product details => /api/v1/admin/product/:id
 
 exports.getSingleProduct = catchAsyncErrors (async (req, res, next) => {
@@ -115,7 +134,7 @@ exports.createProductReview = catchAsyncErrors( async (req, res, next) => {
 
     const review = {
         user: req.user._id,
-        name: req.user.name,
+        name: req.user.firstName + " " + req.user.lastName,
         rating: Number(rating),
         comment
     }
