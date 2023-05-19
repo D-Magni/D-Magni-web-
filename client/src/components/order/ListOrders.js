@@ -13,12 +13,9 @@ const ListOrders = () => {
   const alert = useAlert();
   const dispatch = useDispatch();
   const { loading, error, orders } = useSelector((state) => state.myOrders);
-  const [filteredOrders, setFilteredOrders] = useState(orders); // Initialize filteredOrders with all orders
-  const [searchTerm, setSearchTerm] = useState(""); // Initialize searchTerm with empty string
+  const [filteredOrders, setFilteredOrders] = useState(orders); 
+  const [searchTerm, setSearchTerm] = useState(""); 
 
-  // const removeOrderHandler = (id) => {
-  //   dispatch(removeItemFromCart(id));
-  // };
   useEffect(() => {
     dispatch(myOrders());
 

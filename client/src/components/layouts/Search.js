@@ -14,6 +14,8 @@ const Search = () => {
             history('/')
         }
     }
+    const isAdminPage = window.location.pathname.startsWith("/admin") || window.location.pathname.startsWith("/dashboard");
+
 
   return (
     <form onSubmit={searchHandler} className="flex">
@@ -28,7 +30,7 @@ const Search = () => {
       </div>
 
       <div>
-        <button id="search_btn" className="btn bg-[#9b1c20] py-1 px-2 rounded-r">
+        <button id="search_btn" className={` bg-${isAdminPage ? 'gray-700' : 'primary-color'} py-1 px-2 rounded-r`}>
           <SearchIcon className="text-white" />
         </button>
       </div>

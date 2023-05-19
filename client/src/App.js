@@ -25,6 +25,13 @@ import Success from "./components/cart/Success";
 import ListOrders from "./components/order/ListOrders";
 import OrderDetails from "./components/order/OrderDetails";
 import ProductList from "./components/admin/ProductList";
+import NewProduct from "./components/admin/NewProduct";
+import UpdateProduct from "./components/admin/UpdateProduct";
+import OrdersList from "./components/admin/OrdersList";
+import ProcessOrder from "./components/admin/ProcessOrder";
+import UsersList from "./components/admin/UsersList";
+import UpdateUser from "./components/admin/UpdateUser";
+import ProductReviews from "./components/admin/ProductReviews";
 
 function App() {
 
@@ -68,7 +75,15 @@ function App() {
         <Route path="/search/:keyword" element={<Homepage />} exact />
         <Route path="/dashboard" element={<Dashboard/>} exact/>
         <Route path="/admin/products" element={<ProductList/>}/>
+        <Route path="/admin/product" element={<NewProduct/>}/>
+        <Route path="/admin/product/:id" element={<UpdateProduct/>}/> 
+        <Route path="/admin/orders" element={<OrdersList/>}/>
+        <Route path="/admin/order/:id" element={<ProcessOrder/>}/>
+        <Route path="/admin/users" element={<UsersList/>}/>
+        <Route path="/admin/user/:id" element={<UpdateUser/>}/>
+        <Route path="/admin/reviews" element={<ProductReviews/>}/>
       </Routes>
+
 
     </Router>
   );

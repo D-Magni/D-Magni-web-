@@ -11,6 +11,13 @@ import CloseIcon from "@mui/icons-material/Close";
 import Badge from "@mui/material/Badge";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import ArrowDropDown from '@mui/icons-material/ArrowDropDown';
+import PeopleIcon from '@mui/icons-material/People';
+import ShoppingCart from '@mui/icons-material/ShoppingCart';
+import CategoryIcon from '@mui/icons-material/Category';
+import ReviewsIcon from '@mui/icons-material/Reviews';
+import AddIcon from '@mui/icons-material/Add';
 
 import Search from "./Search";
 
@@ -56,10 +63,13 @@ const Header = () => {
     dispatch(logout());
     alert.success('Logged out successfully')
   }
+
+  const isAdminPage = window.location.pathname.startsWith("/admin") || window.location.pathname.startsWith("/dashboard");
+
   return (
     <Fragment>
       {/* Header for view above 1024px screens */}
-      <nav className="bg-primary-color hidden lg:flex justify-around space-x-12 text-white  lg:px-24 py-5 fixed w-full z-10 top-0 place-items-center">
+      <nav className={`${isAdminPage ? 'bg-gray-900' : 'bg-primary-color'} hidden lg:flex justify-around space-x-12 text-white lg:px-24 py-5 fixed w-full z-10 top-0 place-items-center`}>
         <div className=" flex-1">
           <Link to="/">
             <img src="/images/logo.png" width={200}/>
@@ -163,8 +173,8 @@ const Header = () => {
         </div>
       </nav>
       {/* Header for view below 1024px screens */}
-
-      <nav className="lg:hidden grid gap-5 px-8 py-5 bg-primary-color text-white fixed w-full z-10 top-0">
+      
+      <nav className={`${isAdminPage ? 'bg-gray-900' : 'bg-primary-color'} lg:hidden grid gap-5 px-8 py-5  text-white fixed w-full z-10 top-0`}>
         <div>
           <div className="flex justify-between place-items-center">
             <div>
@@ -231,8 +241,50 @@ const Header = () => {
                       </div>
                     ) : (
                       <div className="py-4 pl-3">
-                        <Link to="/dashboard">Dashbaord</Link>
+                        <Link to="/dashboard">Dashboard</Link>
                       </div>
+                      
+                    )}
+                    {isAdminPage && (
+                      <ul className="px-8 text-neutral-400">
+                         <li className="my-2">
+                         <div className="group">
+                           <div className="flex items-center  hover:text-gray-200 cursor-pointer">
+                             <StorefrontIcon className="mr-2" /> Products
+                             <span className="ml-auto">
+                               <ArrowDropDown className="w-4 h-4 transition-transform duration-300 transform group-hover:rotate-180" />
+                             </span>
+                           </div>
+                           <ul className="pl-4 mt-2 space-y-2 hidden group-hover:block">
+                             <li>
+                               <Link to="/admin/products" className="flex items-center  hover:bg-white hover:text-gray-900 hover:p-1">
+                                 <CategoryIcon className="mr-2" /> All
+                               </Link>
+                             </li>
+                             <li>
+                               <Link to="/admin/product" className="flex items-center  hover:bg-white hover:text-gray-900 hover:p-1">
+                                 <AddIcon className="mr-2" /> Create
+                               </Link>
+                             </li>
+                           </ul>
+                         </div>
+                       </li>
+                       <li className="my-2">
+                         <Link to="/admin/orders" className="flex items-center  hover:bg-white hover:text-gray-900 hover:p-1">
+                           <ShoppingCart className="mr-2" /> Orders
+                         </Link>
+                       </li>
+                       <li className="my-2">
+                         <Link to="/admin/users" className="flex items-center   hover:bg-white hover:text-gray-900 hover:p-1">
+                           <PeopleIcon className="mr-2" /> Users
+                         </Link>
+                       </li>
+                       <li className="my-2">
+                         <Link to="/admin/reviews" className="flex items-center   hover:bg-white hover:text-gray-900 hover:p-1">
+                           <ReviewsIcon className="mr-2" /> Reviews
+                         </Link>
+                       </li>
+                       </ul>
                     )}
                     <div className="py-4 pl-3">
                       <Link to="/me">Profile</Link>

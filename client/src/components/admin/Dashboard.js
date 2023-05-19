@@ -1,120 +1,177 @@
 import React, { Fragment, useEffect } from "react";
 import { Link } from "react-router-dom";
-
-import MetaData from "../layouts/MetaData";
-import Loader from "../layouts/Loader";
 import Sidebar from "./Sidebar";
 import { getAdminProducts, clearErrors } from "../../actions/productActions";
+import { allOrders } from "../../actions/orderActions";
+import { allUsers } from "../../actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
+import Visibility from "@mui/icons-material/Visibility";
+import MetaData from "../layouts/MetaData";
+import Loader from "../layouts/Loader";
 
 const Dashboard = () => {
-
   const dispatch = useDispatch();
-   const { products } = useSelector(state => state.products)
-   let outOfStock = 0;
+  const { products } = useSelector((state) => state.products);
+  const { users } = useSelector((state) => state.allUsers);
 
-   products.forEach(product => {
-    if(product.stock === 0) {
+  const { orders, totalAmount, loading } = useSelector(
+    (state) => state.allOrders
+  );
+  let outOfStock = 0;
+
+  products && products.forEach((product) => {
+    if (product.stock === 0) {
       outOfStock += 1;
     }
-   })
+  });
+  
+  useEffect(() => {
+    dispatch(getAdminProducts());
+    dispatch(allOrders());
+    dispatch(allUsers());
+  }, [dispatch]);
 
-   useEffect(() => {
-    dispatch(getAdminProducts)
-   }, [dispatch])
+  const latestUsers = users.slice(0, 10); // Get the latest 10 users
+
   return (
     <Fragment>
-      <div className="flex">
-        <div className="">
-          <Sidebar className="fixed left-0 to0-0"/>
+      <div className="lg:flex">
+        <div className="lg:w-1/5">
+          <Sidebar />
         </div>
-        <div className="flex flex-1 justify-center">
+        <div className="lg:w-4/5 py-36 px-7 overflow-x-hidden">
+          <h1 className="my-4 text-2xl font-bold text-gray-600">DASHBOARD</h1>
 
-        <div className="col-12 col-md-10 py-40 flex-1">
-          <h1 className="my-4">Dashboard</h1>
-          <div className="flex pr-4">
-            <div className="col-xl-12 flex col-sm-12 mb-3">
-              <div className="card flex  bg-primary o-hidden h-100">
-                <div className="card-body flex">
-                  <div className="text-center card-font-size">
+          {loading ? (
+            <Loader />
+          ) : (
+            <Fragment>
+              <MetaData title={"Admin Dashboard"} />
+
+              <div className=" bg-blue-600 grid place-items-center h-32 w-full mt-10 rounded">
+                <div className="card-body flex items-center justify-center">
+                  <div className="text-center text-white text-2xl">
                     Total Amount
-                    <br /> <b>$4567</b>
+                    <br />{" "}
+                    <b className="text-3xl">
+                      N{totalAmount ? totalAmount.toFixed(2) : "0.00"}
+                    </b>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="row pr-4">
-            <div className="col-xl-3 col-sm-6 mb-3">
-              <div className="card  bg-success o-hidden h-100">
-                <div className="card-body">
-                  <div className="text-center card-font-size">
-                    Products
-                    <br /> <b>{products && products.length}</b>
+              <div className="flex flex-wrap gap-10 justify-center py-10 place-items-center">
+                <div className=" bg-green-700 flex flex-col space-y-5 pt-3 place-items-center h-32 w-72 rounded">
+                  <div className="card-body flex items-center justify-center">
+                    <div className="text-center text-white text-2xl">
+                      Products
+                      <br />{" "}
+                      <b className="text-3xl">
+                        {products && products.length}
+                      </b>
+                    </div>
                   </div>
+
+                  <Link
+                    className="card-footer text-white clearfix  z-1 block text-center flex justify-between  rounded-b cursor-pointer p-2 bg-green-800 w-full"
+                    to="/admin/products"
+                  >
+                    View Details
+                    <Visibility />
+                  </Link>
                 </div>
-                <Link
-                  className="card-footer clearfix small z-1"
-                  to="/admin/products"
-                >
-                  <span className="float-left">View Details</span>
-                  <span className="float-right">
-                    <i className="fa fa-angle-right"></i>
-                  </span>
-                </Link>
-              </div>
-            </div>
-            <div className="col-xl-3 col-sm-6 mb-3">
-              <div className="card  bg-danger o-hidden h-100">
-                <div className="card-body">
-                  <div className="text-center card-font-size">
-                    Orders
-                    <br /> <b>125</b>
+
+                <div className=" bg-red-700 flex flex-col space-y-5 pt-3 place-items-center h-32 w-72 rounded">
+                  <div className=" flex items-center justify-center">
+                    <div className="text-center text-white text-2xl">
+                      Orders
+                      <br />{" "}
+                      <b className="text-3xl">{orders && orders.length}</b>
+                    </div>
                   </div>
+                  <Link
+                    className="card-footer text-white clearfix  z-1 block text-center flex justify-between  rounded-b cursor-pointer p-2 bg-red-800 w-full"
+                    to="/admin/orders"
+                  >
+                    View Details
+                    <Visibility />
+                  </Link>
                 </div>
-                <Link
-                  className="card-footer clearfix small z-1"
-                  to="/admin/orders"
-                >
-                  <span className="float-left">View Details</span>
-                  <span className="float-right">
-                    <i className="fa fa-angle-right"></i>
-                  </span>
-                </Link>
-              </div>
-            </div>
-            <div className="col-xl-3 col-sm-6 mb-3">
-              <div className="card text-white bg-info o-hidden h-100">
-                <div className="card-body">
-                  <div className="text-center card-font-size">
-                    Users
-                    <br /> <b>45</b>
+
+                <div className=" bg-cyan-700 flex flex-col space-y-5 pt-3 place-items-center h-32 w-72 rounded">
+                  <div className="flex items-center justify-center">
+                    <div className="text-center text-white text-2xl">
+                      Users
+                      <br />{" "}
+                      <b className="text-3xl">{users && users.length}</b>
+                    </div>
                   </div>
+                  <Link
+                    className="card-footer text-white clearfix  z-1 block text-center flex justify-between  rounded-b cursor-pointer p-2 bg-cyan-800 w-full"
+                    to="/admin/users"
+                  >
+                    View Details
+                    <Visibility />
+                  </Link>
                 </div>
-                <Link
-                  className="card-footer text-white clearfix small z-1"
-                  to="/admin/users"
-                >
-                  <span className="float-left">View Details</span>
-                  <span className="float-right">
-                    <i className="fa fa-angle-right"></i>
-                  </span>
-                </Link>
-              </div>
-            </div>
-            <div className="col-xl-3 col-sm-6 mb-3">
-              <div className="card text-white bg-warning o-hidden h-100">
-                <div className="card-body">
-                  <div className="text-center card-font-size">
-                    Out of Stock
-                    <br /> <b>{outOfStock}</b>
+                <div className=" bg-yellow-600 flex flex-col space-y-5 pt-3  place-items-center h-32 w-72 rounded">
+                  <div className=" flex items-center justify-center">
+                    <div className="text-center text-white text-2xl">
+                      Out of Stock
+                      <br /> <b className="text-3xl">{outOfStock}</b>
+                    </div>
                   </div>
+                  <div className="card-footer clearfix  z-1 block rounded-b p-5 bg-yellow-600 w-full"></div>
                 </div>
               </div>
-            </div>
-          </div>
+
+              <h2 className="my-4 text-2xl font-bold text-gray-600">
+                New Users
+              </h2>
+              
+              <div className="overflow-x-auto w-full">
+
+              <table className="min-w-full border divide-y divide-gray-200 overflow-x-scroll table-auto">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      User ID
+                    </th>
+                    <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Name
+                    </th>
+                    <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Email
+                    </th>
+                    <th className="py-3 px-6 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Role
+                    </th>
+              
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {latestUsers &&
+                    latestUsers.map((user, index) => (
+                      <tr key={index}>
+                        <td className="py-4 px-6 text-sm text-gray-500">
+                          {user._id}
+                        </td>
+                        <td className="py-4 px-6 text-sm text-gray-500">
+                          {user.firstName} {user.lastName}
+                        </td>
+                        <td className="py-4 px-6 text-sm text-gray-500">
+                          {user.email}
+                        </td>
+                        <td className="py-4 px-6 text-sm text-gray-500">
+                          {user.role}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+              </div>
+            </Fragment>
+          )}
         </div>
-      </div>
       </div>
     </Fragment>
   );

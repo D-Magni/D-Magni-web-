@@ -34,22 +34,6 @@ const productSchema = new mongoose.Schema({
 
         }
     ],
-    category: {
-        type: String,
-        required: [true, 'Please select category for this product'],
-        enum: {
-            values: [
-                'Shoes',
-                'Accessories',
-                'Others'
-            ],
-            message: 'Please select correct category for product'
-        }
-    },
-    seller: {
-        type: String,
-        required: [true, 'Please enter product seller']
-    },
     stock: {
         type: Number,
         required: [true, 'PLease enter product stock'],

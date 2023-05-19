@@ -32,7 +32,6 @@ const Login = () => {
     }
 
     if (error) {
-      alert.error(error);
       dispatch(clearErrors());
     }
   }, [dispatch, alert, isAuthenticated, error]);
