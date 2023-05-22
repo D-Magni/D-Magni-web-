@@ -30,7 +30,9 @@
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "react-js-pagination": "^3.0.3",
+    "react-paginate": "^8.2.0",
     "react-redux": "^8.0.5",
+    "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.11.0",
     "react-scripts": "5.0.1",
     "react-slider": "^2.0.4",
@@ -39,6 +41,8 @@
     "redux": "^4.2.1",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.2",
+    "sweetalert2": "^11.7.5",
+    "tawkto-react": "^3.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

@@ -20,7 +20,7 @@ const ListReviews = ({ reviews }) => {
                     />
                  </div>
              </div>
-             <p className="review_user text-sm">{review.name}</p>
+             <p className="review_user text-sm font-bold">{review.name}</p>
              <p className="review_comment text-sm">{review.comment}</p>
 
              <hr/>

@@ -44,7 +44,7 @@ exports.newProduct = catchAsyncErrors(async (req, res, next) => {
 //Get all products => /api/v1/products?keyword=
 
 exports.getProducts = catchAsyncErrors(async (req, res, next) => {
-  const resPerPage = 3;
+  const resPerPage = 20;
   const productsCount = await Product.countDocuments();
 
   const apiFeatures = new APIFeatures(Product.find(), req.query)
@@ -54,14 +54,12 @@ exports.getProducts = catchAsyncErrors(async (req, res, next) => {
 
   const products = await apiFeatures.query;
 
-  setTimeout(() => {
     res.status(200).json({
       success: true,
       productsCount,
       resPerPage,
       products,
     });
-  }, 2000);
 });
 
 //Get all product - ADMIN  => /api/v1/admin/products
@@ -69,12 +67,11 @@ exports.getProducts = catchAsyncErrors(async (req, res, next) => {
 exports.getAdminProducts = catchAsyncErrors(async (req, res, next) => {
   const products = await Product.find();
 
-  setTimeout(() => {
     res.status(200).json({
       success: true,
       products,
     });
-  }, 2000);
+
 });
 
 // Get single product details => /api/v1/admin/product/:id

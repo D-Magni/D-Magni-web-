@@ -2,15 +2,16 @@ import React, { Fragment, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
 import { Link, useNavigate } from "react-router-dom";
-import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3"; 
+import { useFlutterwave, closePaymentModal } from 'flutterwave-react-v3';
 import { useDispatch } from "react-redux";
-import axios from "axios";
+
 import { useAlert } from "react-alert";
 import CheckoutSteps from "./CheckoutSteps";
 import { createOrder, clearErrors } from '../../actions/orderActions'
+import { addItemToCart, removeItemFromCart } from "../../actions/cartActions";
 
 const ConfirmOrder = () => {
-  const navigate = useNavigate();
+ const navigate = useNavigate(); 
   const [loading, setLoading] = useState(false);
   const [flutterwaveApiKey, setFlutterwaveApiKey] = useState(null);
    const alert = useAlert();
@@ -118,9 +119,14 @@ const ConfirmOrder = () => {
    
           if (response.status === "completed") {
             try {
-
-
               dispatch(createOrder(order));
+              alert.success("Payment successful");
+              const cartItemIds = cartItems.map((item) => item.id);
+                      dispatch(removeItemFromCart(cartItemIds));
+
+                      closePaymentModal() // this will close the modal programmatically
+
+              navigate("/");
             } catch (error) {
               alert.error(error.response.data.message);
             }
@@ -131,6 +137,7 @@ const ConfirmOrder = () => {
         onClose: () => {
           console.log("Payment closed");
           setLoading(false);
+          navigate("/")
         },
       });
     } catch (error) {

@@ -41,8 +41,7 @@ export const getProducts =
     try {
       dispatch({ type: ALL_PRODUCTS_REQUEST });
 
-      let link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[lte]=${price[1]}&price[gte]=${price[0]}&ratings[gte]=${rating}`;
-
+      let link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&ratings[gte]=${rating}`
       const { data } = await axios.get(link);
 
       dispatch({
@@ -193,6 +192,7 @@ export const getAdminProducts = () => async (dispatch) => {
     });
   }
 };
+
 //Get Product Reviews
 export const getProductReviews = (id) => async (dispatch) => {
   try {

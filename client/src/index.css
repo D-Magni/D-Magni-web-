@@ -5,3 +5,43 @@
 p, h1, h2, h3, h4, h5{
     font-family: Arial, Helvetica, sans-serif;
 }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+.page-item {
+  margin: 0 5px;
+  list-style-type: none;
+}
+
+.page-item.disabled button {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.page-item.active button {
+  font-weight: bold;
+  background-color: burgundy;
+  color: white;
+}
+
+.page-link {
+  display: inline-block;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.page-link:hover {
+  background-color: #eee;
+}
+.carousel-root .control-arrow {
+  color: black;
+}
+

@@ -17,6 +17,9 @@ const OrderDetails = () => {
 
     const { shippingInfo, orderItems, paymentInfo, user, totalPrice, orderStatus} = order
     useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+    useEffect(() => {
         dispatch(getOrderDetails(id));
 
         if (error) {

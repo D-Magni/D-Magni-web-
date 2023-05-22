@@ -37,7 +37,7 @@ const Profile = () => {
                   id="edit_profile"
                   className="btn btn-primary btn-block my-5"
                 >
-                  <button className="bg-blue-900 w-full py-3 px-16  font-medium text-white rounded-md hover:bg-blue-800">
+                  <button className="bg-gray-900 w-full py-3 px-16  font-medium text-white rounded-md hover:bg-gray-800">
                     Edit Profile
                   </button>
                 </Link>

@@ -12,8 +12,11 @@ import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import CategoryIcon from '@mui/icons-material/Category';
 import ReviewsIcon from '@mui/icons-material/Reviews';
 const Sidebar = () => {
+  const isAdminPage =
+  window.location.pathname.startsWith("/admin") ||
+  window.location.pathname.startsWith("/dashboard");
     return (
-      <div className="fixed bg-gray-900 h-screen w-1/6 pt-40 px-7 lg:flex flex-col space-y-7 hidden">
+      <div className="fixed bg-gray-900 h-screen w-1/6 pt-40 px-7 lg:flex flex-col space-y-7 hidden z-10">
         <div className="sidebar-wrapper">
           <nav id="sidebar">
             <ul className="list-none flex flex-col space-y-6 font-bold text-lg">

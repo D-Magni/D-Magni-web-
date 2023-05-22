@@ -135,7 +135,7 @@ const submitHandler = (e) => {
         <div className="lg:w-4/5 py-36 px-4 sm:px-6 lg:px-8">
           <Fragment>
             <div className="md:grid place-items-center">
-              <div className="wrapper my-5">
+              <div className=" my-5">
                 <form
                   className="md:shadow-lg p-10 "
                   encType="multipart/form-data"

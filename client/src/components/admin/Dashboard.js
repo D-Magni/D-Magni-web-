@@ -54,7 +54,7 @@ const Dashboard = () => {
                     Total Amount
                     <br />{" "}
                     <b className="text-3xl">
-                      N{totalAmount ? totalAmount.toFixed(2) : "0.00"}
+                    ₦{totalAmount ? totalAmount.toFixed(2) : "0.00"}
                     </b>
                   </div>
                 </div>

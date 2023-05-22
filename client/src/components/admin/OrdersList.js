@@ -127,7 +127,7 @@ const OrdersList = () => {
                           {order.orderItems.length}
                         </td>
                         <td className="py-4 px-6 text-sm text-gray-500">
-                          N{order.totalPrice}
+                        ₦{order.totalPrice}
                         </td>
                         <td
                           className={`py-4 px-6 text-sm text-gray-500 ${orderStatusColor(
@@ -137,12 +137,6 @@ const OrdersList = () => {
                           {order.orderStatus}
                         </td>
                         <td className="py-4 px-6 text-sm flex justify-between gap-5">
-                          <Link
-                            to={`/admin/order/${order._id}`}
-                            className="text-gray-600 hover:text-green-600 font-bold hover:underline mr-4"
-                          >
-                            View
-                          </Link>
                           <Link
                             to={`/admin/order/${order._id}`}
                             className="bg-blue-600 p-1 text-white hover:bg-blue-700 rounded"

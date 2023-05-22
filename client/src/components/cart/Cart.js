@@ -1,13 +1,9 @@
 import React, { Fragment, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import Loader from "../layouts/Loader";
 import MetaData from "../layouts/MetaData";
-import { getProductDetails, clearErrors } from "../../actions/productActions";
 import { addItemToCart, removeItemFromCart } from "../../actions/cartActions";
 import DeleteForever from "@mui/icons-material/DeleteForever";
-import Remove from "@mui/icons-material/Remove";
-import Add from "@mui/icons-material/Add";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -115,7 +111,7 @@ const Cart = () => {
                               id="card_item_price"
                               className="text-gray-600 font-bold text-sm"
                             >
-                              N{item.price}
+                               ₦{item.price}
                             </p>
                           </div>
 
@@ -154,7 +150,7 @@ const Cart = () => {
                 <p className="flex justify-between">
                   Est. total:{" "}
                   <span className="font-bold">
-                    N
+                  ₦
                     {cartItems
                       .reduce(
                         (acc, item) => acc + item.quantity * item.price,

@@ -143,7 +143,7 @@ const ProcessOrder = () => {
 
                           <div className="md:w-2/12">
                             <p className="text-gray-700 font-medium">
-                              N{item.price}
+                            ₦{item.price}
                             </p>
                           </div>
 

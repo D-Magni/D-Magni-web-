@@ -84,7 +84,7 @@ if (loading || typeof products === "undefined") {
               type="text"
               name="search"
               className="w-full bg-transparent outline-none"
-              placeholder="Search for orders..."
+              placeholder="Search for products..."
               onChange={handleSearch}
             />
             <SearchIcon className="text-gray-400" />
@@ -141,7 +141,7 @@ if (loading || typeof products === "undefined") {
                       {product.name}
                     </td>
                     <td className="py-4 px-6 text-sm text-gray-500">
-                      N{product.price}
+                    ₦{product.price}
                     </td>
                     <td className="py-4 px-6 text-sm text-gray-500">
                       {product.stock}

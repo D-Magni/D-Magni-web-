@@ -8,6 +8,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import Person from "@mui/icons-material/Person";
 import Mail from "@mui/icons-material/Mail";
 import VisibilityOff from "@mui/icons-material/Visibility";
+import CloseIcon from "@mui/icons-material/Close";
 
 // import Person from '@mui/icons-material'
 import { register, clearErrors } from "../../actions/userActions";
@@ -77,7 +78,8 @@ const Register = () => {
   return (
     <React.Fragment>
       <MetaData title={"Register User"} />
-      <div className="py-36">
+      <div className="py-36 px-7 md:px-24">
+
         <div className="md:grid place-items-center">
           <div>
             <form
@@ -165,12 +167,12 @@ const Register = () => {
                 <button
                   id="register_button"
                   type="submit"
-                  className="bg-blue-900 text-white rounded-md font-bold hover:bg-gray-500 py-3"
+                  className="bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 "
                   disabled={loading ? true : false}
                 >
                   REGISTER
                 </button>
-                <Link to="/login" class="float-right mt-3 underline text-primary-color text-center">
+                <Link to="/login" class="float-right mt-3 underline text-gray-700 text-center">
                       Login Here
                     </Link>
               </div>

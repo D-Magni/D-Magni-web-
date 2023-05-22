@@ -9,9 +9,9 @@ const Search = () => {
         e.preventDefault()
 
         if(keyword.trim()) {
-            history(`/search/${keyword}`)
+            history(`/shop/search/${keyword}`)
         } else {
-            history('/')
+            history('/shop')
         }
     }
     const isAdminPage = window.location.pathname.startsWith("/admin") || window.location.pathname.startsWith("/dashboard");
@@ -30,7 +30,7 @@ const Search = () => {
       </div>
 
       <div>
-        <button id="search_btn" className={` bg-${isAdminPage ? 'gray-700' : 'primary-color'} py-1 px-2 rounded-r`}>
+        <button id="search_btn" className={` bg-${isAdminPage ? 'gray-700' : 'primary-color'} shadow-lg py-1 px-2 rounded-r`}>
           <SearchIcon className="text-white" />
         </button>
       </div>

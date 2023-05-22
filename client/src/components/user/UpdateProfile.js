@@ -190,7 +190,7 @@ const UpdateProfile = () => {
               <button
                 id="update_button"
                 type="submit"
-                className="w-full rounded py-3 bg-blue-900  hover:bg-zinc-600 text-white"
+                className="bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 "
                 disabled={loading ? true : false}
                 onClick={submitHandler}
               >

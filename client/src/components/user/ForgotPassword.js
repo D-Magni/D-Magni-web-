@@ -64,7 +64,7 @@ const ForgotPassword = () => {
                   <button
                     id="forgot_password_button"
                     type="submit"
-                    className="bg-blue-900 text-white rounded-md font-bold hover:bg-gray-500 py-3 "
+                    className="bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 "
                     onClick={submitHandler}
                     disabled={loading ? true : false}
                   >

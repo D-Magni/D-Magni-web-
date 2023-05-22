@@ -18,6 +18,7 @@ import Cart from "./components/cart/Cart";
 import Shipping from "./components/cart/Shipping";
 import ConfirmOrder from "./components/cart/ConfirmOrder";
 import axios from "axios";
+import Footer from "./components/layouts/Footer";
 
 //Admin Imports
 import Dashboard from "./components/admin/Dashboard";
@@ -32,6 +33,15 @@ import ProcessOrder from "./components/admin/ProcessOrder";
 import UsersList from "./components/admin/UsersList";
 import UpdateUser from "./components/admin/UpdateUser";
 import ProductReviews from "./components/admin/ProductReviews";
+import Shop from "./components/product/Shop";
+import AboutUs from "./components/pages/AboutUs";
+import Contact from "./components/pages/Contact";
+import DeliveryInfo from "./components/pages/DeliveryInfo";
+import Help from "./components/pages/Help";
+import PrivacyPolicy from "./components/pages/PrivacyPolicy";
+import Services from "./components/pages/Services";
+import TermsCon from "./components/pages/TermsCon";
+import SupportPage from "./components/pages/SupportPage";
 
 function App() {
 
@@ -72,7 +82,8 @@ function App() {
         <Route path="/order/:id" element={<OrderDetails/>} exact/>
          
         <Route path="/product/:id" element={<ProductDetails />} exact />
-        <Route path="/search/:keyword" element={<Homepage />} exact />
+        <Route path="/shop" element={<Shop/>}/>
+        <Route path="/shop/search/:keyword" element={<Homepage />} exact />
         <Route path="/dashboard" element={<Dashboard/>} exact/>
         <Route path="/admin/products" element={<ProductList/>}/>
         <Route path="/admin/product" element={<NewProduct/>}/>
@@ -82,8 +93,18 @@ function App() {
         <Route path="/admin/users" element={<UsersList/>}/>
         <Route path="/admin/user/:id" element={<UpdateUser/>}/>
         <Route path="/admin/reviews" element={<ProductReviews/>}/>
+
+        <Route path="/aboutus" element={<AboutUs/>}/>
+        <Route path="/contact" element={<Contact/>}/>
+        <Route path="/deliveryinfo" element={<DeliveryInfo/>}/>
+        <Route path="/help" element={<Help/>}/>
+        <Route path="/privacy" element={<PrivacyPolicy/>}/>
+        <Route path="/services" element={<Services/>}/>
+        <Route path="termscon" element={<TermsCon/>}/>
+        <Route path="/support" element={<SupportPage/>}/>
       </Routes>
 
+      <Footer />
 
     </Router>
   );

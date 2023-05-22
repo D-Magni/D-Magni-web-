@@ -1,11 +1,11 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Carousel } from "react-bootstrap";
+import { Carousel } from 'react-responsive-carousel';
 import Loader from "../layouts/Loader";
 import MetaData from "../layouts/MetaData";
 import Rating from "@mui/material/Rating";
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProductDetails,
@@ -31,7 +31,9 @@ const ProductDetails = () => {
   );
   const dispatch = useDispatch();
   const alert = useAlert();
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { loading, error, product } = useSelector(
     (state) => state.productDetails
   );
@@ -147,16 +149,19 @@ const ProductDetails = () => {
           <div className="mx-auto pt-20 md:pt-36 pb-14 px-7 md:px-24">
             <div className="flex flex-col md:flex-row justify-center">
               <div className="md:w-1/2 lg:w-1/3 p-4 flex-1">
-                <Carousel pause="hover" className="w-full">
+                <Carousel pause="hover"      showArrows={true}
+        showStatus={true}
+        showThumbs={false}         autoPlay
+        interval={5000}
+
+        className="w-full">
                   {product.images &&
                     product.images.map((image) => (
-                      <Carousel.Item key={image.public_id}>
                         <img
                           className="mx-auto h-96 object-contain md:h-96 w-96"
                           src={image.url}
                           alt={product.title}
                         />
-                      </Carousel.Item>
                     ))}
                 </Carousel>
               </div>
@@ -178,7 +183,7 @@ const ProductDetails = () => {
 
                 <hr className="my-4" />
 
-                <p className="text-3xl font-bold mb-4">N{product.price}</p>
+                <p className="text-3xl font-bold mb-4"> ₦{product.price}</p>
 
                 <div className="flex items-center mb-4">
                   <span

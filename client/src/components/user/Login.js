@@ -6,7 +6,7 @@ import MetaData from "../layouts/MetaData";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import Mail from "@mui/icons-material/Mail";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-
+import CloseIcon from "@mui/icons-material/Close";
 import { login, clearErrors } from "../../actions/userActions";
 
 const Login = () => {
@@ -45,9 +45,9 @@ const Login = () => {
       {loading ? (
         <Loader />
       ) : (
-        <div className="py-36">
-          <MetaData title={"Login"} />
-
+        <div className="py-36 px-7 md:px-24">
+        <MetaData title={"Login"} />
+    
           <div className="md:grid place-items-center">
             <div>
               <div>
@@ -88,12 +88,12 @@ const Login = () => {
                     <button
                       id="login_button"
                       type="submit"
-                      className="bg-blue-900 text-white rounded-md font-bold hover:bg-gray-500 py-3 w-full"
-                    >
+                      className="bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 "
+                      >
                       LOGIN
                     </button>
 
-                    <Link to="/register" class="float-right mt-3 flex justify-between text-primary-color text-center text-sm">
+                    <Link to="/register" class="float-right mt-3 flex justify-between text-gray-600 text-center text-sm">
                       <p>New user?</p> <div className="underline" >Sign up here</div>
                     </Link>
                   </div>
