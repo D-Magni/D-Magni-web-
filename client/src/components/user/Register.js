@@ -7,8 +7,9 @@ import Avatar from "@mui/material/Avatar";
 import ImageIcon from "@mui/icons-material/Image";
 import Person from "@mui/icons-material/Person";
 import Mail from "@mui/icons-material/Mail";
-import VisibilityOff from "@mui/icons-material/Visibility";
-import CloseIcon from "@mui/icons-material/Close";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // import Person from '@mui/icons-material'
 import { register, clearErrors } from "../../actions/userActions";
@@ -24,6 +25,8 @@ const Register = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const [avatar, setAvatar] = useState("");
   const [avatarPreview, setAvatarPreview] = useState("");
@@ -47,39 +50,81 @@ const Register = () => {
       dispatch(clearErrors());
     }
   }, [dispatch, alert, isAuthenticated, error]);
+  const validateForm = () => {
+    const errors = {};
+
+    if (!firstName.trim()) {
+      errors.firstName = "First name is required";
+    }
+
+    if (!lastName.trim()) {
+      errors.lastName = "Last name is required";
+    }
+
+    if (!email.trim()) {
+      errors.email = "Email is required";
+    } else if (!email.includes("@")) {
+      errors.email = "Invalid email format";
+    }
+
+    if (!password.trim()) {
+      errors.password = "Password is required";
+    } else if (password.length < 6) {
+      errors.password = "Password must be at least 6 characters long";
+    }
+
+    setErrors(errors);
+
+    return Object.keys(errors).length === 0;
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.set("firstName", firstName);
-    formData.set("lastName", lastName);
-    formData.set("email", email);
-    formData.set("password", password);
-    formData.set("avatar", avatar);
-    dispatch(register(formData));
+    const isValid = validateForm();
+
+    if (isValid) {
+      const formData = new FormData();
+      formData.set("firstName", firstName);
+      formData.set("lastName", lastName);
+      formData.set("email", email);
+      formData.set("password", password);
+      if (avatar) {
+        formData.set("avatar", avatar);
+      }
+
+      dispatch(register(formData));
+    }
   };
 
   const onChange = (e) => {
     if (e.target.name === "avatar") {
       const reader = new FileReader();
-
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setAvatarPreview(reader.result);
-          setAvatar(reader.result);
-        }
-      };
-      reader.readAsDataURL(e.target.files[0]);
+      if (e.target.files.length > 0) {
+        reader.onload = () => {
+          if (reader.readyState === 2) {
+            setAvatarPreview(reader.result);
+            setAvatar(reader.result);
+          }
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      } else {
+        setAvatarPreview("");
+        setAvatar("");
+      }
     } else {
       setUser({ ...user, [e.target.name]: e.target.value });
+      setErrors({ ...errors, [e.target.name]: "" });
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
   return (
     <React.Fragment>
       <MetaData title={"Register User"} />
-      <div className="py-36 px-7 md:px-24">
-
+      <div className="py-36 px-4 md:px-24">
         <div className="md:grid place-items-center">
           <div>
             <form
@@ -91,56 +136,88 @@ const Register = () => {
                 Create a New Account
               </h1>
               <div className="flex flex-col space-y-10 pt-10">
-              <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
-                  <input
-                    type="name"
-                    id="firstName"
-                    className="form-control outline-none bg-transparent w-full"
-                    name="firstName"
-                    placeholder="Enter your first name"
-                    value={firstName}
-                    onChange={onChange}
-                  />
-                  <Person className="text-gray-400" />
+                <div>
+                  <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
+                    <input
+                      type="name"
+                      id="firstName"
+                      className="form-control outline-none bg-transparent w-full"
+                      name="firstName"
+                      placeholder="Enter your first name"
+                      value={firstName}
+                      onChange={onChange}
+                    />
+                    <Person className="text-gray-400" />
+                  </div>
+                  {errors.firstName && (
+                    <span className="text-red-500 pt-3">
+                      {errors.firstName}
+                    </span>
+                  )}
                 </div>
 
-                <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
-                  <input
-                    type="name"
-                    id="lastName"
-                    className="form-control outline-none bg-transparent w-full"
-                    name="lastName"
-                    placeholder="Enter your last name"
-                    value={lastName}
-                    onChange={onChange}
-                  />
-                  <Person className="text-gray-400" />
+                <div>
+                  <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
+                    <input
+                      type="name"
+                      id="lastName"
+                      className="form-control outline-none bg-transparent w-full"
+                      name="lastName"
+                      placeholder="Enter your last name"
+                      value={lastName}
+                      onChange={onChange}
+                    />
+                    <Person className="text-gray-400" />
+                  </div>
+                  {errors.lastName && (
+                    <span className="text-red-500 pt-3">{errors.lastName}</span>
+                  )}
                 </div>
 
-                <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
-                  <input
-                    type="email"
-                    id="email_field"
-                    className="form-control outline-none bg-transparent w-full"
-                    name="email"
-                    placeholder="Enter a valid email address"
-                    value={email}
-                    onChange={onChange}
-                  />
-                  <Mail className="text-gray-400" />
+                <div>
+                  <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
+                    <input
+                      type="email"
+                      id="email_field"
+                      className="form-control outline-none bg-transparent w-full"
+                      name="email"
+                      placeholder="Enter a valid email address"
+                      value={email}
+                      onChange={onChange}
+                    />
+                    <Mail className="text-gray-400" />
+                  </div>
+                  {errors.email && (
+                    <span className="text-red-500 pt-3">{errors.email}</span>
+                  )}
                 </div>
 
-                <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
-                  <input
-                    type="password"
-                    id="password_field"
-                    className="form-control outline-none bg-transparent w-full"
-                    name="password"
-                    placeholder="Use a strong password"
-                    value={password}
-                    onChange={onChange}
-                  />
-                  <VisibilityOff className="text-gray-400" />
+                <div>
+                  <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      id="password_field"
+                      className="form-control outline-none bg-transparent w-full"
+                      name="password"
+                      placeholder="Use a strong password"
+                      value={password}
+                      onChange={onChange}
+                    />
+                    {showPassword ? (
+                      <Visibility
+                        className="text-gray-400 cursor-pointer"
+                        onClick={togglePasswordVisibility}
+                      />
+                    ) : (
+                      <VisibilityOff
+                        className="text-gray-600 cursor-pointer"
+                        onClick={togglePasswordVisibility}
+                      />
+                    )}{" "}
+                  </div>
+                  {errors.password && (
+                    <span className="text-red-500 pt-3">{errors.password}</span>
+                  )}
                 </div>
 
                 <div className="htmlForm-group flex flex-col space-y-4">
@@ -158,7 +235,9 @@ const Register = () => {
                         onChange={onChange}
                       />
                       <div className="flex  justify-between px-3 gap-2">
-                        <span className="text-gray-500">Choose Image</span>
+                        <span className="text-gray-500 text-sm">
+                          Choose Image
+                        </span>
                         <ImageIcon className="text-gray-600" />
                       </div>
                     </div>
@@ -170,11 +249,22 @@ const Register = () => {
                   className="bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 "
                   disabled={loading ? true : false}
                 >
-                  REGISTER
+                  {loading ? (
+                    <div className="flex gap-5 place-items-center justify-center">
+                      {" "}
+                      <CircularProgress size={24} className="text-white" />{" "}
+                      <p>Creating a new account...</p>{" "}
+                    </div>
+                  ) : (
+                    "REGISTER"
+                  )}
                 </button>
-                <Link to="/login" class="float-right mt-3 underline text-gray-700 text-center">
-                      Login Here
-                    </Link>
+                <Link
+                  to="/login"
+                  class="float-right mt-3 underline text-gray-700 text-center"
+                >
+                  Login Here
+                </Link>
               </div>
             </form>
           </div>

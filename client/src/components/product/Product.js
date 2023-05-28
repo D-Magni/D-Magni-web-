@@ -5,7 +5,7 @@ import Rating from "@mui/material/Rating";
 import { Box } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import { useDispatch, useSelector } from "react-redux";
-import { addItemToCart } from "../../actions/cartActions";
+import { addToCart } from "../../actions/cartActions";
 import { useAlert } from "react-alert";
 import { lazy, Suspense } from "react";
 import { PuffLoader } from "react-spinners";
@@ -15,8 +15,8 @@ const Product = ({ product }) => {
   const dispatch = useDispatch();
   const alert = useAlert();
   
-  const addToCart = () => {
-    dispatch(addItemToCart(product._id, 1));
+  const handleAddToCart = () => {
+    dispatch(addToCart(product._id, 1));
     alert.success("Item added to cart");
   };
   return (
@@ -25,7 +25,7 @@ const Product = ({ product }) => {
       <Suspense
             fallback={
               <div className="flex justify-center items-center bg-gray-100">
-                <PuffLoader color="gray" size={50} />
+                <PuffLoader color="gray" size={100} />
               </div>
             }
           >
@@ -67,7 +67,7 @@ const Product = ({ product }) => {
           <button
             className="bg-sec-color text-white px-3 py-1 text-xs rounded hover:bg-zinc-700"
             disabled={product.stock === 0}
-            onClick={addToCart}
+            onClick={handleAddToCart}
           >
             Add to cart
           </button>

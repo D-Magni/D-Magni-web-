@@ -2,16 +2,12 @@ import React, { useState, useEffect } from "react";
 import MetaData from "../layouts/MetaData";
 
 const SupportPage = () => {
-  const [isChatOpen, setChatOpen] = useState(false);
   const [orderCancellationReason, setOrderCancellationReason] = useState("");
   const [helpRequest, setHelpRequest] = useState("");
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
  
-  const handleChatToggle = () => {
-    setChatOpen(!isChatOpen);
-  };
 
   const handleOrderCancellation = (e) => {
     e.preventDefault();
@@ -53,63 +49,17 @@ const SupportPage = () => {
         </div>
       </div>
 
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">Order Cancellation</h2>
-        <p className="text-gray-600">
-          If you need to cancel your order, please provide a reason below and submit the cancellation request.
-        </p>
-        <form onSubmit={handleOrderCancellation} className="space-y-4">
-          <textarea
-            className="border border-gray-300 rounded-md p-2 w-full"
-            rows="4"
-            placeholder="Reason for order cancellation"
-            value={orderCancellationReason}
-            onChange={(e) => setOrderCancellationReason(e.target.value)}
-          ></textarea>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded-md"
-          >
-            Submit Cancellation Request
-          </button>
-        </form>
-      </div>
+     
 
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-4">Help and Assistance</h2>
         <p className="text-gray-600">
-          If you need any help or have specific questions, please fill out the form below and we'll get back to you as soon as possible.
+          If you need to cancel an order, any help or have specific questions, please reach out the contact info below.
         </p>
-        <form onSubmit={handleHelpRequest} className="space-y-4">
-          <textarea
-            className="border border-gray-300 rounded-md p-2 w-full"
-            rows="4"
-            placeholder="Type your request here"
-            value={helpRequest}
-            onChange={(e) => setHelpRequest(e.target.value)}
-          ></textarea>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded-md"
-          >
-            Submit Help Request
-          </button>
-        </form>
-      </div>
-
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">Live Chat</h2>
-        <button
-          className="bg-blue-500 text-white py-2 px-4 rounded-md"
-          onClick={handleChatToggle}
-        >
-          {isChatOpen ? "Close Chat" : "Open Chat"}
-        </button>
-        {isChatOpen && (
-          <div className="mt-4">
-            {/* Live chat component or implementation */}
-          </div>
-        )}
+        <ul className="list-disc ml-6 mt-4 text-gray-600">
+          <li>Email: info@dmagni.com</li>
+          <li>Phone: +2348115925346</li>
+        </ul>
       </div>
     </div>
   );

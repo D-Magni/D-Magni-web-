@@ -20,7 +20,7 @@ exports.processPayment = catchAsyncErrors(async (req, res, next) => {
         customer: {
             email: req.user.email,
             phonenumber: shippingInfo.phone,
-            name: shippingInfo.firstName + ' ' + shippingInfo.lastName
+            name: req.user.firstName + ' ' + req.user.lastName
         },
         customizations: {
             title: 'My Store',

@@ -23,17 +23,20 @@ import "../assets/Styles/style.css";
 import Search from "./Search";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { HourglassBottomOutlined } from "@mui/icons-material";
-import { addItemToCart, removeItemFromCart } from "../../actions/cartActions";
+import { clearCart, removeCartItem } from "../../actions/cartActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import { Avatar } from "@material-ui/core";
 import { logout } from "../../actions/userActions";
-import { useFlutterwave } from "flutterwave-react-v3"; 
-import { createOrder, clearErrors } from '../../actions/orderActions'
+import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
+import { createOrder, clearErrors } from "../../actions/orderActions";
+import CircularProgress from "@mui/material/CircularProgress";
+import Person from "@mui/icons-material/Person";
 
 const Header = () => {
   //Handle cart
   const history = useNavigate();
+  const [orderCreated, setOrderCreated] = useState(false);
 
   const [showCart, setShowCart] = useState(false);
   const handleCartClick = () => {
@@ -48,138 +51,141 @@ const Header = () => {
   const { cartItems, shippingInfo } = useSelector((state) => state.cart);
   const { isAuthenticated } = useSelector((state) => state.auth);
   const removeCartItemHandler = (id) => {
-    dispatch(removeItemFromCart(id));
+    dispatch(removeCartItem(id));
   };
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-
   // code for cart ends here
-
 
   //Payment CheckOut
   const [loading, setLoading] = useState(false);
   const [flutterwaveApiKey, setFlutterwaveApiKey] = useState(null);
-  const { error } = useSelector(state => state.newOrder)
+  const { error } = useSelector((state) => state.newOrder);
   // Calculate order prices
-  const itemsPrice = Number(cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)).toFixed(2);
-  const shippingPrice = itemsPrice > 200 ? 0 : 25;
-  const taxPrice = Number((0.05 * itemsPrice).toFixed(2));
-  const totalPrice = (Number(itemsPrice) + Number(shippingPrice) + Number(taxPrice)).toFixed(2);
+  const itemsPrice = Number(
+    cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+  ).toFixed(2);
+  const shippingPrice = itemsPrice > 1000 ? 0 : 20;
+  const taxPrice = Number((0.005 * itemsPrice).toFixed(2));
+  const totalPrice = (
+    Number(itemsPrice) +
+    Number(shippingPrice) +
+    Number(taxPrice)
+  ).toFixed(2);
 
-  
-// Fetch Flutterwave public key from backend
-useEffect(() => {
+  // Fetch Flutterwave public key from backend
+  useEffect(() => {
+    if (error) {
+      alert.error(error);
+      dispatch(clearErrors());
+    }
+    const fetchFlutterwaveApiKey = async () => {
+      try {
+        const response = await fetch("/api/v1/flutterwaveapi");
+        const data = await response.json();
+        setFlutterwaveApiKey(data.flutterwaveApiKey);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
+    fetchFlutterwaveApiKey();
+  }, [dispatch, error, alert]);
 
-  if (error) {
-    alert.error(error);
-    dispatch(clearErrors()) 
+  useEffect(() => {
+    const itemsPrice = Number(
+      cartItems
+        .reduce((acc, item) => acc + item.price * item.quantity, 0)
+        .toFixed(2)
+    );
+    const shippingPrice = Number(itemsPrice > 200 ? 0 : 25);
+    const taxPrice = Number((0.05 * itemsPrice).toFixed(2));
+    const totalPrice = (
+      Number(itemsPrice) +
+      Number(shippingPrice) +
+      Number(taxPrice)
+    ).toFixed(2);
 
-}
-  const fetchFlutterwaveApiKey = async () => {
+    const orderInfo = {
+      itemsPrice,
+      shippingPrice,
+      taxPrice,
+      totalPrice,
+    };
+    sessionStorage.setItem("orderInfo", JSON.stringify(orderInfo));
+  }, [cartItems]);
+
+  const config = {
+    public_key: flutterwaveApiKey,
+    tx_ref: Date.now(),
+    amount: totalPrice,
+    currency: "NGN",
+    payment_options: "card,mobilemoney,ussd",
+    customer: {
+      name: user && user.firstName + " " + user && user.lastName,
+      phone_number: shippingInfo.phoneNo,
+      email: user && user.email,
+    },
+    customizations: {
+      title: "D'Magni",
+      description: "Payment for items in cart",
+      logo: "https://tinyurl.com/yc3zadhf",
+    },
+  };
+
+  const handleFlutterPayment = useFlutterwave(config);
+  const proceedToPayment = async () => {
+    setLoading(true);
+
+    const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
+    const order = {
+      orderItems: cartItems,
+      shippingInfo,
+      ...orderInfo,
+    };
+
     try {
-      const response = await fetch('/api/v1/flutterwaveapi');
-      const data = await response.json();
-      setFlutterwaveApiKey(data.flutterwaveApiKey);
+      await handleFlutterPayment({
+        callback: async (response) => {
+          console.log(response);
+          setLoading(false);
+
+          const axiosConfig = {
+            headers: {
+              "Content-type": "application/json",
+            },
+          };
+
+          if (response.status === "completed") {
+            try {
+              if (!orderCreated) {
+                setOrderCreated(true);
+                dispatch(createOrder(order));
+              }
+              alert.success("Payment successful");
+              dispatch(clearCart());
+              closePaymentModal();
+              history("/");
+            } catch (error) {
+              alert.error(error.response.data.message);
+            }
+          } else {
+            alert.error("Payment failed");
+          }
+        },
+        onClose: () => {
+          console.log("Payment closed");
+          setLoading(false);
+        },
+      });
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   };
-
-  fetchFlutterwaveApiKey();
-
-  
-}, [dispatch, error, alert]);
-
-
-useEffect(() => {
-  const itemsPrice = Number(cartItems.reduce((acc, item) => acc + (item.price * item.quantity), 0).toFixed(2));
-  const shippingPrice = Number(itemsPrice > 200 ? 0 : 25);
-const taxPrice = Number((0.05 * itemsPrice).toFixed(2));
-const totalPrice = (Number(itemsPrice) + Number(shippingPrice) + Number(taxPrice)).toFixed(2);
-
-
-  const orderInfo = {
-    itemsPrice,
-    shippingPrice,
-    taxPrice,
-    totalPrice,
-  };
-  sessionStorage.setItem("orderInfo", JSON.stringify(orderInfo));
-}, [cartItems]);
-
-
-
-const config = {
-  public_key: flutterwaveApiKey,
-  tx_ref: Date.now(),
-  amount: totalPrice,
-  currency: "NGN",
-  payment_options: "card,mobilemoney,ussd",
-  customer: {
-    phone_number: shippingInfo.phoneNo,
-    email: user && user.email,
-  },
-  customizations: {
-    title: "D'Magni",
-    description: "Payment for items in cart",
-    logo: "https://tinyurl.com/yc3zadhf",
-  },
-};
-
-const handleFlutterPayment = useFlutterwave(config);
-const proceedToPayment = async () => {
-  setLoading(true);
-
-
-  const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
-  const order = {
-    orderItems: cartItems,
-    shippingInfo,
-    ...orderInfo,
-  };
-
-
-  try {
-    await handleFlutterPayment({
-      callback: async (response) => {
-        console.log(response);
-        setLoading(false);
-
-        const axiosConfig = {
-          headers: {
-            "Content-type": "application/json",
-          },
-        };
-  
- 
-        if (response.status === "completed") {
-          try {
-
-
-            dispatch(createOrder(order));
-            history("/");
-          } catch (error) {
-            alert.error(error.response.data.message);
-          }
-        } else {
-          alert.error("Payment failed");
-        }
-      },
-      onClose: () => {
-        console.log("Payment closed");
-        setLoading(false);
-      },
-    });
-  } catch (error) {
-    console.log(error);
-    setLoading(false);
-  }
-}
-//End here
-
+  //End here
 
   const [openMenu, setOpenMenu] = useState();
 
@@ -215,7 +221,7 @@ const proceedToPayment = async () => {
     window.location.pathname.startsWith("/admin") ||
     window.location.pathname.startsWith("/dashboard");
 
-    const isLoginOrRegister = 
+  const isLoginOrRegister =
     window.location.pathname.startsWith("/login") ||
     window.location.pathname.startsWith("/register");
 
@@ -223,9 +229,7 @@ const proceedToPayment = async () => {
     <Fragment>
       {/* Header for view above 1024px screens */}
       <nav
-        className={`${
-          isAdminPage ? "bg-gray-900" : "bg-primary-color"
-        }
+        className={`${isAdminPage ? "bg-gray-900" : "bg-primary-color"}
          hidden lg:flex  justify-around space-x-12 text-white lg:px-24 py-5 fixed w-full z-40 top-0 place-items-center`}
       >
         <div className=" flex-1">
@@ -344,8 +348,23 @@ const proceedToPayment = async () => {
                         View Cart
                       </button>
                     </Link>
-                    <button className="bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded-lg w-full" onClick={proceedToPayment}>
-                      Checkout
+                    <button
+                      className="bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded-lg w-full"
+                      onClick={proceedToPayment}
+                      disabled={loading ? true : false}
+                    >
+                      {loading ? (
+                        <div className="flex gap-5 place-items-center justify-center">
+                          {" "}
+                          <CircularProgress
+                            size={24}
+                            className="text-white"
+                          />{" "}
+                          <p>Processing ...</p>{" "}
+                        </div>
+                      ) : (
+                        "Check Out"
+                      )}
                     </button>
                   </div>
                 </div>
@@ -353,11 +372,11 @@ const proceedToPayment = async () => {
             </div>
           )}
           <Link to="/support">
-          <div className="flex gap-1 cursor-pointer">
-            <ContactSupportIcon />
+            <div className="flex gap-1 cursor-pointer">
+              <ContactSupportIcon />
 
-            <p>Help</p>
-          </div>
+              <p>Help</p>
+            </div>
           </Link>
           <div>
             {user ? (
@@ -368,10 +387,20 @@ const proceedToPayment = async () => {
                   type="button"
                   onClick={handleClickUser}
                 >
-                  <Avatar
-                    src={user.avatar && user.avatar.url}
-                    alt={user && user.firstName}
-                  />
+                  {user && user.avatar ? (
+                    <Avatar
+                      src={user.avatar.url}
+                      alt={user.firstName && user.firstName}
+                    />
+                  ) : (
+                    <div>
+                      {user && user.firstName && (
+                        <Avatar>
+                          {user.firstName.charAt(0).toUpperCase()}
+                        </Avatar>
+                      )}
+                    </div>
+                  )}
                   <div className="flex gap-1">
                     <span className="font-bold text-gray-300">
                       {user && user.firstName}
@@ -438,11 +467,10 @@ const proceedToPayment = async () => {
       {/* Header for view below 1024px screens */}
 
       <nav
-        className={`${
-          isAdminPage ? "bg-gray-900" : "bg-primary-color"
-        } 
-     lg:hidden  gap-5 px-8 py-5  text-white fixed w-full z-10 top-0
-      `}>
+        className={`${isAdminPage ? "bg-gray-900" : "bg-primary-color"} 
+     lg:hidden flex flex-col  gap-5 px-8 py-5  text-white fixed w-full z-10 top-0
+      `}
+      >
         <div>
           <div className="flex justify-between place-items-center">
             <div>
@@ -560,8 +588,23 @@ const proceedToPayment = async () => {
                               View Cart
                             </button>
                           </Link>
-                          <button className="bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded-lg w-full" onClick={proceedToPayment}>
-                            Checkout
+                          <button
+                            className="bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded-lg w-full"
+                            onClick={proceedToPayment}
+                            disabled={loading ? true : false}
+                          >
+                            {loading ? (
+                              <div className="flex gap-5 place-items-center justify-center">
+                                {" "}
+                                <CircularProgress
+                                  size={24}
+                                  className="text-white"
+                                />{" "}
+                                <p>Processing ...</p>{" "}
+                              </div>
+                            ) : (
+                              "Check Out"
+                            )}
                           </button>
                         </div>
                       </div>
@@ -569,11 +612,29 @@ const proceedToPayment = async () => {
                   </div>
                 </div>
               )}
-              {user && user.avatar && (
-                <Avatar
-                  src={user.avatar && user.avatar.url}
-                  alt={user && user.firstName}
-                />
+
+              {user ? (
+                <div>
+                  {" "}
+                  {user && user.avatar ? (
+                    <Avatar
+                      src={user.avatar.url}
+                      alt={user.firstName && user.firstName}
+                    />
+                  ) : (
+                    <div>
+                      {user && user.firstName && (
+                        <Avatar>
+                          {user.firstName.charAt(0).toUpperCase()}
+                        </Avatar>
+                      )}
+                    </div>
+                  )}{" "}
+                </div>
+              ) : (
+                <div>
+                  <Avatar />
+                </div>
               )}
             </div>
           </div>
@@ -717,11 +778,15 @@ const proceedToPayment = async () => {
                       <p className="py-4 pl-4">ACCOUNT</p>
 
                       <div className="py-4 pl-3">
-                        <Link to="/register">Sign Up</Link>
+                        <Link to="/register" onClick={closeMenu}>
+                          Sign Up
+                        </Link>
                       </div>
                       <hr className="border border-neutral-700" />
                       <div className="py-4 pl-3">
-                        <Link to="/login">Login</Link>
+                        <Link to="/login" onClick={closeMenu}>
+                          Login
+                        </Link>
                       </div>
                     </div>
                   )

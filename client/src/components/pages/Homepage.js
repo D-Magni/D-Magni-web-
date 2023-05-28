@@ -12,7 +12,9 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const Homepage = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [price, setPrice] = useState([1, 1000]);
+  const [minPrice, setMinPrice] = useState(1);
+
+  const [maxPrice, setMaxPrice] = useState(1500000);
   const [rating, setRating] = useState(0);
 
   const alert = useAlert();
@@ -24,17 +26,18 @@ const Homepage = () => {
   );
 
   const { keyword } = useParams();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     if (error) {
       return alert.error(error);
     }
-    const timer = setTimeout(() => {
-      dispatch(getProducts(keyword, currentPage, price, rating));
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, [dispatch, alert, error, keyword, currentPage, price, rating]);
+  
+      dispatch(getProducts(keyword, currentPage, minPrice, maxPrice, rating));
+   
+  }, [dispatch, alert, error, keyword, currentPage, minPrice, maxPrice, rating]);
 
   const inputRef = useRef(null);
 
@@ -90,23 +93,29 @@ const Homepage = () => {
               showIndicators={false}
               interval={5000}
               infiniteLoop={true}
-              className="w-full"
+              className="w-full h-full"
             >
+              <div className="h-80 md:h-screen bg-gray-600">
               <img
                 src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604494/dmagni/ad/Ad2_ngybj4.jpg"
                 alt="adImage"
                 className="h-full"
               />
+              </div>
+              <div className="h-80 md:h-screen bg-gray-600">
               <img
                 src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604490/dmagni/ad/Ad3_nykbno.jpg"
                 alt="adImage"
                 className="h-full"
               />
+              </div>
+              <div className="h-80 md:h-screen bg-gray-600">
               <img
                 src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604486/dmagni/ad/Ad1_v81yhc.jpg"
                 alt="adImage"
                 className="h-full"
               />
+              </div>
             </Carousel>
             <div className="absolute top-40 lg:top-96 px-6 md:px-24 flex flex-col space-y-3 md:space-y-6">
               <p className="text-lg  md:text-2xl lg:text-6xl font-bold text-white">
@@ -126,7 +135,7 @@ const Homepage = () => {
           <div className="py-20 px-7 md:px-24 bg-neutral-100 flex flex-col md:space-y-20 space-y-10">
             {/* Latest Products Section */}
             <section>
-              <h3 className="text-xl md:text-3xl py-10 font-bold text-gray-700">
+              <h3 className="text-xl md:text-3xl py-5 md:py-10 font-bold text-gray-700">
                 LATEST PRODUCTS
               </h3>
               <div className="w-full md:hidden flex space-x-5 overflow-x-auto">

@@ -1,5 +1,8 @@
 import React, { Fragment } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router,
+   Route, 
+   Routes,
+  useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const ProtectedRoute = ({ isAdmin, element: Element, ...rest }) => {
@@ -7,24 +10,29 @@ const ProtectedRoute = ({ isAdmin, element: Element, ...rest }) => {
   const { isAuthenticated, loading, user } = useSelector((state) => state.auth);
 
   return (
-    <Routes>
+    <Fragment>
 
       {loading === false && (
         <Route
           {...rest}
           render={(props) => {
-            if (isAuthenticated === false) {
-              navigate("/login");
+            if (isAuthenticated === false) { 
+              return (
+              navigate("/login")
+              )
             }
 
             if (isAdmin === true && user.role !== "admin") {
-              navigate("/");
+
+              return (
+                navigate("/")
+              )
             }
             return <Element {...props} />;
           }}
         />
       )}
-    </Routes>
+    </Fragment>
 
   );
 };

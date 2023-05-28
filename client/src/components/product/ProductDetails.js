@@ -12,7 +12,7 @@ import {
   clearErrors,
   newReview,
 } from "../../actions/productActions";
-import { addItemToCart } from "../../actions/cartActions";
+import { addToCart } from "../../actions/cartActions";
 import { useAlert } from "react-alert";
 import { useParams } from "react-router-dom";
 import { Modal, Typography } from "@material-ui/core";
@@ -76,7 +76,7 @@ const ProductDetails = () => {
   };
 
   const addToCart = () => {
-    dispatch(addItemToCart(id, quantity));
+    dispatch(addToCart(id, quantity));
     alert.success("Item Add to Cart");
   };
 

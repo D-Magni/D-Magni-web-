@@ -8,6 +8,7 @@ import { NEW_PRODUCT_RESET } from "../../constants/productConstants";
 import Sidebar from "./Sidebar";
 import ImageIcon from "@mui/icons-material/Image";
 import Compressor from 'compressorjs';
+import CircularProgress from "@mui/material/CircularProgress";
 
 const NewProduct = () => {
   const navigate = useNavigate();
@@ -205,7 +206,7 @@ const onChange = async (e) => {
                       className="bg-zinc-900 text-white rounded-md font-bold hover:bg-gray-500 py-3"
                       disabled={loading ? true : false}
                     >
-                      CREATE
+                {loading ? <div className="flex gap-5 place-items-center justify-center"> <CircularProgress size={24} className="text-white"/> <p>Creating product...</p> </div> : "CREATE"}
                     </button>
                   </div>
                 </form>

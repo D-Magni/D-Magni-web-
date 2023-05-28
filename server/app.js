@@ -21,12 +21,14 @@ app.use(fileUpload());
 
 const products = require('./routes/product');
 const auth = require('./routes/auth');
+const cart = require('./routes/cart');
 const order = require('./routes/order');
 const payment = require('./routes/payment');
 
 
 app.use('/api/v1', products);
 app.use('/api/v1', auth);
+app.use('/api/v1', cart);
 app.use('/api/v1', payment)
 app.use('/api/v1', order);
 

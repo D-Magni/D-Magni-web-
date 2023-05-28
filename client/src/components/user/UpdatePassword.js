@@ -3,8 +3,8 @@ import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
 import { useNavigate } from "react-router-dom";
-import Avatar from "@mui/material/Avatar";
-import VisibilityOff from "@mui/icons-material/Visibility";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 import { updatePassword, clearErrors } from "../../actions/userActions";
 import { UPDATE_PASSWORD_RESET } from "../../constants/userConstants";
@@ -12,6 +12,7 @@ import { UPDATE_PASSWORD_RESET } from "../../constants/userConstants";
 const UpdatePassword = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
   const alert = useAlert();
@@ -47,6 +48,9 @@ const UpdatePassword = () => {
     formData.set("password", password);
     dispatch(updatePassword(formData));
   };
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
   return (
     <Fragment>
       <MetaData title={"Change Password"} />
@@ -60,7 +64,7 @@ const UpdatePassword = () => {
               </h1>
 
               <div className="flex flex-col space-y-10 pt-10">
-              <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
+                <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
                   <input
                     type="password"
                     id="old_password_field"
@@ -69,7 +73,17 @@ const UpdatePassword = () => {
                     placeholder="Enter your old password"
                     onChange={(e) => setOldPassword(e.target.value)}
                   />
-                  <VisibilityOff className="text-gray-400" />
+                  {showPassword ? (
+                    <Visibility
+                      className="text-gray-400 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    />
+                  ) : (
+                    <VisibilityOff
+                      className="text-gray-400 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    />
+                  )}{" "}
                 </div>
 
                 <div className="border-2 border-gray-300 w-full hover:border-blue-900 py-2 px-3 rounded-md flex justify-between">
@@ -81,7 +95,17 @@ const UpdatePassword = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                  <VisibilityOff className="text-gray-400" />
+                  {showPassword ? (
+                    <Visibility
+                      className="text-gray-400 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    />
+                  ) : (
+                    <VisibilityOff
+                      className="text-gray-400 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    />
+                  )}{" "}
                 </div>
 
                 <button

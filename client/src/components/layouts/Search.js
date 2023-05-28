@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
 import SearchIcon from "@mui/icons-material/Search";
 import { useNavigate } from 'react-router-dom';
+
 const Search = () => {
-     const history = useNavigate();
-    const [keyword, setKeyword] = useState('');
+  const navigate = useNavigate();
+  const [keyword, setKeyword] = useState('');
 
-    const searchHandler = (e) => {
-        e.preventDefault()
+  const searchHandler = (e) => {
+    e.preventDefault();
 
-        if(keyword.trim()) {
-            history(`/shop/search/${keyword}`)
-        } else {
-            history('/shop')
-        }
+    if (keyword.trim()) {
+      navigate(`/shop?keyword=${keyword}`);
+    } else {
+      navigate('/shop');
     }
-    const isAdminPage = window.location.pathname.startsWith("/admin") || window.location.pathname.startsWith("/dashboard");
+  };
 
+  const isAdminPage = window.location.pathname.startsWith("/admin") || window.location.pathname.startsWith("/dashboard");
 
   return (
     <form onSubmit={searchHandler} className="flex">
-        <div className="w-full">
+      <div className="w-full">
         <input
           type="text"
           id="search_field"
@@ -30,12 +31,15 @@ const Search = () => {
       </div>
 
       <div>
-        <button id="search_btn" className={` bg-${isAdminPage ? 'gray-700' : 'primary-color'} shadow-lg py-1 px-2 rounded-r`}>
+        <button
+          id="search_btn"
+          className={`bg-${isAdminPage ? 'gray-700' : 'primary-color'} shadow-lg py-1 px-2 rounded-r`}
+        >
           <SearchIcon className="text-white" />
         </button>
       </div>
     </form>
-  )
-}
+  );
+};
 
-export default Search
+export default Search;

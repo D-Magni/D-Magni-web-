@@ -35,26 +35,25 @@ import {
   CLEAR_ERRORS,
 } from "../constants/productConstants";
 
-export const getProducts =
-  (keyword = "", currentPage = 1, price, rating = 0) =>
-  async (dispatch) => {
-    try {
-      dispatch({ type: ALL_PRODUCTS_REQUEST });
+export const getProducts = (keyword = "", currentPage = 1, minPrice, maxPrice, rating = 0) => async (dispatch) => {
+  try {
+    dispatch({ type: ALL_PRODUCTS_REQUEST });
 
-      let link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&ratings[gte]=${rating}`
-      const { data } = await axios.get(link);
+let link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[gte]=${minPrice}&price[lte]=${maxPrice}&ratings[gte]=${rating}`;
+    const { data } = await axios.get(link);
 
-      dispatch({
-        type: ALL_PRODUCTS_SUCCESS,
-        payload: data,
-      });
-    } catch (error) {
-      dispatch({
-        type: ALL_PRODUCTS_FAIL,
-        payload: error.response.data.message,
-      });
-    }
-  };
+    dispatch({
+      type: ALL_PRODUCTS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: ALL_PRODUCTS_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
 
 export const newProduct = (productData) => async (dispatch) => {
   try {

@@ -38,7 +38,7 @@ const UpdateProfile = () => {
       setFirstName(user.firstName);
       setLastName(user.lastName);
       setEmail(user.email);
-      setAvatarPreview(user.avatar.url);
+      setAvatarPreview(user.avatar && user.avatar.url);
     }
 
     if (error) {
@@ -190,11 +190,11 @@ const UpdateProfile = () => {
               <button
                 id="update_button"
                 type="submit"
-                className="bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 "
+                className="bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 w-full"
                 disabled={loading ? true : false}
                 onClick={submitHandler}
               >
-                {loading ? <div> <CircularProgress size={24} /> <p>Updating ...</p> </div> : "UPDATE PROFILE"}
+                {loading ? <div className="flex gap-5 place-items-center justify-center"> <CircularProgress size={24} className="text-white"/> <p>Updating ...</p> </div> : "UPDATE PROFILE"}
               </button>
             </form>
           </div>

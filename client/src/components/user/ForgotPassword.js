@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
 
 import { forgotPassword, clearErrors } from "../../actions/userActions";
-import VisibilityOff from "@mui/icons-material/Visibility";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -30,12 +30,22 @@ const ForgotPassword = () => {
     }
   }, [dispatch, alert, error, message]);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
     formData.set("email", email);
-    dispatch(forgotPassword(formData));
+
+    try {
+      await dispatch(forgotPassword(formData));
+      if (message) {
+        alert.success(message);
+      } else {
+        throw new Error("User not found");
+      }
+    } catch (error) {
+      alert.error(error.message);
+    }
   };
   return (
     <Fragment>
@@ -68,7 +78,7 @@ const ForgotPassword = () => {
                     onClick={submitHandler}
                     disabled={loading ? true : false}
                   >
-                    Send Email
+                {loading ? <div className="flex gap-5 place-items-center justify-center"> <CircularProgress size={24} /> <p>Sending ...</p> </div> : "SEND MAIL"}
                   </button>
                 </div>
               </form>
