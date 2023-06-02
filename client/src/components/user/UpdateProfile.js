@@ -76,7 +76,7 @@ const UpdateProfile = () => {
     reader.onload = () => {
       if (reader.readyState === 2) {
         new Compressor(e.target.files[0], {
-          quality: 0.9,
+          quality: 0.1,
           success: (compressedFile) => {
             const compressedReader = new FileReader();
             compressedReader.onload = () => {

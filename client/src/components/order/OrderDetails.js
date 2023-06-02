@@ -72,7 +72,7 @@ const OrderDetails = () => {
               </div>
 
               <div className="md:w-2/12">
-                <p className="text-gray-700 font-medium">N{item.price}</p>
+                <p className="text-gray-700 font-medium">₦{item.price}</p>
               </div>
 
               <div className="md:w-2/12">

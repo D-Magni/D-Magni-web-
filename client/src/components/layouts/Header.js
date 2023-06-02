@@ -221,10 +221,7 @@ const Header = () => {
     window.location.pathname.startsWith("/admin") ||
     window.location.pathname.startsWith("/dashboard");
 
-  const isLoginOrRegister =
-    window.location.pathname.startsWith("/login") ||
-    window.location.pathname.startsWith("/register");
-
+ 
   return (
     <Fragment>
       {/* Header for view above 1024px screens */}
@@ -315,7 +312,7 @@ const Header = () => {
                             <button
                               className="text-red-500"
                               onClick={() =>
-                                removeCartItemHandler(item.product)
+                                removeCartItemHandler(item.id)
                               }
                             >
                               <DeleteForeverIcon />
@@ -656,6 +653,7 @@ const Header = () => {
                     <p>Home</p>
                   </Link>
                 </div>
+                <hr className="border border-neutral-700" />
                 <div className="py-4 pl-3">
                   <Link to="/shop" onClick={closeMenu}>
                     <p>Shop</p>
@@ -679,18 +677,27 @@ const Header = () => {
                     {user && user.role !== "admin" ? (
                       <div>
                         <div className="py-4 pl-3">
-                          <Link to="/orders" onClick={closeMenu}>
+                          <Link to="/orders/me" onClick={closeMenu}>
                             Orders
                           </Link>
                         </div>
                         <hr className="border border-neutral-700" />
                       </div>
                     ) : (
+                      <div>
                       <div className="py-4 pl-3">
                         <Link to="/dashboard" onClick={closeMenu}>
                           Dashboard
                         </Link>
                       </div>
+                      <hr className="border border-neutral-700" />
+                           <div className="py-4 pl-3">
+                           <Link to="/orders/me" onClick={closeMenu}>
+                             Orders
+                           </Link>
+                         </div>
+                         <hr className="border border-neutral-700" />
+                         </div>
                     )}
                     {isAdminPage && (
                       <ul className="px-8 text-neutral-400">

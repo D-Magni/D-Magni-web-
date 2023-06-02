@@ -3,14 +3,25 @@ import Swal from "sweetalert2";
 import MetaData from "../layouts/MetaData";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../../actions/productActions";
-import Product from "../product/Product";
 import Loader from "../layouts/Loader";
 import { Carousel } from "react-responsive-carousel";
 import { useAlert } from "react-alert";
 import { useParams } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { addToCart } from "../../actions/cartActions";
+import { lazy, Suspense } from "react";
+import { PuffLoader } from "react-spinners";
+import { Link } from "react-router-dom";
+import Rating from "@mui/material/Rating";
+import { Box } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import { Typography } from "@material-ui/core";
+import { SelectAll, ThumbUp, HeadsetMic, Lock } from "@mui/icons-material";
 
-const Homepage = () => {
+
+const LazyImage = lazy(() => import("../lazyloader/LazyImage"));
+
+const Homepage = ({ product }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [minPrice, setMinPrice] = useState(1);
 
@@ -34,11 +45,23 @@ const Homepage = () => {
     if (error) {
       return alert.error(error);
     }
-  
-      dispatch(getProducts(keyword, currentPage, minPrice, maxPrice, rating));
-   
-  }, [dispatch, alert, error, keyword, currentPage, minPrice, maxPrice, rating]);
 
+    dispatch(getProducts(keyword, currentPage, minPrice, maxPrice, rating));
+  }, [
+    dispatch,
+    alert,
+    error,
+    keyword,
+    currentPage,
+    minPrice,
+    maxPrice,
+    rating,
+  ]);
+
+  const handleAddToCart = () => {
+    dispatch(addToCart(product && product._id, 1));
+    alert.success("Item added to cart");
+  };
   const inputRef = useRef(null);
 
   const showAlert = (e) => {
@@ -95,59 +118,114 @@ const Homepage = () => {
               infiniteLoop={true}
               className="w-full h-full"
             >
-              <div className="h-80 md:h-screen bg-gray-600">
-              <img
-                src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604494/dmagni/ad/Ad2_ngybj4.jpg"
-                alt="adImage"
-                className="h-full"
-              />
+              <div className="h-80 md:h-96 lg:h-screen bg-gray-600">
+                <img
+                  src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604494/dmagni/ad/Ad2_ngybj4.jpg"
+                  alt="adImage"
+                  className="h-full"
+                />
               </div>
-              <div className="h-80 md:h-screen bg-gray-600">
-              <img
-                src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604490/dmagni/ad/Ad3_nykbno.jpg"
-                alt="adImage"
-                className="h-full"
-              />
+              <div className="h-80 md:h-96 lg:h-screen bg-gray-600">
+                <img
+                  src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604490/dmagni/ad/Ad3_nykbno.jpg"
+                  alt="adImage"
+                  className="h-full"
+                />
               </div>
-              <div className="h-80 md:h-screen bg-gray-600">
-              <img
-                src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604486/dmagni/ad/Ad1_v81yhc.jpg"
-                alt="adImage"
-                className="h-full"
-              />
+              <div className="h-80 md:h-96 lg:h-screen bg-gray-600">
+                <img
+                  src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604486/dmagni/ad/Ad1_v81yhc.jpg"
+                  alt="adImage"
+                  className="h-full"
+                />
               </div>
             </Carousel>
-            <div className="absolute top-40 lg:top-96 px-6 md:px-24 flex flex-col space-y-3 md:space-y-6">
-              <p className="text-lg  md:text-2xl lg:text-6xl font-bold text-white">
+            <div className="absolute top-40 lg:top-80 px-6 md:px-24 flex flex-col space-y-3 md:space-y-6">
+            <p className="text-2xl md:text-4xl lg:text-6xl font-bold text-white">
                 Elevate your steps with{" "}
                 <b className="text-primary-color font-bold">D'Magni</b>
               </p>
-              <p className=" text-3xl md:text-6xl lg:text-8xl font-bold text-gray-200">
+              <p className="text-xl md:text-3xl lg:text-5xl font-bold text-gray-200">
                 Where fashion meets comfort.
               </p>
               <div>
-                <button className="px-12 md:px-24 py-2 md:py-3 font-bold text-white bg-primary-color rounded">
+                <button className="px-12 md:px-24 py-2 md:py-3 font-bold text-white bg-primary-color rounded hover:bg-gray-700">
                   Shop Now
                 </button>
               </div>
             </div>
           </section>
-          <div className="py-20 px-7 md:px-24 bg-neutral-100 flex flex-col md:space-y-20 space-y-10">
-            {/* Latest Products Section */}
+          <div className="py-20 px-4 md:px-24 bg-neutral-100 flex flex-col md:space-y-20 space-y-10">
             <section>
-              <h3 className="text-xl md:text-3xl py-5 md:py-10 font-bold text-gray-700">
+              <h3 className="text-xl md:text-3xl py-5 md:py-10 font-bold text-gray-700 text-left">
                 LATEST PRODUCTS
               </h3>
-              <div className="w-full md:hidden flex space-x-5 overflow-x-auto">
+              <div className="w-full flex flex-wrap justify-center gap-7 md:justify-center lg:justify-start">
                 {latestProducts &&
                   latestProducts.map((product) => (
-                    <Product key={product._id} product={product} />
-                  ))}
-              </div>
-              <div className="hidden md:flex flex-wrap gap-12 justify-center  md:justify-start">
-                {latestProducts &&
-                  latestProducts.map((product) => (
-                    <Product key={product._id} product={product} />
+                    <div className="h-full w-36 md:w-64  p-1 sm:p-2 mb-7">
+                      <div className=" border p-5 bg-white shadow-lg rounded-lg">
+                        <div className="text-center">
+                          <Suspense
+                            fallback={
+                              <div className="flex justify-center items-center bg-gray-100">
+                                <PuffLoader color="gray" size={100} />
+                              </div>
+                            }
+                          >
+                            <LazyImage
+                              src={product.images[0].url}
+                              alt={product.name}
+                              className="w-full h-36 object-cover rounded-md"
+                            />
+                          </Suspense>
+                        </div>
+                        <div className="text-center mt-3">
+                          <h5 className="text-sm font-bold truncate">
+                            <Link
+                              to={`/product/${product._id}`}
+                              className="underline hover:text-zinc-700"
+                            >
+                              {product.name}
+                            </Link>
+                          </h5>
+                          <div className="flex flex-col space-y-1 justify-center items-center mt-2">
+                            <Box sx={{ width: "1.5rem", height: "1.5rem" }}>
+                              <Rating
+                                name="read-only"
+                                value={product.ratings}
+                                readOnly
+                                sx={{ fontSize: "0.875rem" }}
+                              />
+                            </Box>
+                            <div className="text-xs font-bold ml-1">
+                              ({product.numOfReviews} Reviews)
+                            </div>
+                          </div>
+                          <p className="text-gray-600 text-xs mt-2">
+                            ₦{product.price}
+                          </p>
+                          <div className="flex justify-center">
+                            <Link
+                              to={`/product/${product._id}`}
+                              className="text-sec-color flex items-center text-xs underline hover:text-zinc-700"
+                            >
+                              <Visibility fontSize="small" className="mr-1" />
+                              View Details
+                            </Link>
+                          </div>
+                          <div className="text-center mt-2">
+                            <button
+                              className="bg-sec-color text-white px-3 py-1 text-xs rounded hover:bg-zinc-700"
+                              disabled={product.stock === 0}
+                              onClick={handleAddToCart}
+                            >
+                              Add to cart
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   ))}
               </div>
             </section>
@@ -158,38 +236,187 @@ const Homepage = () => {
                 HOT PRODUCTS
               </h3>
 
-              <div className="w-full md:hidden flex space-x-5 overflow-x-auto">
+              <div className="flex flex-wrap justify-center gap-8 md:justify-center lg:justify-start">
                 {bestSellingProducts &&
                   bestSellingProducts.map((product) => (
-                    <Product key={product._id} product={product} />
-                  ))}
-              </div>
-              <div className="hidden md:flex flex-wrap gap-12 justify-center  md:justify-start">
-                {bestSellingProducts &&
-                  bestSellingProducts.map((product) => (
-                    <Product key={product._id} product={product} />
+                    <div className="px-4 md:px-0  mb-7 w-full md:w-64 ">
+                    <div key={product._id} className="border p-5 bg-white h-full  p-1 sm:p-2shadow-lg rounded-lg">
+                      <Link
+                        to={`/product/${product._id}`}
+                        className="block mt-4 px-3 py-1 text-xs rounded"
+                      >
+                        <div>
+                          <Suspense
+                            fallback={
+                              <div className="flex justify-center items-center bg-gray-100">
+                                <PuffLoader color="gray" size={100} />
+                              </div>
+                            }
+                          >
+                            <LazyImage
+                              src={product.images[0].url}
+                              alt={product.name}
+                              className="w-full h-full md:h-44 object-cover"
+                            />
+                          </Suspense>
+                        </div>
+                        <div className="text-center mt-3">
+                          <h5 className="text-sm font-bold truncate">
+                            <Link
+                              to={`/product/${product._id}`}
+                              className="underline hover:text-zinc-700"
+                            >
+                              {product.name}
+                            </Link>
+                          </h5>
+                          <div className="flex justify-center items-center mt-2">
+                            <Box>
+                              <Rating
+                                name="read-only"
+                                value={product.ratings}
+                                readOnly
+                         
+                              />
+                            </Box>
+                          </div>
+                          <p className="text-gray-600 text-xs mt-2">
+                            ₦{product.price}
+                          </p>
+                        </div>
+                      </Link>
+                    </div>
+                    </div>
                   ))}
               </div>
             </section>
 
             {/* Featured Products Section */}
             <section>
-              <h3 className="text-xl md:text-3xl py-10 font-bold text-gray-700">
-                FEATURED PRODUCTS
-              </h3>
-              <div className="w-full md:hidden flex space-x-5 overflow-x-auto">
-                {featuredProducts &&
-                  featuredProducts.map((product) => (
-                    <Product key={product._id} product={product} />
-                  ))}
+  <div className="text-center px-4 py-5">
+    <h3 className="text-2xl md:text-4xl py-2 font-bold text-gray-700">
+      Discover Our Featured Products
+    </h3>
+    <p className="text-gray-600">Explore our carefully selected products for a premium shopping experience.</p>
+  </div>
+  <div className="w-full flex flex-wrap justify-center">
+    {featuredProducts &&
+      featuredProducts.map((product) => (
+        <div className="w-full sm:w-1/2 md:w-1/2 lg:w-1/2 xl:w-1/2 p-1 sm:p-2 mb-6">
+          <div className="border p-3 bg-white shadow-lg rounded-lg">
+            <div className="h-full">
+              <Suspense
+                fallback={
+                  <div className="flex justify-center items-center bg-gray-100">
+                    <PuffLoader color="gray" size={100} />
+                  </div>
+                }
+              >
+                <LazyImage
+                  src={product.images[0].url}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+              </Suspense>
+            </div>
+            <div className="text-center mt-3">
+              <h5 className="text-sm md:text-lg font-bold">
+                <Link
+                  to={`/product/${product._id}`}
+                  className="underline hover:text-zinc-700"
+                >
+                  {product.name}
+                </Link>
+              </h5>
+             
+              <p className="text-gray-600 text-xs md:text-sm">
+                ₦{product.price}
+              </p>
+              <div className="flex justify-center">
+                <Link
+                  to={`/product/${product._id}`}
+                  className="text-sec-color flex items-center text-xs md:text-sm underline hover:text-zinc-700"
+                >
+                  <Visibility fontSize="small" className="mr-1" />
+                  View Details
+                </Link>
               </div>
-              <div className="hidden md:flex flex-wrap gap-12 justify-center  md:justify-start">
-                {featuredProducts &&
-                  featuredProducts.map((product) => (
-                    <Product key={product._id} product={product} />
-                  ))}
+            </div>
+          </div>
+        </div>
+      ))}
+  </div>
+</section>
+
+
+      {/* Why Choose Us Section */}
+      <section className="py-10 px-4 md:px-24 bg-neutral-100">
+        <div className="text-center">
+          <Typography variant="h4" className="font-bold text-gray-700">
+            Why Choose Us?
+          </Typography>
+          <Typography variant="body1" className="text-gray-600 mt-2">
+            We are dedicated to providing you with the best shopping experience and high-quality products. Here are a few reasons why you should choose us:
+          </Typography>
+        </div>
+
+        <div className="flex flex-wrap justify-center mt-10">
+          <div className="w-full lg:w-1/2 p-4">
+            <div className="bg-white shadow-lg rounded-lg p-6 h-80">
+              <div className="text-center flex flex-col gap-4 place-items-center">
+                <SelectAll fontSize="large" className="text-gray-600"/>
+                <Typography variant="h5" className="text-lg font-bold text-gray-700">
+                  Wide Selection
+                </Typography>
+                <Typography variant="body1" className="text-gray-600 mt-2 text-sm md:text-lg">
+                  We offer a wide range of products to suit your style and preferences. From casual shoes to formal footwear, we have something for everyone.
+                </Typography>
               </div>
-            </section>
+            </div>
+          </div>
+
+          <div className="w-full lg:w-1/2 p-4">
+          <div className="bg-white shadow-lg rounded-lg p-6 h-80">
+            <div className="text-center flex flex-col gap-4 place-items-center">
+                <ThumbUp fontSize="large" className="text-gray-600"/>
+                <Typography variant="h5" className="text-lg font-bold text-gray-700">
+                  Quality Assurance
+                </Typography>
+                <Typography variant="body1" className="text-gray-600 mt-2">
+                  We ensure that all our products meet high-quality standards. Each item is carefully inspected to provide you with the best value for your money.
+                </Typography>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full lg:w-1/2 p-4">
+          <div className="bg-white shadow-lg rounded-lg p-6 h-80">
+            <div className="text-center flex flex-col gap-4 place-items-center">
+                <HeadsetMic fontSize="large" className="text-gray-600"/>
+                <Typography variant="h5" className="text-lg font-bold text-gray-700">
+                  Exceptional Service
+                </Typography>
+                <Typography variant="body1" className="text-gray-600 mt-2">
+                  Our dedicated customer support team is always ready to assist you with any inquiries or concerns. We strive to provide exceptional service and ensure your satisfaction.
+                </Typography>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full lg:w-1/2 p-4">
+          <div className="bg-white shadow-lg rounded-lg p-6 h-80">
+            <div className="text-center flex flex-col gap-4 place-items-center">
+                <Lock fontSize="large" className="text-gray-600"/>
+                <Typography variant="h5" className="text-lg font-bold text-gray-700">
+                  Secure Shopping
+                </Typography>
+                <Typography variant="body1" className="text-gray-600 mt-2">
+                  Your privacy and security are important to us. We use secure payment gateways and protect your personal information to ensure a safe shopping experience.
+                </Typography>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
             <section className="px-4 md:px-24 flex flex-col gap-7 text-center py-10 md:py-20 place-items-center">
               <p className="text-xl md:text-4xl font-medium text-gray-700">
@@ -222,7 +449,6 @@ const Homepage = () => {
               </form>
             </section>
           </div>
-
         </React.Fragment>
       )}
     </React.Fragment>

@@ -5,7 +5,7 @@ const ListReviews = ({ reviews }) => {
     const { user } = useSelector((state) => state.auth);
 
   return (
-    <div className="px-7 md:px-24">
+    <div className="px-7 md:px-24 py-10">
 		<div className="reviews w-75">
             <h3 className='text-2xl gray-500 font-medium'>Product Reviews:</h3>
             <br/>
@@ -22,7 +22,7 @@ const ListReviews = ({ reviews }) => {
              </div>
              <p className="review_user text-sm font-bold">{review.name}</p>
              <p className="review_comment text-sm">{review.comment}</p>
-
+             <br/>
              <hr/>
          </div>
 

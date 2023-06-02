@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
-import { getCartItems, removeCartItem, addToCart } from "../../actions/cartActions";
+import { getCartItems, removeCartItem, updateCartItem } from "../../actions/cartActions";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 const Cart = () => {
@@ -16,21 +16,21 @@ const Cart = () => {
   }, [dispatch]);
 
   const removeCartItemHandler = (id) => {
-    dispatch(removeCartItem(id));
+    dispatch(removeCartItem(id)); // Pass itemId instead of productId
   };
-
+  
   const increaseQty = (id, quantity, stock) => {
     const newQty = quantity + 1;
     if (newQty > stock) return;
-    dispatch(addToCart(id, newQty));
+    dispatch(updateCartItem(id, newQty)); // Use updateCartItem action instead of addToCart
   };
-
+  
   const decreaseQty = (id, quantity) => {
     const newQty = quantity - 1;
     if (newQty <= 0) return;
-    dispatch(addToCart(id, newQty));
+    dispatch(updateCartItem(id, newQty)); // Use updateCartItem action instead of addToCart
   };
-
+  
   const checkoutHandler = () => {
     if (isAuthenticated) {
       navigate("/shipping");
@@ -42,22 +42,21 @@ const Cart = () => {
   return (
     <Fragment>
       <MetaData title={"Your Cart"} />
-      {cartItems.length === 0 ? (
-        <h2>Your Cart is Empty</h2>
-      ) : (
-        <Fragment>
-          <div className="px-7 md:px-24 py-36">
-            <h2 className="py-5 text-2xl md:text-3xl font-bold text-gray-700">
-              Your Cart: <b>{cartItems.length}</b>
-            </h2>
+      <div className="px-7 md:px-24 py-36">
+        <h2 className="py-5 text-2xl md:text-3xl font-bold text-gray-700">
+          Your Cart: <b>{cartItems.length}</b>
+        </h2>
 
-            <div className="flex flex-col md:flex-row gap-10 md:gap-36 justify-between flex-1">
-              <div className="grid space-y-8 flex-1">
-                {cartItems.map((item) => (
-                  <Fragment key={item.product}>
-                    <hr />
-                    <div className="cart-item">
-                      <div className="flex justify-between place-items-center">
+        {cartItems.length === 0 ? (
+          <h3>Your cart is empty. Please add some products.</h3>
+        ) : (
+          <div className="flex flex-col md:flex-row gap-10 md:gap-36 justify-between flex-1">
+            <div className="grid space-y-8 flex-1">
+              {cartItems.map((item) => (
+                <Fragment key={item.product}>
+                  <hr />
+                  <div className="cart-item">
+                  <div className="flex justify-between place-items-center">
                         <div className="flex flex-col space-y-4 flex-1">
                           <img
                             src={item.image}
@@ -78,9 +77,8 @@ const Cart = () => {
                             <div className="flex justify-between place-items-center mt-4 mt-lg-0">
                               <span
                                 className="cursor-pointer text-white bg-gray-400 p-1 px-3"
-                                onClick={() =>
-                                  decreaseQty(item.product, item.quantity)
-                                }
+                                onClick={() => decreaseQty(item._id, item.quantity)}
+
                               >
                                 -
                               </span>
@@ -92,13 +90,8 @@ const Cart = () => {
                               />
                               <span
                                 className="cursor-pointer text-white bg-gray-400 p-1 px-3"
-                                onClick={() =>
-                                  increaseQty(
-                                    item.product,
-                                    item.quantity,
-                                    item.stock
-                                  )
-                                }
+                                onClick={() => increaseQty(item._id, item.quantity, item.stock)}
+
                               >
                                 +
                               </span>
@@ -118,9 +111,8 @@ const Cart = () => {
                             <button
                               id="delete_cart_item"
                               className="fa fa-trash text-red-600"
-                              onClick={() =>
-                                removeCartItemHandler(item.product)
-                              }
+                              onClick={() => removeCartItemHandler(item._id)}
+
                             >
                               <DeleteForeverIcon />
                             </button>
@@ -128,12 +120,12 @@ const Cart = () => {
                         </div>
                       </div>
                     </div>
-                  </Fragment>
-                ))}
-                <hr />
-              </div>
-              <div className="flex flex-col space-y-5 h-3/6 border flex-3 px-7 py-10 md:px-20 shadow-md rounded-md flex-2">
-                <h4 className="text-2xl font-medium">Order Summary</h4>
+                </Fragment>
+              ))}
+              <hr />
+            </div>
+            <div className="flex flex-col space-y-5 h-3/6 border flex-3 px-7 py-10 md:px-20 shadow-md rounded-md flex-2">
+            <h4 className="text-2xl font-medium">Order Summary</h4>
                 <hr />
                 <p className="flex justify-between">
                   Subtotal:{" "}
@@ -167,9 +159,8 @@ const Cart = () => {
                 </button>
               </div>
             </div>
-          </div>
-        </Fragment>
-      )}
+        )}
+      </div>
     </Fragment>
   );
 };

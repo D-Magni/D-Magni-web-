@@ -1,17 +1,19 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Carousel } from 'react-responsive-carousel';
+import { Carousel } from "react-responsive-carousel";
 import Loader from "../layouts/Loader";
 import MetaData from "../layouts/MetaData";
 import Rating from "@mui/material/Rating";
 import { Box } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getProductDetails,
   clearErrors,
   newReview,
 } from "../../actions/productActions";
+import { myOrders } from "../../actions/orderActions";
+
 import { addToCart } from "../../actions/cartActions";
 import { useAlert } from "react-alert";
 import { useParams } from "react-router-dom";
@@ -24,8 +26,11 @@ const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
+  const [hasOrdered, setHasOrdered] = useState(false);
   const { id } = useParams();
   const { user } = useSelector((state) => state.auth);
+  const { orders } = useSelector((state) => state.myOrders);
+
   const { error: reviewError, success } = useSelector(
     (state) => state.newReview
   );
@@ -75,7 +80,7 @@ const ProductDetails = () => {
     setQuantity(qty);
   };
 
-  const addToCart = () => {
+  const handleAddToCart = () => {
     dispatch(addToCart(id, quantity));
     alert.success("Item Add to Cart");
   };
@@ -99,11 +104,34 @@ const ProductDetails = () => {
     },
   });
 
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        await dispatch(myOrders());
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+    fetchOrders();
+  }, [dispatch]);
+  
+  useEffect(() => {
+    const userOrders = orders;
+  
+    // Check if the current product's ID is present in the user's orders
+    if (userOrders && userOrders.length > 0) {
+      const hasOrderedProduct = userOrders.some((order) =>
+        order.orderItems.some((item) => item.product === id)
+      );
+      setHasOrdered(hasOrderedProduct);
+    }
+  }, [orders, id]);
   // Inside your component
   const classes = useStyles();
   function setUserRatings(event, newValue) {
     const ratingIcons = document.querySelectorAll(".reviewrating");
-  
+
     if (event === "click" || event === "mouseover") {
       ratingIcons.forEach((icon, index) => {
         if (index < newValue) {
@@ -113,16 +141,15 @@ const ProductDetails = () => {
         }
       });
     }
-  
+
     if (event === "click") {
       setRating(newValue);
     }
   }
-  
 
   const reviewHandler = () => {
     const formData = new FormData();
-  
+
     formData.set("rating", rating);
     formData.set("comment", comment);
     formData.set("productId", id);
@@ -131,13 +158,13 @@ const ProductDetails = () => {
       rating,
       comment,
       productId: id,
-      firstName: user.firstName, // Assuming user object has firstName and lastName properties
+      firstName: user.firstName,
       lastName: user.lastName,
     });
-  
+
     dispatch(newReview(formData));
   };
-  
+
   return (
     <Fragment>
       {loading ? (
@@ -149,19 +176,22 @@ const ProductDetails = () => {
           <div className="mx-auto pt-20 md:pt-36 pb-14 px-7 md:px-24">
             <div className="flex flex-col md:flex-row justify-center">
               <div className="md:w-1/2 lg:w-1/3 p-4 flex-1">
-                <Carousel pause="hover"      showArrows={true}
-        showStatus={true}
-        showThumbs={false}         autoPlay
-        interval={5000}
-
-        className="w-full">
+                <Carousel
+                  pause="hover"
+                  showArrows={true}
+                  showStatus={true}
+                  showThumbs={false}
+                  autoPlay
+                  interval={5000}
+                  className="w-full"
+                >
                   {product.images &&
                     product.images.map((image) => (
-                        <img
-                          className="mx-auto h-96 object-contain md:h-96 w-96"
-                          src={image.url}
-                          alt={product.title}
-                        />
+                      <img
+                        className="mx-auto h-96 object-contain md:h-96 w-96"
+                        src={image.url}
+                        alt={product.title}
+                      />
                     ))}
                 </Carousel>
               </div>
@@ -228,7 +258,7 @@ const ProductDetails = () => {
                   id="cart_btn"
                   className="bg-gray-900 text-white px-4 py-2 rounded disabled:opacity-50"
                   disabled={product.stock === 0}
-                  onClick={addToCart}
+                  onClick={handleAddToCart}
                 >
                   Add to Cart
                 </button>
@@ -238,17 +268,26 @@ const ProductDetails = () => {
                 <h4 className="text-xl font-bold mb-2">Description:</h4>
                 <p className="text-gray-700 mb-4">{product.description}</p>
                 {user ? (
-                  <button
-                    type="button"
-                    id="review_btn"
-                    className="bg-green-500 text-white px-4 py-2 rounded"
-                    onClick={() => {
-                      handleOpen();
-                      setUserRatings();
-                    }}
-                  >
-                    Submit Your Review
-                  </button>
+                  hasOrdered ? ( 
+                    <button
+                      type="button"
+                      id="review_btn"
+                      className="bg-green-500 text-white px-4 py-2 rounded"
+                      onClick={() => {
+                        handleOpen();
+                        setUserRatings();
+                      }}
+                    >
+                      Submit Your Review
+                    </button>
+                  ) : (
+                    <div
+                      className="mt-5 bg-red-200 text-red-900 py-2 px-3"
+                      type="alert"
+                    >
+                      You can only submit a review after ordering this product.
+                    </div>
+                  )
                 ) : (
                   <div
                     className="mt-5 bg-red-200 text-red-900 py-2 px-3"
@@ -333,10 +372,9 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          {product.reviews &&
-            product.reviews.length > 0 && (
-              <ListReviews reviews={product.reviews}/>
-            )}
+          {product.reviews && product.reviews.length > 0 && (
+            <ListReviews reviews={product.reviews} />
+          )}
         </Fragment>
       )}
     </Fragment>

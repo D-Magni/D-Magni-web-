@@ -236,7 +236,7 @@ const Register = () => {
                       />
                       <div className="flex  justify-between px-3 gap-2">
                         <span className="text-gray-500 text-sm">
-                          Choose Image
+                          Choose Image <b className="text-sm">(opt)</b>
                         </span>
                         <ImageIcon className="text-gray-600" />
                       </div>

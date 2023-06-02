@@ -134,6 +134,7 @@ const ConfirmOrder = () => {
         onClose: () => {
           console.log("Payment closed");
           setLoading(false);
+          navigate("/");
         },
       });
     } catch (error) {

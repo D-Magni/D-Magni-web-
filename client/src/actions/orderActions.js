@@ -142,8 +142,6 @@ export const updateOrder = (id, orderData) => async (dispatch) => {
 // Delete order - ADMIN
 
 export const deleteOrder = (id) => async (dispatch) => {
-    console.log('createOrder called'); // add this line
-
     try {
 
         dispatch({ type: DELETE_ORDER_REQUEST })

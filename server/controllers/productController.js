@@ -183,17 +183,18 @@ exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
   const isReviewed = product.reviews.find(
     (r) => r.user.toString() === req.user._id.toString()
   );
+
   if (isReviewed) {
-    product.reviews.forEach((review) => {
-      if (review.user.toString() === req.user._id.toString())
-        review.comment = comment;
-      review.rating = rating;
-    });
+    // Update the review for the current user
+    isReviewed.comment = comment;
+    isReviewed.rating = rating;
   } else {
+    // Add the new review for the current user
     product.reviews.push(review);
     product.numOfReviews = product.reviews.length;
   }
 
+  // Recalculate the ratings for the product
   product.ratings =
     product.reviews.reduce((acc, item) => item.rating + acc, 0) /
     product.reviews.length;
@@ -204,6 +205,7 @@ exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
     success: true,
   });
 });
+
 
 //Get product reviews => /api/v1/reviews
 

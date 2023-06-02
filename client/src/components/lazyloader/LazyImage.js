@@ -12,7 +12,7 @@ const LazyImage = ({ src, alt }) => {
     };
   }, [src]);
 
-  return loaded ? <img src={src} alt={alt} className='w-full h-full object-cover' /> : <div className=" flex justify-center items-center bg-gray-100">
+  return loaded ? <img src={src} alt={alt} className='w-full h-24 md:h-40 object-cover' /> : <div className=" flex justify-center items-center bg-gray-100">
     <PuffLoader color="gray" size={100}/></div>;
 };
 

@@ -6,15 +6,14 @@ import MetaData from "../layouts/MetaData";
 import { myOrders, clearErrors } from "../../actions/orderActions";
 import Visibility from "@mui/icons-material/Visibility";
 import { useAlert } from "react-alert";
-import DeleteForever from "@mui/icons-material/DeleteForever";
 import SearchIcon from "@mui/icons-material/Search";
 
 const ListOrders = () => {
   const alert = useAlert();
   const dispatch = useDispatch();
   const { loading, error, orders } = useSelector((state) => state.myOrders);
-  const [filteredOrders, setFilteredOrders] = useState(orders); 
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [filteredOrders, setFilteredOrders] = useState(orders);
+  const [searchTerm, setSearchTerm] = useState("");
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -26,29 +25,32 @@ const ListOrders = () => {
       dispatch(clearErrors());
     }
   }, [dispatch, alert, error]);
-
   const orderStatusColor = (orderStatus) => {
     if (orderStatus && String(orderStatus).includes("Delivered")) {
       return "text-green-600";
+    } else if (orderStatus && String(orderStatus).includes("Shipped")) {
+      return "text-blue-600";
     } else {
       return "text-red-600";
     }
   };
+  
 
   useEffect(() => {
     setFilteredOrders(orders);
   }, [orders]);
 
   const handleSearch = (event) => {
-    const keyword = event.target.value.toLowerCase(); // Convert user input to lowercase
+    const keyword = event.target.value.toLowerCase();
     const filtered = orders.filter(
       (order) =>
-        order._id.toLowerCase().includes(keyword) || // Search by order ID
-        String(order.paidAt).substring(0, 10).includes(keyword) // Search by order date
+        order._id.toLowerCase().includes(keyword) ||
+        String(order.paidAt).substring(0, 10).includes(keyword)
     );
     setFilteredOrders(filtered);
     setSearchTerm(keyword);
   };
+
   return (
     <Fragment>
       <MetaData title={"My Orders"} />
@@ -62,7 +64,7 @@ const ListOrders = () => {
                 type="text"
                 name="search"
                 className="w-full bg-transparent outline-none"
-                placeholder="Search for orders..."
+                placeholder="Search by ID or Date"
                 onChange={handleSearch}
               />
               <SearchIcon className="text-gray-400" />
@@ -73,7 +75,12 @@ const ListOrders = () => {
             <Loader />
           ) : (
             <div className="flex flex-col space-y-10">
-              {filteredOrders &&
+              {filteredOrders && filteredOrders.length === 0 ? (
+                <h2 className="py-5 text-2xl md:text-3xl font-bold text-gray-700">
+                  Your Order(s): <b>{filteredOrders.length}</b>
+                </h2>
+              ) : (
+                filteredOrders &&
                 filteredOrders.map((order, index) => (
                   <div key={index} className="w-full p-3">
                     <div className="bg-white shadow-lg p-4">
@@ -98,19 +105,7 @@ const ListOrders = () => {
                             View Order
                             <Visibility />
                           </Link>
-                          {order.orderStatus === "Delivered" && (
-                            <div>
-                              <button
-                                className="bg-blue-900 hover:bg-blue-800 text-white px-3 py-1 flex gap-2 w-[150px] justify-center  rounded-lg"
-                                // onClick={() =>
-                                //   removeOrderHandler(item.product)
-                                // }
-                              >
-                                Delete Order
-                                <DeleteForever />
-                              </button>
-                            </div>
-                          )}
+                         
                         </d>
                       </div>
                       {order.orderItems.map((item, index) => (
@@ -131,13 +126,13 @@ const ListOrders = () => {
                               </Link>
                             </div>
                             <div className="text-sm text-gray-500">
-                              Qty: {item.quantity} | Price: N{item.price}
+                              Qty: {item.quantity} | Price: ₦{item.price}
                             </div>
                           </div>
                         </div>
                       ))}
                       <div className="text-sm text-gray-600 mt-4">
-                        Total: N{order.totalPrice}
+                        Total: ₦{order.totalPrice}
                       </div>
                       <div
                         className={`text-sm font-bold mt-2 ${orderStatusColor(
@@ -148,7 +143,8 @@ const ListOrders = () => {
                       </div>
                     </div>
                   </div>
-                ))}
+                ))
+              )}
             </div>
           )}
         </div>
@@ -156,4 +152,5 @@ const ListOrders = () => {
     </Fragment>
   );
 };
+
 export default ListOrders;
