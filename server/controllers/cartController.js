@@ -55,25 +55,12 @@ exports.addToCart = catchAsyncErrors(async (req, res, next) => {
 exports.getCartItems = catchAsyncErrors(async (req, res, next) => {
   let cart;
 
-  if (req.user) {
     // User is authenticated
     cart = await Cart.findOne({ user: req.user._id }).populate(
       'cartItems.product',
       'name price image'
     );
-  } else {
-    // User is unauthenticated
-    const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-    return res.status(200).json({
-      success: true,
-      cartItems: cartItems,
-    });
-  }
-
-  res.status(200).json({
-    success: true,
-    cartItems: cart.cartItems,
-  });
+  
 });
 
 // Update cart item => PUT /api/v1/cart/:id
@@ -109,7 +96,6 @@ exports.removeCartItem = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
 
   let cart;
-  if (req.user) {
     // User is authenticated
     cart = await Cart.findOne({ user: req.user._id });
     if (!cart) {
@@ -129,7 +115,6 @@ exports.removeCartItem = catchAsyncErrors(async (req, res, next) => {
         message: 'Cart item removed',
         cartItems: cart.cartItems // Return the updated cart items
       });
-    } else {
 
       const itemIndex = cartItems.findIndex((item) => item._id.toString() === id);
       if (itemIndex !== -1) {
@@ -144,7 +129,7 @@ exports.removeCartItem = catchAsyncErrors(async (req, res, next) => {
       else {
         return next(new ErrorHandler('Cart item not found', 404));
       }
-    }
+
   } 
 });
 
@@ -153,16 +138,10 @@ exports.removeCartItem = catchAsyncErrors(async (req, res, next) => {
 // Clear cart => DELETE /api/v1/cart/clear
 exports.clearCart = catchAsyncErrors(async (req, res, next) => {
   let cart;
-  if (req.user) {
     // User is authenticated
     cart = await Cart.findOne({ user: req.user._id });
-  } else {
-    // User is unauthenticated
-    // Retrieve from local storage or handle it as per your frontend requirements
-    // Example: const cartItems = localStorage.getItem('cart');
-    // cart = { cartItems: JSON.parse(cartItems) || [] };
-    cart = { cartItems: [] };
-  }
+  
+    
 
   if (cart) {
     cart.cartItems = [];

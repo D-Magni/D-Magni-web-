@@ -22,10 +22,10 @@ const RecommendedProducts = () => {
   // Limit the displayed recommended products to 6
   let recommendedProducts = products && [...products]; 
   recommendedProducts && recommendedProducts.sort(() => Math.random() - 0.5); 
-   recommendedProducts = recommendedProducts && recommendedProducts.slice(0, 6); 
+   recommendedProducts = recommendedProducts && recommendedProducts.slice(0, 12); 
 
   return (
-    <div className="mt-10 px-7 md:px-24">
+    <div className="py-10 px-7 md:px-24 ">
       <h2 className="text-2xl font-bold mb-4">You may like</h2>
       <div className="flex flex-wrap gap-4 md:gap-8">
         {recommendedProducts &&

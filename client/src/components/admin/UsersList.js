@@ -47,7 +47,7 @@ const UsersList = () => {
       const userId = user._id ? user._id.toLowerCase() : "";
       const userFirstName = user.firstName ? user.firstName.toLowerCase() : "";
       const userLastName = user.lastName ? user.lastName.toLowerCase() : "";
-      const name = `${userFirstName} ${userLastName}`.toLowerCase(); // Merge firstName and lastName
+      const name = `${userFirstName} ${userLastName}`.toLowerCase(); 
   
       return userId.includes(keyword) || name.includes(keyword);
     });
@@ -58,7 +58,7 @@ const UsersList = () => {
 
   const deleteUserHandler = (id) => {
     dispatch(deleteUser(id))
-    setFilteredUsers(filteredUsers.filter(order => order._id !== id));
+    setFilteredUsers(filteredUsers.filter(user => user._id !== id));
   
   }
   return (

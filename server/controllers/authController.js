@@ -296,13 +296,13 @@ exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
 
   if (!user) {
     return next(
-      new ErrorHandler(`User does not found with id: ${req.params.id}`)
+      new ErrorHandler(`User not found with id: ${req.params.id}`)
     );
   }
 
-  const image_id = user.avatar.public_id;
-
-   res = await cloudinary.v2.uploader.destroy(image_id);
+  if (user.avatar && user.avatar.public_id) {
+    await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+  }
 
   await user.deleteOne();
 
