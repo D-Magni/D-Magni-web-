@@ -39,7 +39,7 @@ export const getProducts = (keyword = "", currentPage = 1, minPrice, maxPrice, r
   try {
     dispatch({ type: ALL_PRODUCTS_REQUEST });
 
-let link = `/api/v1/products?keyword=${keyword}&page=${currentPage}&price[gte]=${minPrice}&price[lte]=${maxPrice}&ratings[gte]=${rating}`;
+let link = `/api/v1/products?keyword=${keyword}&page=${currentPage}`;
     const { data } = await axios.get(link);
 
     dispatch({

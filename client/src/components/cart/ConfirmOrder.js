@@ -32,7 +32,9 @@ const ConfirmOrder = () => {
     Number(shippingPrice) +
     Number(taxPrice)
   ).toFixed(2);
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   // Fetch Flutterwave public key from backend
   useEffect(() => {
     if (error) {
@@ -118,9 +120,10 @@ const ConfirmOrder = () => {
             try {
               if (!orderCreated) {
                 setOrderCreated(true);
-                dispatch(createOrder(order));
-              }              alert.success("Payment successful");
-              dispatch(clearCart());
+                await dispatch(createOrder(order));
+                localStorage.removeItem("cartitems");
+              }
+              alert.success("Payment successful");
               closePaymentModal();
 
               navigate("/");
@@ -230,7 +233,15 @@ const ConfirmOrder = () => {
               onClick={proceedToPayment}
               disabled={loading ? true : false}
             >
-                                  {loading ? <div className="flex gap-5 place-items-center justify-center"> <CircularProgress size={24} className="text-white"/> <p>Processing ...</p> </div> : "Proceed to payment"}
+              {loading ? (
+                <div className="flex gap-5 place-items-center justify-center">
+                  {" "}
+                  <CircularProgress size={24} className="text-white" />{" "}
+                  <p>Processing ...</p>{" "}
+                </div>
+              ) : (
+                "Proceed to payment"
+              )}
             </button>
           </div>
         </div>

@@ -2,7 +2,8 @@ import React, { Fragment, useState, useEffect } from "react";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {register, clearErrors } from "../../actions/userActions";
 import Avatar from "@mui/material/Avatar";
 import ImageIcon from "@mui/icons-material/Image";
 import Person from "@mui/icons-material/Person";
@@ -10,10 +11,15 @@ import Mail from "@mui/icons-material/Mail";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import CircularProgress from "@mui/material/CircularProgress";
+import Compressor from 'compressorjs';
 
-// import Person from '@mui/icons-material'
-import { register, clearErrors } from "../../actions/userActions";
 const Register = () => {
+
+  const navigate = useNavigate();
+  const alert = useAlert();
+
+  const dispatch = useDispatch();
+
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -25,31 +31,31 @@ const Register = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const { isAuthenticated, error, loading } = useSelector(
+    (state) => state.auth
+  );
+  const location = useLocation();
+  const redirect = location.search ? location.search.split("=")[1] : "/";
+
+
+useEffect(() => {
+  if (isAuthenticated) {
+    navigate(redirect);
+  }
+
+  if (error) {
+    alert.error(error);
+    dispatch(clearErrors());
+  }
+}, [dispatch, alert, isAuthenticated, error]);
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
   const [avatar, setAvatar] = useState("");
   const [avatarPreview, setAvatarPreview] = useState("");
 
-  const navigate = useNavigate();
-  const alert = useAlert();
 
-  const dispatch = useDispatch();
-
-  const { isAuthenticated, error, loading } = useSelector(
-    (state) => state.auth
-  );
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/");
-    }
-
-    if (error) {
-      alert.error(error);
-      dispatch(clearErrors());
-    }
-  }, [dispatch, alert, isAuthenticated, error]);
   const validateForm = () => {
     const errors = {};
 
@@ -92,7 +98,6 @@ const Register = () => {
       if (avatar) {
         formData.set("avatar", avatar);
       }
-
       dispatch(register(formData));
     }
   };
@@ -103,8 +108,23 @@ const Register = () => {
       if (e.target.files.length > 0) {
         reader.onload = () => {
           if (reader.readyState === 2) {
-            setAvatarPreview(reader.result);
-            setAvatar(reader.result);
+            new Compressor(e.target.files[0], {
+              quality: 0.1,
+              success: (compressedFile) => {
+                const compressedReader = new FileReader();
+                compressedReader.onload = () => {
+                  if (compressedReader.readyState === 2) {
+                    setAvatarPreview(compressedReader.result);
+                    setAvatar(compressedReader.result);
+                    
+                  }
+                };
+                compressedReader.readAsDataURL(compressedFile);
+              },
+              error: (err) => {
+                console.log(err.message);
+              },
+            });
           }
         };
         reader.readAsDataURL(e.target.files[0]);
@@ -117,6 +137,7 @@ const Register = () => {
       setErrors({ ...errors, [e.target.name]: "" });
     }
   };
+  
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

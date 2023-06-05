@@ -2,42 +2,54 @@ import React, { Fragment, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
-import { getCartItems, removeCartItem, updateCartItem } from "../../actions/cartActions";
+import {
+  addToCart,
+  getCartItems,
+  removeCartItem,
+  updateCartItem,
+} from "../../actions/cartActions";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-
+import Loader from "../layouts/Loader";
+import { useAlert } from "react-alert";
 const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { cartItems } = useSelector((state) => state.cart);
+  const alert = useAlert();
+  const { cartItems, loading } = useSelector((state) => state.cart);
   const { isAuthenticated } = useSelector((state) => state.auth);
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   useEffect(() => {
     dispatch(getCartItems());
-  }, [dispatch]);
+  }, [dispatch, isAuthenticated]);
 
-  const removeCartItemHandler = (id) => {
-    dispatch(removeCartItem(id)); // Pass itemId instead of productId
+  const removeCartItemHandler = async (id) => {
+    await dispatch(removeCartItem(id));
+    dispatch(getCartItems());
   };
-  
+
   const increaseQty = (id, quantity, stock) => {
     const newQty = quantity + 1;
     if (newQty > stock) return;
-    dispatch(updateCartItem(id, newQty)); // Use updateCartItem action instead of addToCart
+    dispatch(updateCartItem(id, newQty));
   };
-  
+
   const decreaseQty = (id, quantity) => {
     const newQty = quantity - 1;
     if (newQty <= 0) return;
-    dispatch(updateCartItem(id, newQty)); // Use updateCartItem action instead of addToCart
+    dispatch(updateCartItem(id, newQty));
   };
-  
   const checkoutHandler = () => {
     if (isAuthenticated) {
       navigate("/shipping");
     } else {
-      navigate(`/login?redirect=/shipping`);
+      navigate(`/register?redirect=/shipping`);
+      alert.error("Create an account to proceed payment");
     }
+    dispatch(getCartItems());
   };
+  
 
   return (
     <Fragment>
@@ -46,8 +58,9 @@ const Cart = () => {
         <h2 className="py-5 text-2xl md:text-3xl font-bold text-gray-700">
           Your Cart: <b>{cartItems.length}</b>
         </h2>
-
-        {cartItems.length === 0 ? (
+        {loading ? (
+          <Loader />
+        ) : cartItems.length === 0 ? (
           <h3>Your cart is empty. Please add some products.</h3>
         ) : (
           <div className="flex flex-col md:flex-row gap-10 md:gap-36 justify-between flex-1">
@@ -56,109 +69,121 @@ const Cart = () => {
                 <Fragment key={item.product}>
                   <hr />
                   <div className="cart-item">
-                  <div className="flex justify-between place-items-center">
-                        <div className="flex flex-col space-y-4 flex-1">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-20 h-20 bg-zinc-200 border"
-                          />
+                    <div className="flex justify-between place-items-center">
+                      <div className="flex flex-col space-y-4 flex-1">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-20 h-20 bg-zinc-200 border"
+                        />
+                      </div>
+                      <div className="flex flex-col place-items-center text-sm flex-1 justify-center">
+                        <div className="flex flex-col space-y-4">
+                          <Link
+                            to={`/product/${item.product && item.product._id}`}
+                            className="font-bold"
+                          >
+                            {item.name}
+                          </Link>
                         </div>
-                        <div className="flex flex-col place-items-center text-sm flex-1 justify-center">
-                          <div className="flex flex-col space-y-4">
-                            <Link
-                              to={`/products/${item.product}`}
-                              className="font-bold"
-                            >
-                              {item.name}
-                            </Link>
-                          </div>
+                        <div className="flex place-items-center">
                           <div className="flex place-items-center">
                             <div className="flex justify-between place-items-center mt-4 mt-lg-0">
                               <span
                                 className="cursor-pointer text-white bg-gray-400 p-1 px-3"
-                                onClick={() => decreaseQty(item._id, item.quantity)}
-
+                                onClick={() =>
+                                  decreaseQty(item._id, item.quantity)
+                                }
                               >
                                 -
                               </span>
                               <input
                                 type="number"
-                                className="form-control count text-center outline-none w-10 bg-transparent"
+                                className="w-12 bg-gray-200 text-center outline-none"
                                 value={item.quantity}
-                                readOnly
+                                onChange={(e) => {
+                                  const newQty = parseInt(e.target.value);
+                                  if (isNaN(newQty)) {
+                                    dispatch(updateCartItem(item._id, 1));
+                                  } else {
+                                    dispatch(updateCartItem(item._id, newQty));
+                                  }
+                                }}
                               />
+
                               <span
                                 className="cursor-pointer text-white bg-gray-400 p-1 px-3"
-                                onClick={() => increaseQty(item._id, item.quantity, item.stock)}
-
+                                onClick={() =>
+                                  increaseQty(
+                                    item._id,
+                                    item.quantity,
+                                    item.stock
+                                  )
+                                }
                               >
                                 +
                               </span>
                             </div>
                           </div>
                         </div>
-                        <div className="flex flex-col gap-1 flex-1 text-right">
-                          <div className="col-4 col-lg-2 mt-4 mt-lg-0">
-                            <p
-                              id="card_item_price"
-                              className="text-gray-600 font-bold text-sm"
-                            >
-                              ₦{item.price}
-                            </p>
-                          </div>
-                          <div className="col-4 col-lg-1 mt-4 mt-lg-0">
-                            <button
-                              id="delete_cart_item"
-                              className="fa fa-trash text-red-600"
-                              onClick={() => removeCartItemHandler(item._id)}
-
-                            >
-                              <DeleteForeverIcon />
-                            </button>
-                          </div>
+                      </div>
+                      <div className="flex flex-col gap-1 flex-1 text-right">
+                        <div className="col-4 col-lg-2 mt-4 mt-lg-0">
+                          <p
+                            id="card_item_price"
+                            className="text-gray-600 font-bold text-sm"
+                          >
+                            ₦{item.price}
+                          </p>
+                        </div>
+                        <div className="col-4 col-lg-1 mt-4 mt-lg-0">
+                          <button
+                            id="delete_cart_item"
+                            className="fa fa-trash text-red-600"
+                            onClick={() => removeCartItemHandler(item._id)}
+                          >
+                            <DeleteForeverIcon />
+                          </button>
                         </div>
                       </div>
                     </div>
+                  </div>
                 </Fragment>
               ))}
               <hr />
             </div>
             <div className="flex flex-col space-y-5 h-3/6 border flex-3 px-7 py-10 md:px-20 shadow-md rounded-md flex-2">
-            <h4 className="text-2xl font-medium">Order Summary</h4>
-                <hr />
-                <p className="flex justify-between">
-                  Subtotal:{" "}
-                  <span className="font-bold">
-                    {cartItems.reduce(
-                      (acc, item) => acc + Number(item.quantity),
-                      0
-                    )}{" "}
-                    (Units)
-                  </span>
-                </p>
-                <p className="flex justify-between">
-                  Est. total:{" "}
-                  <span className="font-bold">
-                    ₦
-                    {cartItems
-                      .reduce(
-                        (acc, item) => acc + item.quantity * item.price,
-                        0
-                      )
-                      .toFixed(2)}{" "}
-                  </span>
-                </p>
-                <hr />
-                <button
-                  id="checkout_btn"
-                  className="py-2 w-full px-7 bg-green-600 hover:bg-gray-400 text-white font-bold rounded"
-                  onClick={checkoutHandler}
-                >
-                  Check Out
-                </button>
-              </div>
+              <h4 className="text-2xl font-medium">Order Summary</h4>
+              <hr />
+              <p className="flex justify-between">
+                Subtotal:{" "}
+                <span className="font-bold">
+                  {cartItems.reduce(
+                    (acc, item) => acc + Number(item.quantity),
+                    0
+                  )}{" "}
+                  (Units)
+                </span>
+              </p>
+              <p className="flex justify-between">
+                Est. total:{" "}
+                <span className="font-bold">
+                  ₦
+                  {cartItems
+                    .reduce((acc, item) => acc + item.quantity * item.price, 0)
+                    .toFixed(2)}{" "}
+                </span>
+              </p>
+              <hr />
+              <button
+                id="checkout_btn"
+                className="py-2 w-full px-7 bg-green-600 hover:bg-gray-400 text-white font-bold rounded"
+                onClick={checkoutHandler}
+              >
+                Check Out
+              </button>
             </div>
+          </div>
         )}
       </div>
     </Fragment>

@@ -21,6 +21,7 @@ import { Modal, Typography } from "@material-ui/core";
 
 import { NEW_REVIEW_RESET } from "../../constants/productConstants";
 import ListReviews from "../review/ListReviews";
+import RecommendedProducts from "./RecommendedProducts";
 
 const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
@@ -375,6 +376,7 @@ const ProductDetails = () => {
           {product.reviews && product.reviews.length > 0 && (
             <ListReviews reviews={product.reviews} />
           )}
+          <RecommendedProducts/>
         </Fragment>
       )}
     </Fragment>

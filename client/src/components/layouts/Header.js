@@ -23,15 +23,15 @@ import "../assets/Styles/style.css";
 import Search from "./Search";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { HourglassBottomOutlined } from "@mui/icons-material";
-import { clearCart, removeCartItem } from "../../actions/cartActions";
+import {
+  removeCartItem,
+  getCartItems,
+} from "../../actions/cartActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import { Avatar } from "@material-ui/core";
 import { logout } from "../../actions/userActions";
-import { useFlutterwave, closePaymentModal } from "flutterwave-react-v3";
-import { createOrder, clearErrors } from "../../actions/orderActions";
 import CircularProgress from "@mui/material/CircularProgress";
-import Person from "@mui/icons-material/Person";
 
 const Header = () => {
   //Handle cart
@@ -39,6 +39,7 @@ const Header = () => {
   const [orderCreated, setOrderCreated] = useState(false);
 
   const [showCart, setShowCart] = useState(false);
+
   const handleCartClick = () => {
     setShowCart(!showCart);
   };
@@ -48,143 +49,24 @@ const Header = () => {
   const alert = useAlert();
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const { cartItems, shippingInfo } = useSelector((state) => state.cart);
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  const removeCartItemHandler = (id) => {
-    dispatch(removeCartItem(id));
+  const { cartItems } = useSelector((state) => state.cart);
+  const removeCartItemHandler = async (id) => {
+    await dispatch(removeCartItem(id));
+    await dispatch(getCartItems());
   };
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   // code for cart ends here
+  useEffect(() => {
+    dispatch(getCartItems());
+  }, [dispatch]);
 
   //Payment CheckOut
   const [loading, setLoading] = useState(false);
-  const [flutterwaveApiKey, setFlutterwaveApiKey] = useState(null);
-  const { error } = useSelector((state) => state.newOrder);
-  // Calculate order prices
-  const itemsPrice = Number(
-    cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
-  ).toFixed(2);
-  const shippingPrice = itemsPrice > 1000 ? 0 : 20;
-  const taxPrice = Number((0.005 * itemsPrice).toFixed(2));
-  const totalPrice = (
-    Number(itemsPrice) +
-    Number(shippingPrice) +
-    Number(taxPrice)
-  ).toFixed(2);
+  
 
-  // Fetch Flutterwave public key from backend
-  useEffect(() => {
-    if (error) {
-      alert.error(error);
-      dispatch(clearErrors());
-    }
-    const fetchFlutterwaveApiKey = async () => {
-      try {
-        const response = await fetch("/api/v1/flutterwaveapi");
-        const data = await response.json();
-        setFlutterwaveApiKey(data.flutterwaveApiKey);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchFlutterwaveApiKey();
-  }, [dispatch, error, alert]);
-
-  useEffect(() => {
-    const itemsPrice = Number(
-      cartItems
-        .reduce((acc, item) => acc + item.price * item.quantity, 0)
-        .toFixed(2)
-    );
-    const shippingPrice = Number(itemsPrice > 200 ? 0 : 25);
-    const taxPrice = Number((0.05 * itemsPrice).toFixed(2));
-    const totalPrice = (
-      Number(itemsPrice) +
-      Number(shippingPrice) +
-      Number(taxPrice)
-    ).toFixed(2);
-
-    const orderInfo = {
-      itemsPrice,
-      shippingPrice,
-      taxPrice,
-      totalPrice,
-    };
-    sessionStorage.setItem("orderInfo", JSON.stringify(orderInfo));
-  }, [cartItems]);
-
-  const config = {
-    public_key: flutterwaveApiKey,
-    tx_ref: Date.now(),
-    amount: totalPrice,
-    currency: "NGN",
-    payment_options: "card,mobilemoney,ussd",
-    customer: {
-      name: user && user.firstName + " " + user && user.lastName,
-      phone_number: shippingInfo.phoneNo,
-      email: user && user.email,
-    },
-    customizations: {
-      title: "D'Magni",
-      description: "Payment for items in cart",
-      logo: "https://tinyurl.com/yc3zadhf",
-    },
-  };
-
-  const handleFlutterPayment = useFlutterwave(config);
-  const proceedToPayment = async () => {
-    setLoading(true);
-
-    const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
-    const order = {
-      orderItems: cartItems,
-      shippingInfo,
-      ...orderInfo,
-    };
-
-    try {
-      await handleFlutterPayment({
-        callback: async (response) => {
-          console.log(response);
-          setLoading(false);
-
-          const axiosConfig = {
-            headers: {
-              "Content-type": "application/json",
-            },
-          };
-
-          if (response.status === "completed") {
-            try {
-              if (!orderCreated) {
-                setOrderCreated(true);
-                dispatch(createOrder(order));
-              }
-              alert.success("Payment successful");
-              dispatch(clearCart());
-              closePaymentModal();
-              history("/");
-            } catch (error) {
-              alert.error(error.response.data.message);
-            }
-          } else {
-            alert.error("Payment failed");
-          }
-        },
-        onClose: () => {
-          console.log("Payment closed");
-          setLoading(false);
-        },
-      });
-    } catch (error) {
-      console.log(error);
-      setLoading(false);
-    }
-  };
   //End here
 
   const [openMenu, setOpenMenu] = useState();
@@ -214,6 +96,8 @@ const Header = () => {
 
   const logoutHandler = () => {
     dispatch(logout());
+    localStorage.removeItem("cartItems");
+    dispatch(getCartItems());
     alert.success("Logged out successfully");
   };
 
@@ -221,7 +105,6 @@ const Header = () => {
     window.location.pathname.startsWith("/admin") ||
     window.location.pathname.startsWith("/dashboard");
 
- 
   return (
     <Fragment>
       {/* Header for view above 1024px screens */}
@@ -311,9 +194,7 @@ const Header = () => {
                           <div className="flex-1 flex justify-end ">
                             <button
                               className="text-red-500"
-                              onClick={() =>
-                                removeCartItemHandler(item.id)
-                              }
+                              onClick={() => removeCartItemHandler(item._id)}
                             >
                               <DeleteForeverIcon />
                             </button>
@@ -345,24 +226,28 @@ const Header = () => {
                         View Cart
                       </button>
                     </Link>
-                    <button
-                      className="bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded-lg w-full"
-                      onClick={proceedToPayment}
-                      disabled={loading ? true : false}
-                    >
-                      {loading ? (
-                        <div className="flex gap-5 place-items-center justify-center">
-                          {" "}
-                          <CircularProgress
-                            size={24}
-                            className="text-white"
-                          />{" "}
-                          <p>Processing ...</p>{" "}
-                        </div>
-                      ) : (
-                        "Check Out"
-                      )}
-                    </button>
+                    {user && (
+                                                  <Link to="/shipping">
+                      <button
+                        className="bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded-lg w-full"
+                        disabled={loading ? true : false}
+                        onClick={closeCart}
+                      >
+                        {loading ? (
+                          <div className="flex gap-5 place-items-center justify-center">
+                            {" "}
+                            <CircularProgress
+                              size={24}
+                              className="text-white"
+                            />{" "}
+                            <p>Processing ...</p>{" "}
+                          </div>
+                        ) : (
+                          "Check Out"
+                        )}
+                      </button>
+                      </Link>
+                    )}
                   </div>
                 </div>
               )}
@@ -550,7 +435,7 @@ const Header = () => {
                                   <button
                                     className="text-red-500"
                                     onClick={() =>
-                                      removeCartItemHandler(item.product)
+                                      removeCartItemHandler(item._id)
                                     }
                                   >
                                     <DeleteForeverIcon />
@@ -585,24 +470,28 @@ const Header = () => {
                               View Cart
                             </button>
                           </Link>
-                          <button
-                            className="bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded-lg w-full"
-                            onClick={proceedToPayment}
-                            disabled={loading ? true : false}
-                          >
-                            {loading ? (
-                              <div className="flex gap-5 place-items-center justify-center">
-                                {" "}
-                                <CircularProgress
-                                  size={24}
-                                  className="text-white"
-                                />{" "}
-                                <p>Processing ...</p>{" "}
-                              </div>
-                            ) : (
-                              "Check Out"
-                            )}
-                          </button>
+                          {user && (
+                            <Link to="/shipping">
+                            <button
+                              className="bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded-lg w-full"
+                              disabled={loading ? true : false}
+                              onClick={closeCart}
+                            >
+                              {loading ? (
+                                <div className="flex gap-5 place-items-center justify-center">
+                                  {" "}
+                                  <CircularProgress
+                                    size={24}
+                                    className="text-white"
+                                  />{" "}
+                                  <p>Processing ...</p>{" "}
+                                </div>
+                              ) : (
+                                "Check Out"
+                              )}
+                            </button>
+                            </Link>
+                          )}
                         </div>
                       </div>
                     )}
@@ -685,19 +574,19 @@ const Header = () => {
                       </div>
                     ) : (
                       <div>
-                      <div className="py-4 pl-3">
-                        <Link to="/dashboard" onClick={closeMenu}>
-                          Dashboard
-                        </Link>
+                        <div className="py-4 pl-3">
+                          <Link to="/dashboard" onClick={closeMenu}>
+                            Dashboard
+                          </Link>
+                        </div>
+                        <hr className="border border-neutral-700" />
+                        <div className="py-4 pl-3">
+                          <Link to="/orders/me" onClick={closeMenu}>
+                            Orders
+                          </Link>
+                        </div>
+                        <hr className="border border-neutral-700" />
                       </div>
-                      <hr className="border border-neutral-700" />
-                           <div className="py-4 pl-3">
-                           <Link to="/orders/me" onClick={closeMenu}>
-                             Orders
-                           </Link>
-                         </div>
-                         <hr className="border border-neutral-700" />
-                         </div>
                     )}
                     {isAdminPage && (
                       <ul className="px-8 text-neutral-400">

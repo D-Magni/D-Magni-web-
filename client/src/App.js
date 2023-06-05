@@ -68,7 +68,9 @@ function ProtectedRoute({ isAdmin, children, ...rest }) {
 
 
 function App() {
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
   const [flutterwaveApiKey, setFlutterwaveKey] = useState(``);
   useEffect(() => {
     store.dispatch(loadUser());
@@ -88,7 +90,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Homepage />} exact />
-        <Route path="/shop/search/:keyword" element={<Homepage />} exact />
+        <Route path="/search/:keyword" element={<Shop />} exact />
         <Route path="/product/:id" element={<ProductDetails />} exact />
         <Route path="/shop" element={<Shop/>}/>
 

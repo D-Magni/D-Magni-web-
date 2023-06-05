@@ -9,6 +9,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { login, clearErrors } from "../../actions/userActions";
 import CircularProgress from "@mui/material/CircularProgress";
+import { getCartItems} from "../../actions/cartActions";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -49,7 +50,6 @@ const Login = () => {
       alert.error("Please enter your email and password.");
       return;
     }
-
     dispatch(login(email, password));
   };
 

@@ -10,9 +10,7 @@ import {
 const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action) => {
   switch (action.type) {
     case ADD_TO_CART:
-    case UPDATE_CART_ITEM:
       const newItem = action.payload;
-
       const existingItem = state.cartItems.find(
         (item) => item.productId === newItem.productId
       );
@@ -37,7 +35,15 @@ const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action) => {
         ...state,
         cartItems: action.payload.cartItems,
       };
-
+      case UPDATE_CART_ITEM:
+        const { _id, quantity } = action.payload;
+        return {
+          ...state,
+          cartItems: state.cartItems.map((item) =>
+            item._id === _id ? { ...item, quantity } : item
+          ),
+        };
+  
     // cartReducer function
     case REMOVE_CART_ITEM:
       return {

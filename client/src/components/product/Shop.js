@@ -1,14 +1,10 @@
 import React, { Fragment, useEffect, useState } from "react";
 import MetaData from "../layouts/MetaData";
 import Pagination from "react-js-pagination";
-import Box from "@mui/material/Box";
-import Tooltip from "@mui/material/Tooltip";
-import Slider from "@mui/material/Slider";
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../../actions/productActions";
 import Product from "../product/Product";
 import Loader from "../layouts/Loader";
-import Rating from "@mui/material/Rating";
 
 import { useAlert } from "react-alert";
 
@@ -53,15 +49,6 @@ const Shop = () => {
     maxPrice,
     rating,
   ]);
-
-  // const handleRatingFilter = (star) => {
-  //   setRating(star);
-  //   dispatch(getProducts(keyword, currentPage, minPrice, maxPrice, star));
-  // };
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   dispatch(getProducts(keyword, currentPage, minPrice, maxPrice, rating));
-  // };
 
 
 
