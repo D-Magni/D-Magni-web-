@@ -26,7 +26,7 @@ const RecommendedProducts = () => {
 
   return (
     <div className="py-10 px-7 md:px-24 ">
-      <h2 className="text-2xl font-bold mb-4">You may like</h2>
+      <h2 className="text-2xl font-bold mb-4">You may also like</h2>
       <div className="flex flex-wrap gap-4 md:gap-8">
         {recommendedProducts &&
           recommendedProducts.map((product) => (
