@@ -23,7 +23,7 @@ import {
 } from '../constants/orderConstants'
 import { clearCart } from './cartActions'
 
-export const createOrder = (order) => async (dispatch, getState) => {
+export const createOrder = (order) => async (dispatch) => {
     try {
 
         dispatch({ type: CREATE_ORDER_REQUEST })
@@ -48,7 +48,6 @@ export const createOrder = (order) => async (dispatch, getState) => {
         })
     }
 }
-//get currently logged in user orders
 // Get curretly logged in user orders
 export const myOrders = () => async (dispatch) => {
     try {

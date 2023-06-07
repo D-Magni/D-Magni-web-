@@ -142,15 +142,17 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
   sendToken(user, 200, res);
 });
 
-// Get currently logged in user details => /api/v1/me
+
+// Get currently logged in user details   =>   /api/v1/me
 exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id);
 
   res.status(200).json({
-    success: true,
-    user,
-  });
-});
+      success: true,
+      user
+  })
+})
+
 // Update / Chnage password => /api/v1/password/update
 exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.user.id).select("+password");
@@ -290,19 +292,14 @@ exports.updateUser = catchAsyncErrors(async (req, res, next) => {
   }
 });
 
-// Delete user  => /api/v1/admin/user/:id
 exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
   if (!user) {
-    return next(
-      new ErrorHandler(`User not found with id: ${req.params.id}`)
-    );
+    return next(new ErrorHandler(`User not found with id: ${req.params.id}`));
   }
 
-  if (user.avatar && user.avatar.public_id) {
-    await cloudinary.v2.uploader.destroy(user.avatar.public_id);
-  }
+  await cloudinary.v2.uploader.destroy(user.avatar?.public_id);
 
   await user.deleteOne();
 

@@ -7,10 +7,12 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fileUpload = require('express-fileupload');
 const dotenv = require('dotenv');
-const path = require('path')
 
 const errorMiddleware = require('./middlewares/errors');
 const secretKey = crypto.randomBytes(32).toString('hex');
+
+
+if (process.env.NODE_ENV !== 'PRODUCTION') require('dotenv').config({ path: 'server/config/config.env' })
 
 
 app.use(express.json());
@@ -33,13 +35,6 @@ const cart = require('./routes/cart');
 const order = require('./routes/order');
 const payment = require('./routes/payment');
 
-if(process.env.NODE_ENV === 'PRODUCTION') {
-  app.use(express.static(path.join(__dirname, '../client/build')))
-
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client/build/index.html'))
-  })
-}
 
 
 app.use('/api/v1', products);
@@ -50,5 +45,14 @@ app.use('/api/v1', order);
 
 //Middleware to handle errors
 app.use(errorMiddleware);
+
+if (process.env.NODE_ENV === 'PRODUCTION') {
+  app.use(express.static(path.join(__dirname, '../client/build')))
+
+  app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, '../client/build/index.html'))
+  })
+}
+
 
 module.exports = app

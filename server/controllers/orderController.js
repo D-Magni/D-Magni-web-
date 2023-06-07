@@ -7,7 +7,7 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const order = require('../models/order');
 
 
-//reate a new order => /api/v1/order/new
+//create a new order => /api/v1/order/new
 
 exports.newOrder = catchAsyncErrors( async (req, res, next) => {
     const { 
