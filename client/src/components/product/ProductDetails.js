@@ -4,7 +4,6 @@ import Loader from "../layouts/Loader";
 import MetaData from "../layouts/MetaData";
 import Rating from "@mui/material/Rating";
 import { Box } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,7 +16,7 @@ import { myOrders } from "../../actions/orderActions";
 import { addToCart } from "../../actions/cartActions";
 import { useAlert } from "react-alert";
 import { useParams } from "react-router-dom";
-import { Modal, Typography } from "@material-ui/core";
+import { Modal, Typography } from "@mui/material";
 
 import { NEW_REVIEW_RESET } from "../../constants/productConstants";
 import ListReviews from "../review/ListReviews";
@@ -96,14 +95,7 @@ const ProductDetails = () => {
     setOpen(false);
   };
 
-  const useStyles = makeStyles({
-    highlighted: {
-      color: "orange",
-    },
-    hovered: {
-      color: "yellow",
-    },
-  });
+
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -129,10 +121,20 @@ const ProductDetails = () => {
     }
   }, [orders, id]);
   // Inside your component
-  const classes = useStyles();
+
+  const classes = {
+    highlighted: {
+      color: "orange",
+    },
+    hovered: {
+      color: "yellow",
+    },
+  };
   function setUserRatings(event, newValue) {
     const ratingIcons = document.querySelectorAll(".reviewrating");
-
+  
+ 
+  
     if (event === "click" || event === "mouseover") {
       ratingIcons.forEach((icon, index) => {
         if (index < newValue) {
@@ -142,11 +144,12 @@ const ProductDetails = () => {
         }
       });
     }
-
+  
     if (event === "click") {
       setRating(newValue);
     }
   }
+  
 
   const reviewHandler = () => {
     const formData = new FormData();

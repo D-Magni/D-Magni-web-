@@ -3,7 +3,7 @@ import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
 import { useNavigate } from "react-router-dom";
-import Avatar from "@mui/material/Avatar";
+import { Avatar } from "@mui/material";
 import Compressor from "compressorjs";
 import CircularProgress from "@mui/material/CircularProgress";
 import ImageIcon from '@mui/icons-material/Image';

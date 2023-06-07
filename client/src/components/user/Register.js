@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {register, clearErrors } from "../../actions/userActions";
-import Avatar from "@mui/material/Avatar";
+import { Avatar } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import Person from "@mui/icons-material/Person";
 import Mail from "@mui/icons-material/Mail";

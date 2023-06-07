@@ -8,9 +8,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import NotesIcon from "@mui/icons-material/Notes";
 import CloseIcon from "@mui/icons-material/Close";
-import Badge from "@mui/material/Badge";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
+import { Badge, Menu, MenuItem, Avatar } from "@mui/material";
+
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import StoreIcon from "@mui/icons-material/Store";
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
@@ -29,7 +28,6 @@ import {
 } from "../../actions/cartActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
-import { Avatar } from "@material-ui/core";
 import { logout } from "../../actions/userActions";
 import CircularProgress from "@mui/material/CircularProgress";
 

@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import { Box } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import { SelectAll, ThumbUp, HeadsetMic, Lock } from "@mui/icons-material";
 
 const LazyImage = lazy(() => import("../lazyloader/LazyImage"));
