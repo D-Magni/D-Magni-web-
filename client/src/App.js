@@ -46,13 +46,16 @@ import Services from "./components/pages/Services";
 import TermsCon from "./components/pages/TermsCon";
 import SupportPage from "./components/pages/SupportPage";
 import Loader from "./components/layouts/Loader";
+import { useAlert } from 'react-alert';
 
 function ProtectedRoute({ isAdmin, children, ...rest }) {
   const navigate = useNavigate();
   const { isAuthenticated, loading, user } = useSelector((state) => state.auth);
+  const alert = useAlert();
 
     if (!loading && !isAuthenticated) {
       navigate("/login");
+      alert.error('Please login first');
     }
 
   if (loading) {
@@ -61,6 +64,7 @@ function ProtectedRoute({ isAdmin, children, ...rest }) {
 
   if (isAdmin && (!isAuthenticated || user.role !== "admin")) {
     navigate("/");
+    alert.error('You are not authorized to access this page');
   }
 
   return <>{children}</>;

@@ -1,10 +1,8 @@
 import React, { Fragment, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../layouts/Loader";
 import MetaData from "../layouts/MetaData";
 import { getOrderDetails, clearErrors } from "../../actions/orderActions";
-import Visibility from "@mui/icons-material/Visibility";
 import { useAlert } from "react-alert";
 import { useParams } from "react-router-dom";
 
@@ -32,12 +30,16 @@ const OrderDetails = () => {
     const shippingDetails = shippingInfo && `${shippingInfo.address}, ${shippingInfo.city}, ${shippingInfo.postalCode}, ${shippingInfo.country}`
 
 
-    const isPaid = paymentInfo && paymentInfo.status === 'completed' ? true : false
   return (
     <Fragment>
     <MetaData title={'Order Details'}/>
 
-    <div className="container py-40 px-7 md:px-24 mx-auto">
+
+    {loading ? (
+                       <Loader />
+                       ) : (
+                        <div className="container py-40 px-7 md:px-24 mx-auto">
+
       {order && (
         <Fragment>
           <h1 className="text-xl md:text-2xl font-bold text-gray-700 mb-10">Order ID: {order._id}</h1>
@@ -78,13 +80,19 @@ const OrderDetails = () => {
               <div className="md:w-2/12">
                 <p className="text-gray-700 font-medium">{item.quantity} Piece(s)</p>
               </div>
+              <div className="md:w-2/12">
+                <p className="text-gray-700 font-medium">Size: {item.shoeSize}</p>
+              </div>
             </div>
           ))}
         </Fragment>
       )}
 
       {!order && <Loader />}
+      
     </div>
+                           )}
+
   </Fragment>
   )
 }

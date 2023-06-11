@@ -34,7 +34,7 @@ export const newOrderReducer = (state = {}, action) => {
         case CREATE_ORDER_SUCCESS:
             return {
                 loading: false,
-                orders: action.payload
+                order: action.payload
             }
 
         case CREATE_ORDER_FAIL:

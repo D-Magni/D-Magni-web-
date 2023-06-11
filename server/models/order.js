@@ -52,6 +52,10 @@ const orderSchema = mongoose.Schema({
         required: true,
         ref: "Product",
       },
+      shoeSize: {
+        type: Number,
+        required: true,
+      },
     },
   ],
   paymentInfo: {

@@ -11,6 +11,7 @@ const Search = () => {
 
     if (keyword.trim()) {
       navigate(`/search/${keyword}`);
+      setKeyword(''); 
     } else {
       navigate('/shop');
     }
@@ -26,6 +27,7 @@ const Search = () => {
           id="search_field"
           className="form-control outline-none text-black py-[5px] px-2 w-full rounded-l"
           placeholder="Search..."
+          value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
         />
       </div>

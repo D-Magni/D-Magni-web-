@@ -9,27 +9,28 @@ import {
 
 const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action) => {
   switch (action.type) {
-    case ADD_TO_CART:
-      const newItem = action.payload;
-      const existingItem = state.cartItems.find(
-        (item) => item.productId === newItem.productId
-      );
-
-      if (existingItem) {
-        // Product already exists in the cart, update quantity
-        return {
-          ...state,
-          cartItems: state.cartItems.map((item) =>
-            item.productId === existingItem.productId ? newItem : item
-          ),
-        };
-      } else {
-        // Product doesn't exist in the cart, add new item
-        return {
-          ...state,
-          cartItems: [...state.cartItems, newItem],
-        };
-      }
+      case ADD_TO_CART:
+        const newItem = action.payload.cartItems[action.payload.cartItems.length - 1];
+        const existingItemIndex = state.cartItems.findIndex(
+          (item) => item.productId === newItem.productId
+        );
+      
+        if (existingItemIndex !== -1) {
+          // Product already exists in the cart, update quantity
+          return {
+            ...state,
+            cartItems: state.cartItems.map((item, index) =>
+              index === existingItemIndex ? { ...item, quantity: newItem.quantity } : item
+            ),
+          };
+        } else {
+          // Product doesn't exist in the cart, add new item
+          return {
+            ...state,
+            cartItems: [...state.cartItems, newItem],
+          };
+        }
+      
     case GET_CART_ITEMS:
       return {
         ...state,

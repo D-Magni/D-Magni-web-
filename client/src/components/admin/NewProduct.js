@@ -36,7 +36,7 @@ const NewProduct = () => {
       alert.success("Product created successfully");
       dispatch({ type: NEW_PRODUCT_RESET });
     }
-  }, [dispatch, alert, error, success]);
+  }, [dispatch, alert, error, success, navigate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -190,11 +190,11 @@ const onChange = async (e) => {
                       </label>
 
                       {imagesPreview.length > 0 &&
-                        imagesPreview.map((img) => (
+                        imagesPreview.map((preview) => (
                           <img
                             className="mt-3 mr-2 w-[55px] h-[52px]"
-                            src={img}
-                            key={img}
+                            src={preview}
+                            key={preview}
                             alt="Image Preview"
                           />
                         ))}
@@ -203,7 +203,9 @@ const onChange = async (e) => {
                     <button
                       id="login_button"
                       type="submit"
-                      className="bg-zinc-900 text-white rounded-md font-bold hover:bg-gray-500 py-3"
+                      className={`bg-zinc-900 text-white rounded-md font-bold hover:bg-gray-500 py-3 ${
+                        loading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                       disabled={loading ? true : false}
                     >
                 {loading ? <div className="flex gap-5 place-items-center justify-center"> <CircularProgress size={24} className="text-white"/> <p>Creating product...</p> </div> : "CREATE"}

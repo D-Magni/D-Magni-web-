@@ -21,8 +21,13 @@ exports.newOrder = catchAsyncErrors( async (req, res, next) => {
      } = req.body;
 
      const order = await Order.create({
-        orderItems,
-        shippingInfo,
+        orderItems: orderItems.map((item) => {
+            return {
+              ...item,
+              shoeSize: item.shoeSize
+            };
+          }),
+              shippingInfo,
         itemsPrice,
         taxPrice,
         shippingPrice,

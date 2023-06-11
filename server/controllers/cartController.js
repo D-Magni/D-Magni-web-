@@ -24,13 +24,17 @@ exports.addToCart = catchAsyncErrors(async (req, res, next) => {
       });
     }
 
-    const itemIndex = cart.cartItems.findIndex(
+    const itemExists = cart.cartItems.some(
       (item) => item.product.toString() === productId
     );
 
-    if (itemIndex !== -1) {
+    if (itemExists) {
       // Product already exists in the cart, update quantity
-      cart.cartItems[itemIndex].quantity += quantity;
+      cart.cartItems.forEach((item) => {
+        if (item.product.toString() === productId) {
+          item.quantity += quantity;
+        }
+      });
     } else {
       // Product doesn't exist in the cart, add new cart item
       cart.cartItems.push({
@@ -52,13 +56,17 @@ exports.addToCart = catchAsyncErrors(async (req, res, next) => {
     // User is unauthenticated
     const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
 
-    const itemIndex = cartItems.findIndex(
+    const itemExists = cartItems.some(
       (item) => item.product.toString() === productId
     );
 
-    if (itemIndex !== -1) {
+    if (itemExists) {
       // Product already exists in the cart, update quantity
-      cartItems[itemIndex].quantity += quantity;
+      cartItems.forEach((item) => {
+        if (item.product.toString() === productId) {
+          item.quantity += quantity;
+        }
+      });
     } else {
       // Product doesn't exist in the cart, add new cart item
       cartItems.push({
@@ -200,7 +208,8 @@ exports.clearCart = catchAsyncErrors(async (req, res, next) => {
     cart = await Cart.findOne({ user: req.user._id });
 
     if (cart) {
-      cart.cartItems = [];
+      cart.cartItems = []; // Clear the cartItems array
+      cart.markModified('cartItems'); // Mark the modified field to resolve the VersionError
       await cart.save();
 
       res.status(200).json({

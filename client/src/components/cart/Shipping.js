@@ -14,7 +14,7 @@ const Shipping = () => {
   const [city, setCity] = useState(shippingInfo.city);
   const [postalCode, setPostalCode] = useState(shippingInfo.postalCode);
   const [phoneNo, setPhoneNo] = useState(shippingInfo.phoneNo);
-  const [country, setCountry] = useState(shippingInfo.country);
+  const [country, setCountry] = useState(shippingInfo.country || "Nigeria"); 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {

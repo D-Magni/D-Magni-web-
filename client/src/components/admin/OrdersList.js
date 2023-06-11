@@ -3,7 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../layouts/Loader";
 import MetaData from "../layouts/MetaData";
-import { allOrders, deleteOrder, clearErrors } from "../../actions/orderActions";
+import {
+  allOrders,
+  deleteOrder,
+  clearErrors,
+} from "../../actions/orderActions";
 import { useAlert } from "react-alert";
 import DeleteForever from "@mui/icons-material/DeleteForever";
 import SearchIcon from "@mui/icons-material/Search";
@@ -18,9 +22,10 @@ const OrdersList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredOrders, setFilteredOrders] = useState(orders);
 
-  const { error: deleteError, isDeleted } = useSelector(
-    (state) => state.order
-  );
+  const { error: deleteError, isDeleted } = useSelector((state) => state.order);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   useEffect(() => {
     dispatch(allOrders());
 
@@ -33,10 +38,10 @@ const OrdersList = () => {
       dispatch(clearErrors());
     }
 
-      if (isDeleted) {
-        alert.success('Order deleted successfully')
-        dispatch({ type: DELETE_ORDER_RESET })
-      }
+    if (isDeleted) {
+      alert.success("Order deleted successfully");
+      dispatch({ type: DELETE_ORDER_RESET });
+    }
   }, [dispatch, alert, error, isDeleted]);
 
   useEffect(() => {
@@ -44,11 +49,11 @@ const OrdersList = () => {
   }, [orders]);
 
   const handleSearch = (event) => {
-    const keyword = event.target.value.toLowerCase(); 
+    const keyword = event.target.value.toLowerCase();
     const filtered = orders.filter(
       (order) =>
-        order._id.toLowerCase().includes(keyword) || 
-        String(order.paidAt).substring(0, 10).includes(keyword) 
+        order._id.toLowerCase().includes(keyword) ||
+        String(order.paidAt).substring(0, 10).includes(keyword)
     );
     setFilteredOrders(filtered);
     setSearchTerm(keyword);
@@ -56,18 +61,17 @@ const OrdersList = () => {
   const orderStatusColor = (orderStatus) => {
     if (orderStatus && String(orderStatus).includes("Delivered")) {
       return "text-green-600";
-    } 
+    }
     if (orderStatus && String(orderStatus).includes("Shipped")) {
       return "text-blue-600";
-    }else {
+    } else {
       return "text-red-600";
     }
   };
   const deleteOrderHandler = (id) => {
-    dispatch(deleteOrder(id))
-    setFilteredOrders(filteredOrders.filter(order => order._id !== id));
-  
-  }
+    dispatch(deleteOrder(id));
+    setFilteredOrders(filteredOrders.filter((order) => order._id !== id));
+  };
   return (
     <Fragment>
       <MetaData title={"All Orders"} />
@@ -75,26 +79,29 @@ const OrdersList = () => {
         <div className="lg:w-1/5">
           <Sidebar />
         </div>
-
-        <div className="lg:w-4/5 py-36 px-4 sm:px-6 lg:px-8">
-          <h1 className="my-5 text-3xl font-bold text-gray-600">All Orders</h1>
-
-          <div className="flex md:justify-end">
-            <div className="border border-gray-400 rounded-md py-1 flex px-3 mb-10 mt-3">
-              <input
-                type="text"
-                name="search"
-                className="w-full bg-transparent outline-none"
-                placeholder="Search for orders..."
-                onChange={handleSearch}
-              />
-              <SearchIcon className="text-gray-400" />
-            </div>
-          </div>
-
+    
+          <div className="lg:w-4/5 py-36 px-4 sm:px-6 lg:px-8">
           {loading ? (
-            <Loader />
-          ) : (
+          <Loader />
+        ) : (
+          <div>
+            <h1 className="my-5 text-3xl font-bold text-gray-600">
+              All Orders
+            </h1>
+
+            <div className="flex md:justify-end">
+              <div className="border border-gray-400 rounded-md py-1 flex px-3 mb-10 mt-3">
+                <input
+                  type="text"
+                  name="search"
+                  className="w-full bg-transparent outline-none"
+                  placeholder="Search for orders..."
+                  onChange={handleSearch}
+                />
+                <SearchIcon className="text-gray-400" />
+              </div>
+            </div>
+
             <div className="overflow-x-scroll">
               <table className="min-w-full border divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -127,7 +134,7 @@ const OrdersList = () => {
                           {order.orderItems.length}
                         </td>
                         <td className="py-4 px-6 text-sm text-gray-500">
-                        ₦{order.totalPrice}
+                          ₦{order.totalPrice}
                         </td>
                         <td
                           className={`py-4 px-6 text-sm text-gray-500 ${orderStatusColor(
@@ -145,7 +152,7 @@ const OrdersList = () => {
                           </Link>
                           <button
                             className="bg-red-600 p-1 text-white hover:bg-red-700 rounded"
-                              onClick={() => deleteOrderHandler(order._id)}
+                            onClick={() => deleteOrderHandler(order._id)}
                           >
                             <DeleteForever />
                           </button>
@@ -155,8 +162,10 @@ const OrdersList = () => {
                   ))}
               </table>
             </div>
-          )}
-        </div>
+            </div>
+                    )}
+
+          </div>
       </div>
     </Fragment>
   );

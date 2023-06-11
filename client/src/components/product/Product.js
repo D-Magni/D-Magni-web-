@@ -14,7 +14,7 @@ const LazyImage = lazy(() => import("../lazyloader/LazyImage"));
 const Product = ({ product }) => {
   const dispatch = useDispatch();
   const alert = useAlert();
-  
+
   const handleAddToCart = () => {
     dispatch(addToCart(product._id, 1));
     alert.success("Item added to cart");
@@ -22,20 +22,19 @@ const Product = ({ product }) => {
   return (
     <div className="w-64 border p-5 bg-white">
       <div className="h-36">
-      <Suspense
-            fallback={
-              <div className="flex justify-center items-center bg-gray-100">
-                <PuffLoader color="gray" size={100} />
-              </div>
-            }
-          >
-        <LazyImage
-          src={product.images[0].url}
-          alt={product.name}
-          className="w-full h-full object-cover"
-        />
-       </Suspense>
-
+        <Suspense
+          fallback={
+            <div className="flex justify-center items-center bg-gray-100">
+              <PuffLoader color="gray" size={100} />
+            </div>
+          }
+        >
+          <LazyImage
+            src={product.images[0].url}
+            alt={product.name}
+            className="w-full h-full object-cover"
+          />
+        </Suspense>
       </div>
       <div className="text-center mt-3">
         <h5 className="text-sm font-bold">
@@ -46,12 +45,18 @@ const Product = ({ product }) => {
             {product.name}
           </Link>
         </h5>
-        <div className="flex justify-center items-center">
-          <Box>
-            <Rating name="read-only" value={product.ratings} readOnly />
+        <div className="flex flex-col space-y-1 justify-center items-center mt-2">
+          <Box sx={{ width: "1.5rem", height: "1.5rem" }}>
+            <Rating
+              name="read-only"
+              value={product.ratings}
+              readOnly
+              sx={{ fontSize: "0.875rem" }}
+            />
           </Box>
-          {/* Uncomment the following line if you want to display the number of reviews */}
-          {/* <span className="text-xs font-bold">({product.numOfRev} Reviews)</span> */}
+          <div className="text-xs font-bold ml-1">
+            ({product.numOfReviews} Reviews)
+          </div>
         </div>
         <p className="text-gray-600 text-xs">₦{product.price}</p>
         <div className="flex justify-center">

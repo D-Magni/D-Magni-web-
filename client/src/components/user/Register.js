@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
@@ -48,7 +48,7 @@ useEffect(() => {
     alert.error(error);
     dispatch(clearErrors());
   }
-}, [dispatch, alert, isAuthenticated, error]);
+}, [dispatch, alert, isAuthenticated, error, navigate, redirect]);
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
@@ -267,7 +267,9 @@ useEffect(() => {
                 <button
                   id="register_button"
                   type="submit"
-                  className="bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 "
+                  className={`bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 ${
+                    loading ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                   disabled={loading ? true : false}
                 >
                   {loading ? (

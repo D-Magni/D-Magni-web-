@@ -111,7 +111,6 @@ export const getOrderDetails = (id) => async (dispatch) => {
 // Update order - ADMIN
 
 export const updateOrder = (id, orderData) => async (dispatch) => {
-    console.log('createOrder called'); // add this line
 
     try {
 

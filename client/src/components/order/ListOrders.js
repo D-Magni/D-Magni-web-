@@ -55,6 +55,10 @@ const ListOrders = () => {
     <Fragment>
       <MetaData title={"My Orders"} />
       <div className="bg-zinc-100">
+
+      {loading ? (
+            <Loader />
+      ) : (
         <div className="py-36 px-7 md:px-24">
           <h1 className="my-5 text-3xl font-bold text-gray-600">My Orders</h1>
 
@@ -71,9 +75,7 @@ const ListOrders = () => {
             </div>
           </div>
 
-          {loading ? (
-            <Loader />
-          ) : (
+           
             <div className="flex flex-col space-y-10">
               {filteredOrders && filteredOrders.length === 0 ? (
                 <h2 className="py-5 text-2xl md:text-3xl font-bold text-gray-700">
@@ -128,6 +130,9 @@ const ListOrders = () => {
                             <div className="text-sm text-gray-500">
                               Qty: {item.quantity} | Price: ₦{item.price}
                             </div>
+                            <div className="text-sm text-gray-500">
+                              shoeSize: {item.shoeSize}
+                            </div>
                           </div>
                         </div>
                       ))}
@@ -146,9 +151,11 @@ const ListOrders = () => {
                 ))
               )}
             </div>
-          )}
         </div>
+         )}
+
       </div>
+      
     </Fragment>
   );
 };

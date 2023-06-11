@@ -56,7 +56,7 @@ const UpdateProfile = () => {
         type: UPDATE_PROFILE_RESET,
       });
     }
-  }, [dispatch, alert, error, isUpdated]);
+  }, [dispatch, alert, error, isUpdated, navigate, user]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -190,7 +190,9 @@ const UpdateProfile = () => {
               <button
                 id="update_button"
                 type="submit"
-                className="bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 w-full"
+                className={`bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 w-full ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 disabled={loading ? true : false}
                 onClick={submitHandler}
               >

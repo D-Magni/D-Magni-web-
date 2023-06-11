@@ -145,13 +145,23 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 
 // Get currently logged in user details   =>   /api/v1/me
 exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
+  if (!req.user) {
+    // Handle the case when the user is not authenticated
+    res.status(401).json({
+      success: false,
+      error: 'User is not authenticated',
+    });
+    return;
+  }
+
   const user = await User.findById(req.user.id);
 
   res.status(200).json({
-      success: true,
-      user
-  })
-})
+    success: true,
+    user,
+  });
+});
+
 
 // Update / Chnage password => /api/v1/password/update
 exports.updatePassword = catchAsyncErrors(async (req, res, next) => {

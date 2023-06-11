@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../layouts/Loader";
@@ -116,7 +116,9 @@ const Login = () => {
                     <button
                       id="login_button"
                       type="submit"
-                      className="bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 "
+                      className={`bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 ${
+                        loading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                       disabled={loading ? true : false}
                     >
                       {loading ? (

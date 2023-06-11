@@ -22,6 +22,9 @@ const ProductList = () => {
   
   const { error: deleteError, isDeleted } = useSelector(state => state.product)
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
     dispatch(getAdminProducts());
 
     if (error) {
@@ -146,7 +149,7 @@ if (loading || typeof products === "undefined") {
                     <td className="py-4 px-6 text-sm text-gray-500">
                       {product.stock}
                     </td>
-                    <td className="py-4 px-6 text-sm flex justify-between gap-5">
+                    <td className="py-4 px-6 text-sm flex justify-between gap-5  ">
                       <Link
                         to={`/product/${product._id}`}
                         className="text-gray-600 hover:text-green-600 font-bold hover:underline mr-4"

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
@@ -11,22 +11,22 @@ import {
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import Loader from "../layouts/Loader";
 import { useAlert } from "react-alert";
+
 const Cart = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const alert = useAlert();
   const { cartItems, loading } = useSelector((state) => state.cart);
   const { isAuthenticated } = useSelector((state) => state.auth);
+  const [shoeSizes, setShoeSizes] = useState({});
+
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
-  useEffect(() => {
     dispatch(getCartItems());
   }, [dispatch, isAuthenticated]);
 
   const removeCartItemHandler = async (id) => {
     await dispatch(removeCartItem(id));
-    dispatch(getCartItems());
   };
 
   const increaseQty = (id, quantity, stock) => {
@@ -40,17 +40,38 @@ const Cart = () => {
     if (newQty <= 0) return;
     dispatch(updateCartItem(id, newQty));
   };
-  const checkoutHandler = () => {
-    if (isAuthenticated) {
-      navigate("/shipping");
-    } else {
-      navigate(`/register?redirect=/shipping`);
-      alert.error("Create an account to proceed payment");
-    }
-    dispatch(getCartItems());
+
+  const handleShoeSizeChange = (itemId, newSize) => {
+    setShoeSizes((prevSizes) => ({
+      ...prevSizes,
+      [itemId]: newSize
+    }));
   };
   
-
+  const checkoutHandler = () => {
+    if (isAuthenticated) {
+      const itemsWithoutShoeSize = cartItems.filter(
+        (item) => !shoeSizes[item._id] || shoeSizes[item._id].trim() === ""
+      );
+      if (itemsWithoutShoeSize.length > 0) {
+        alert.error("Please enter the shoe size for all items.");
+      } else {
+        const itemsWithSizes = cartItems.map((item) => ({
+          ...item,
+          shoeSize: shoeSizes[item._id] || "",
+        }));
+  
+        // Save the items with sizes to local storage
+        localStorage.setItem("cartItems", JSON.stringify(itemsWithSizes));
+  
+        navigate("/shipping");
+      }
+    } else {
+      navigate(`/register?redirect=/shipping`);
+      alert.error("Create an account to proceed with the payment");
+    }
+  };
+  
   return (
     <Fragment>
       <MetaData title={"Your Cart"} />
@@ -147,6 +168,20 @@ const Cart = () => {
                         </div>
                       </div>
                     </div>
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="shoeSize" className="text-xs text-gray-500">
+                        Shoe Size
+                      </label>
+                      <input
+      type="text"
+      id={`shoeSize_${item._id}`}
+      name={`shoeSize_${item._id}`}
+      placeholder="e.g. 45"
+      value={shoeSizes[item._id] || ""}
+      onChange={(e) => handleShoeSizeChange(item._id, e.target.value)}
+      className="w-24 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+    />
+                    </div>
                   </div>
                 </Fragment>
               ))}
@@ -158,20 +193,13 @@ const Cart = () => {
               <p className="flex justify-between">
                 Subtotal:{" "}
                 <span className="font-bold">
-                  {cartItems.reduce(
-                    (acc, item) => acc + Number(item.quantity),
-                    0
-                  )}{" "}
-                  (Units)
+                  {cartItems.reduce((acc, item) => acc + Number(item.quantity), 0)} (Units)
                 </span>
               </p>
               <p className="flex justify-between">
                 Est. total:{" "}
                 <span className="font-bold">
-                  ₦
-                  {cartItems
-                    .reduce((acc, item) => acc + item.quantity * item.price, 0)
-                    .toFixed(2)}{" "}
+                  ₦{cartItems.reduce((acc, item) => acc + item.quantity * item.price, 0).toFixed(2)}{" "}
                 </span>
               </p>
               <hr />

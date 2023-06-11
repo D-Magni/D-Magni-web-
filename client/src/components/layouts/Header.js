@@ -10,36 +10,34 @@ import NotesIcon from "@mui/icons-material/Notes";
 import CloseIcon from "@mui/icons-material/Close";
 import { Badge, Menu, MenuItem, Avatar } from "@mui/material";
 
-import StorefrontIcon from "@mui/icons-material/Storefront";
 import StoreIcon from "@mui/icons-material/Store";
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
-import PeopleIcon from "@mui/icons-material/People";
-import ShoppingCart from "@mui/icons-material/ShoppingCart";
 import CategoryIcon from "@mui/icons-material/Category";
-import ReviewsIcon from "@mui/icons-material/Reviews";
 import AddIcon from "@mui/icons-material/Add";
 import "../assets/Styles/style.css";
 import Search from "./Search";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { HourglassBottomOutlined } from "@mui/icons-material";
-import {
-  removeCartItem,
-  getCartItems,
-} from "../../actions/cartActions";
+import { removeCartItem, getCartItems } from "../../actions/cartActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import { logout } from "../../actions/userActions";
-import CircularProgress from "@mui/material/CircularProgress";
+import Loader from "../layouts/Loader";
 
 const Header = () => {
   //Handle cart
   const history = useNavigate();
-  const [orderCreated, setOrderCreated] = useState(false);
+  const [isProductOpen, setProductOpen] = useState(false);
+
+  const toggleProduct = () => {
+    setProductOpen(!isProductOpen);
+  };
 
   const [showCart, setShowCart] = useState(false);
 
   const handleCartClick = () => {
     setShowCart(!showCart);
+
   };
   const closeCart = () => {
     setShowCart(false);
@@ -48,9 +46,14 @@ const Header = () => {
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
+
   const removeCartItemHandler = async (id) => {
+    setIsLoading(true);
+
     await dispatch(removeCartItem(id));
     await dispatch(getCartItems());
+    setIsLoading(false); // Set loading state back to false after the request is complete
+
   };
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -59,11 +62,12 @@ const Header = () => {
   // code for cart ends here
   useEffect(() => {
     dispatch(getCartItems());
+    setLoading(false);
   }, [dispatch]);
 
   //Payment CheckOut
   const [loading, setLoading] = useState(false);
-  
+  const [isLoading, setIsLoading] = useState(false);
 
   //End here
 
@@ -149,7 +153,10 @@ const Header = () => {
                   className="cursor-pointer absolute z-40 bg-black text-white text-xl top-5 right-6"
                 />
               </div>
-              {cartItems.length === 0 ? (
+              {isLoading ? (
+      // Render the preloader when loading is true
+      <Loader />
+              ) : cartItems.length === 0 ? (
                 <div className="text-center ">
                   <p className="text-black text-xl font-medium">
                     Your cart is empty.
@@ -224,28 +231,7 @@ const Header = () => {
                         View Cart
                       </button>
                     </Link>
-                    {user && (
-                                                  <Link to="/shipping">
-                      <button
-                        className="bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded-lg w-full"
-                        disabled={loading ? true : false}
-                        onClick={closeCart}
-                      >
-                        {loading ? (
-                          <div className="flex gap-5 place-items-center justify-center">
-                            {" "}
-                            <CircularProgress
-                              size={24}
-                              className="text-white"
-                            />{" "}
-                            <p>Processing ...</p>{" "}
-                          </div>
-                        ) : (
-                          "Check Out"
-                        )}
-                      </button>
-                      </Link>
-                    )}
+          
                   </div>
                 </div>
               )}
@@ -468,28 +454,7 @@ const Header = () => {
                               View Cart
                             </button>
                           </Link>
-                          {user && (
-                            <Link to="/shipping">
-                            <button
-                              className="bg-green-600 hover:bg-green-500 text-white py-2 px-4 rounded-lg w-full"
-                              disabled={loading ? true : false}
-                              onClick={closeCart}
-                            >
-                              {loading ? (
-                                <div className="flex gap-5 place-items-center justify-center">
-                                  {" "}
-                                  <CircularProgress
-                                    size={24}
-                                    className="text-white"
-                                  />{" "}
-                                  <p>Processing ...</p>{" "}
-                                </div>
-                              ) : (
-                                "Check Out"
-                              )}
-                            </button>
-                            </Link>
-                          )}
+              
                         </div>
                       </div>
                     )}
@@ -529,7 +494,7 @@ const Header = () => {
         </div>
         {openMenu && (
           <div className="bg-overlay absolute h-screen w-full z-40 ">
-            <div className="h-screen fixed bg-zinc-800 w-5/6 navMenu">
+            <div className="h-screen fixed bg-zinc-800 w-5/6 navMenu overflow-y-scroll pb-5">
               <div className="flex justify-end pr-5 py-10">
                 <CloseIcon onClick={closeMenu} />
               </div>
@@ -587,16 +552,28 @@ const Header = () => {
                       </div>
                     )}
                     {isAdminPage && (
-                      <ul className="px-8 text-neutral-400">
-                        <li className="my-2">
+                      <>
+                        <div className="py-4 pl-3">
                           <div className="group">
-                            <div className="flex items-center  hover:text-gray-200 cursor-pointer">
-                              <StorefrontIcon className="mr-2" /> Products
+                            <div
+                              className="flex items-center text-neutral-400  hover:text-gray-200 cursor-pointer"
+                              onClick={toggleProduct}
+                            >
+                              Products
                               <span className="ml-auto">
-                                <ArrowDropDown className="w-4 h-4 transition-transform duration-300 transform group-hover:rotate-180" />
+                                <ArrowDropDown
+                                  className={`w-4 h-4 transition-transform duration-300 transform ${
+                                    isProductOpen ? "rotate-180" : ""
+                                  }`}
+                                />
                               </span>
                             </div>
-                            <ul className="pl-4 mt-2 space-y-2 hidden group-hover:block">
+                            <ul
+                              className={`pl-4 mt-2 space-y-2 ${
+                                isProductOpen ? "block" : "hidden"
+                              }`}
+                            >
+                              {" "}
                               <li>
                                 <Link
                                   to="/admin/products"
@@ -617,36 +594,41 @@ const Header = () => {
                               </li>
                             </ul>
                           </div>
-                        </li>
-                        <li className="my-2">
+                        </div>
+                        <hr className="border border-neutral-700" />
+                        <div className="py-4 pl-3">
                           <Link
                             to="/admin/orders"
                             className="flex items-center  hover:bg-white hover:text-gray-900 hover:p-1"
                             onClick={closeMenu}
                           >
-                            <ShoppingCart className="mr-2" /> Orders
+                            All Orders
                           </Link>
-                        </li>
-                        <li className="my-2">
+                        </div>
+                        <hr className="border border-neutral-700" />
+                        <div className="py-4 pl-3">
                           <Link
                             to="/admin/users"
                             className="flex items-center   hover:bg-white hover:text-gray-900 hover:p-1"
                             onClick={closeMenu}
                           >
-                            <PeopleIcon className="mr-2" /> Users
+                            All Users
                           </Link>
-                        </li>
-                        <li className="my-2">
+                        </div>
+                        <hr className="border border-neutral-700" />
+                        <div className="py-4 pl-3">
                           <Link
                             to="/admin/reviews"
                             className="flex items-center   hover:bg-white hover:text-gray-900 hover:p-1"
                             onClick={closeMenu}
                           >
-                            <ReviewsIcon className="mr-2" /> Reviews
+                            All Reviews
                           </Link>
-                        </li>
-                      </ul>
+                        </div>
+                        <hr className="border border-neutral-700" />
+                      </>
                     )}
+
                     <div className="py-4 pl-3">
                       <Link to="/me" onClick={closeMenu}>
                         Profile

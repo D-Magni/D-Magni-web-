@@ -35,7 +35,7 @@ const NewPassword = () => {
       alert.success("Password updated successfully");
       navigate("/login");
     }
-  }, [dispatch, alert, error, success]);
+  }, [dispatch, alert, error, success, navigate]);
 
   const validateForm = () => {
     const errors = {};
@@ -51,11 +51,14 @@ const NewPassword = () => {
   };
   const submitHandler = (e) => {
     e.preventDefault();
+    const isValid = validateForm();
+    if (isValid) {
 
     const formData = new FormData();
     formData.set("password", password);
     formData.set("confirmPassword", confirmPassword);
     dispatch(resetPassword(token, formData));
+    }
   };
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

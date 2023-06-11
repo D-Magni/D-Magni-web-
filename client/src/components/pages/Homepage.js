@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Swal from "sweetalert2";
 import MetaData from "../layouts/MetaData";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,14 +25,12 @@ const Homepage = () => {
   const [minPrice, setMinPrice] = useState(1);
   const [maxPrice, setMaxPrice] = useState(1500000);
   const [rating, setRating] = useState(0);
-
+  const [isLoading, setIsLoading] = useState(false)
   const alert = useAlert();
 
   const dispatch = useDispatch();
 
-  const { loading, products, error } = useSelector(
-    (state) => state.products
-  );
+  const { loading, products, error } = useSelector((state) => state.products);
 
   const { keyword } = useParams();
   useEffect(() => {
@@ -57,8 +55,12 @@ const Homepage = () => {
   ]);
 
   const handleAddToCart = (product) => {
+    setIsLoading(true);
+
     dispatch(addToCart(product._id, 1));
+    setIsLoading(false);
     alert.success("Item added to cart");
+    
   };
   const inputRef = useRef(null);
 
@@ -84,15 +86,14 @@ const Homepage = () => {
     }
   };
 
-  const latestProducts = products && products.slice(0, 10);
-
+  const sortedProducts = products && [...products].sort((a, b) => new Date(b.date) - new Date(a.date));
+  const latestProducts = sortedProducts && sortedProducts.slice(0, 10);
+  
   // Sort the products by price in descending order
-  const bestSellingProducts =
-    products && products.sort((a, b) => b.price - a.price).slice(0, 8);
+  const bestSellingProducts = products && [...products].sort((a, b) => b.price - a.price).slice(0, 8);
 
-  // Shuffle the products array randomly
-  const featuredProducts =
-    products && products.sort(() => Math.random() - 0.5).slice(0, 8);
+  const featuredProducts = products && [...products].sort((a, b) => b.rating - a.rating).slice(0, 8);
+  
   if (loading && !products) {
     return <Loader />;
   }
@@ -103,56 +104,68 @@ const Homepage = () => {
       ) : (
         <React.Fragment>
           <MetaData title="High-Quality Shoes for Every Occassion" />
-          <section className="pt-24 md:pt-5 relative">
-            {" "}
-            <Carousel
-              autoPlay
-              pause="hover"
-              showArrows={true}
-              showStatus={false}
-              showThumbs={false}
-              showIndicators={false}
-              interval={5000}
-              infiniteLoop={true}
-              className="w-full h-full"
-            >
-              <div className="h-80 md:h-96 lg:h-screen bg-gray-400">
-                <img
-                  src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604494/dmagni/ad/Ad2_ngybj4.jpg"
-                  alt="adImage"
-                  className="h-full"
-                />
+          {/* Hero Section */}
+          <section className=" pt-40 pb-10 px-5 md:px-24 lg:h-screen md:grid place-items-center bg-gradient-to-b from-gray-400 to-gray-100">
+            <div className="flex lg:flex-row gap-10 lg:gap-20 flex-col-reverse   place-items-center">
+              <div className="flex-1">
+                <div className=" flex flex-col space-y-3 md:space-y-6">
+                  <p className="text-xl md:text-4xl xl:text-6xl font-bold text-gray-700">
+                    Elevate your steps with{" "}
+                    <b className="text-primary-color font-bold">D'Magni</b>
+                  </p>
+                  <p className="text-base md:text-lg text-gray-600 font-medium">
+                    Discover our exquisite collection of footwear that combines
+                    style and comfort. Shop now and experience luxury at your
+                    feet.
+                  </p>
+
+                  <div>
+                    <Link to="/shop">
+                      <button className="px-12 md:px-24 py-2 md:py-3 font-bold text-white bg-primary-color rounded hover:bg-gray-700">
+                        Shop Now
+                      </button>
+                    </Link>
+                  </div>
+                </div>
               </div>
-              <div className="h-80 md:h-96 lg:h-screen bg-gray-400">
-                <img
-                  src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604490/dmagni/ad/Ad3_nykbno.jpg"
-                  alt="adImage"
-                  className="h-full"
-                />
-              </div>
-              <div className="h-80 md:h-96 lg:h-screen bg-gray-400">
-                <img
-                  src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604486/dmagni/ad/Ad1_v81yhc.jpg"
-                  alt="adImage"
-                  className="h-full"
-                />
-              </div>
-            </Carousel>
-            <div className="absolute top-40 lg:top-80 px-6 md:px-24 flex flex-col space-y-3 md:space-y-6">
-              <p className="text-2xl md:text-4xl lg:text-6xl font-bold text-white">
-                Elevate your steps with{" "}
-                <b className="text-primary-color font-bold">D'Magni</b>
-              </p>
-              <p className="text-xl md:text-3xl lg:text-5xl font-bold text-gray-200">
-                Where fashion meets comfort.
-              </p>
-              <div>
-                <button className="px-12 md:px-24 py-2 md:py-3 font-bold text-white bg-primary-color rounded hover:bg-gray-700">
-                  Shop Now
-                </button>
+              <div className="flex-1 ">
+                <Carousel
+                  autoPlay
+                  pause="hover"
+                  showArrows={true}
+                  showStatus={false}
+                  showThumbs={false}
+                  showIndicators={false}
+                  interval={5000}
+                  infiniteLoop={true}
+                  className="w-full h-full "
+                >
+                  <div className="bg-gray-400 h-full">
+                    <img
+                      src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604494/dmagni/ad/Ad2_ngybj4.jpg"
+                      alt="adImage"
+                      className="h-full"
+                    />
+                  </div>
+                  <div className="bg-gray-400 h-full">
+                    <img
+                      src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604490/dmagni/ad/Ad3_nykbno.jpg"
+                      alt="adImage"
+                      className="h-full"
+                    />
+                  </div>
+                  <div className="bg-gray-400 h-full">
+                    <img
+                      src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604486/dmagni/ad/Ad1_v81yhc.jpg"
+                      alt="adImage"
+                      className="h-full"
+                    />
+                  </div>
+                </Carousel>
               </div>
             </div>
           </section>
+
           <div className=" py-5 md:py-20 px-4 md:px-24 bg-neutral-100 flex flex-col md:space-y-20 space-y-10">
             <section>
               <h3 className="text-xl md:text-3xl py-5 md:py-10 font-bold text-gray-700 text-left">
@@ -217,7 +230,7 @@ const Homepage = () => {
                               className="bg-sec-color text-white px-3 py-1 text-xs rounded hover:bg-zinc-700"
                               disabled={product.stock === 0}
                               onClick={() => handleAddToCart(product)}
-                              >
+                            >
                               Add to cart
                             </button>
                           </div>
@@ -455,7 +468,7 @@ const Homepage = () => {
                 </div>
               </div>
             </section>
-
+            {/* Newsletter section */}
             <section className="px-4 md:px-24 flex flex-col gap-7 text-center py-10 md:py-20 place-items-center">
               <p className="text-xl md:text-4xl font-medium text-gray-700">
                 Subscribe To Our Newsletter

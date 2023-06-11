@@ -36,7 +36,9 @@ const UpdateProduct = () => {
   } = useSelector((state) => state.product);
 
   const { id } = useParams();
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   useEffect(() => {
 
     if (product && product._id !== id) {
@@ -246,7 +248,9 @@ const submitHandler = (e) => {
                     <button
                       id="login_button"
                       type="submit"
-                      className="bg-zinc-900 text-white rounded-md font-bold hover:bg-gray-500 py-3"
+                      className={`bg-zinc-900 text-white rounded-md font-bold hover:bg-gray-500 py-3 ${
+                        loading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                       disabled={loading ? true : false}
                     >
                       CREATE

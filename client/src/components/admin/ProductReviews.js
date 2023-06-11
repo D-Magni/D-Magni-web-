@@ -6,8 +6,6 @@ import MetaData from "../layouts/MetaData";
 import { getProductReviews, deleteReview, clearErrors } from "../../actions/productActions";
 import { useAlert } from "react-alert";
 import DeleteForever from "@mui/icons-material/DeleteForever";
-import SearchIcon from "@mui/icons-material/Search";
-import PencilIcon from "@mui/icons-material/Edit";
 import Sidebar from "./Sidebar";
 import { DELETE_REVIEW_RESET } from "../../constants/productConstants";
 
@@ -19,7 +17,9 @@ const ProductReviews = () => {
   const { isDeleted } = useSelector(state => state.review)
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredReviews, setFilteredReviews] = useState(reviews);
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
 

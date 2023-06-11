@@ -20,7 +20,17 @@ const ConfirmOrder = () => {
   const { user } = useSelector((state) => state.auth);
   const { error } = useSelector((state) => state.newOrder);
   const [orderCreated, setOrderCreated] = useState(false);
+  const [localStorageCartItems, setLocalStorageCartItems] = useState([]);
 
+  useEffect(() => {
+    // Fetch cart items from localStorage
+    const storedCartItems = localStorage.getItem("cartItems");
+    if (storedCartItems) {
+      const parsedCartItems = JSON.parse(storedCartItems);
+      // Update the cart items in the state
+      setLocalStorageCartItems(parsedCartItems);
+    }
+  }, []);
   // Calculate order prices
   const itemsPrice = Number(
     cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
@@ -99,11 +109,15 @@ const ConfirmOrder = () => {
 
     const orderInfo = JSON.parse(sessionStorage.getItem("orderInfo"));
     const order = {
-      orderItems: cartItems,
+      orderItems: localStorageCartItems.map((item) => {
+        return {
+          ...item,
+          shoeSize: item.shoeSize,
+        };
+      }),
       shippingInfo,
       ...orderInfo,
     };
-
     try {
       await handleFlutterPayment({
         callback: async (response) => {
@@ -121,6 +135,7 @@ const ConfirmOrder = () => {
               if (!orderCreated) {
                 setOrderCreated(true);
                 await dispatch(createOrder(order));
+                console.log(order);
                 localStorage.removeItem("cartitems");
               }
               alert.success("Payment successful");
@@ -173,7 +188,7 @@ const ConfirmOrder = () => {
               Your Cart Items:
             </h4>
 
-            {cartItems.map((item) => (
+            {localStorageCartItems.map((item) => (
               <Fragment>
                 <hr />
 
@@ -194,6 +209,7 @@ const ConfirmOrder = () => {
 
                     <div className="col-4 col-lg-4 mt-4 mt-lg-0 text-sm">
                       <p>Quantiy: {item.quantity}</p>
+                      <p>Size: {item.shoeSize}</p> {/* Display the shoeSize */}
                       <p className="font-bold">
                         N{(item.quantity * item.price).toFixed(2)}
                       </p>
@@ -229,15 +245,16 @@ const ConfirmOrder = () => {
 
             <button
               id="checkout_btn"
-              className="py-2 w-full  px-7 bg-green-600 hover:bg-gray-400 text-white font-bold rounded"
+              className={`py-2 w-full px-7 bg-green-600  text-white font-bold rounded ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               onClick={proceedToPayment}
               disabled={loading ? true : false}
             >
               {loading ? (
                 <div className="flex gap-5 place-items-center justify-center">
-                  {" "}
-                  <CircularProgress size={24} className="text-white" />{" "}
-                  <p>Processing ...</p>{" "}
+                  <CircularProgress size={24} className="text-white" />
+                  <p>Processing ...</p>
                 </div>
               ) : (
                 "Proceed to payment"

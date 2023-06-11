@@ -74,7 +74,9 @@ const ForgotPassword = () => {
                   <button
                     id="forgot_password_button"
                     type="submit"
-                    className="bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3 "
+                    className={`bg-gray-900 text-white rounded-md font-bold hover:bg-gray-800 py-3  ${
+                      loading ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
                     onClick={submitHandler}
                     disabled={loading ? true : false}
                   >

@@ -1,5 +1,4 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../layouts/Loader";
 import MetaData from "../layouts/MetaData";
@@ -17,21 +16,21 @@ import { UPDATE_ORDER_RESET } from "../../constants/orderConstants";
 const ProcessOrder = () => {
   const [status, setStatus] = useState("");
 
-  const navigate = useNavigate();
   const alert = useAlert();
   const dispatch = useDispatch();
   const { loading,  order = {} } = useSelector((state) => state.orderDetails);
   const {
     shippingInfo,
     orderItems,
-    paymentInfo,
     user,
     totalPrice,
     orderStatus,
   } = order
   const { error, isUpdated } = useSelector((state) => state.order);
   const { id } = useParams();
-
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   useEffect(() => {
     dispatch(getOrderDetails(id));
 
@@ -52,6 +51,7 @@ const ProcessOrder = () => {
 
     dispatch(updateOrder(id, formData));
   };
+  console.log("Order Items:", orderItems);
 
   const shippingDetails =
     shippingInfo &&
@@ -150,6 +150,13 @@ const ProcessOrder = () => {
                           <div className="md:w-2/12">
                             <p className="text-gray-700 font-medium">
                               {item.quantity} Piece(s)
+                            </p>
+                          </div>
+
+
+                          <div className="md:w-2/12">
+                            <p className="text-gray-700 font-medium">
+                              Size: {item.shoeSize}
                             </p>
                           </div>
                         </div>

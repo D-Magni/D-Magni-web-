@@ -14,9 +14,11 @@ const Footer = () => {
   const isAdminPage =
     window.location.pathname.startsWith("/admin") ||
     window.location.pathname.startsWith("/dashboard");
-
+    if (isAdminPage) {
+      return null
+    }
   return (
-    <footer className={`${isAdminPage ? "hidden" : ""} bg-black text-white`}>
+    <footer className={`${isAdminPage ? "hidden" : "block"} bg-black text-white z-40`}>
       <div className="container mx-auto py-10 px-4 md:px-24">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="col-span-1 flex flex-col gap-4" id="about">
