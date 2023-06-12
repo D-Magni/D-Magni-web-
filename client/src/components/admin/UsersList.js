@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../layouts/Loader";
 import MetaData from "../layouts/MetaData";
@@ -16,7 +16,7 @@ const UsersList = () => {
   const alert = useAlert();
   const dispatch = useDispatch();
   const { loading, error, users } = useSelector((state) => state.allUsers);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [, setSearchTerm] = useState("");
   const [filteredUsers, setFilteredUsers] = useState(users);
 
   const { isDeleted } = useSelector(
@@ -114,7 +114,7 @@ const UsersList = () => {
               </thead>
               {filteredUsers &&
                 filteredUsers.map((user, index) => (
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-white divide-y divide-gray-200" key={user._id}>
                     <tr key={index}>
                       <td className="py-4 px-6 text-sm text-gray-500">
                         {user._id}

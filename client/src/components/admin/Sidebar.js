@@ -10,10 +10,7 @@ import CategoryIcon from '@mui/icons-material/Category';
 import ReviewsIcon from '@mui/icons-material/Reviews';
 
 const Sidebar = () => {
-  const isAdminPage =
-    window.location.pathname.startsWith('/admin') ||
-    window.location.pathname.startsWith('/dashboard');
-
+ 
   const [isProductOpen, setProductOpen] = useState(false);
 
   const toggleProduct = () => {

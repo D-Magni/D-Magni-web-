@@ -1,10 +1,9 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../layouts/Loader";
 import MetaData from "../layouts/MetaData";
 import { getAdminProducts, deleteProduct, clearErrors } from "../../actions/productActions";
-import Visibility from "@mui/icons-material/Visibility";
 import { useAlert } from "react-alert";
 import DeleteForever from "@mui/icons-material/DeleteForever";
 import SearchIcon from "@mui/icons-material/Search";
@@ -15,9 +14,8 @@ import { DELETE_PRODUCT_RESET } from "../../constants/productConstants";
 const ProductList = () => {
   const alert = useAlert();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { loading, error, products } = useSelector((state) => state.products);
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [, setSearchTerm] = useState(""); 
   const [filteredProducts, setFilteredProducts] = useState([]);
   
   const { error: deleteError, isDeleted } = useSelector(state => state.product)

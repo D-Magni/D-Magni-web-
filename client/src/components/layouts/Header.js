@@ -107,7 +107,7 @@ const Header = () => {
       >
         <div className=" flex-1">
           <Link to="/">
-            <img src="/images/logo.png" width={200} />
+            <img src="/images/logo.png" width={200} alt="logo" />
           </Link>
         </div>
 
@@ -187,7 +187,7 @@ const Header = () => {
                           <div className="flex-1 flex justify-end ">
                             <button
                               className="text-red-500"
-                              onClick={() => removeCartItemHandler(item.product._id)}
+                              onClick={() => removeCartItemHandler(item._id)}
                             >
                               <DeleteForeverIcon />
                             </button>
@@ -332,7 +332,7 @@ const Header = () => {
 
             <div>
               <Link to="/">
-                <img src="/images/logo.png" width={130} />
+                <img src="/images/logo.png" width={130} alt="logo"/>
               </Link>{" "}
             </div>
 
@@ -406,7 +406,7 @@ const Header = () => {
                                   <button
                                     className="text-red-500"
                                     onClick={() =>
-                                      removeCartItemHandler(item.product._id)
+                                      removeCartItemHandler(item._id)
                                     }
                                   >
                                     <DeleteForeverIcon />

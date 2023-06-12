@@ -195,7 +195,7 @@ const onChange = async (e) => {
                             className="mt-3 mr-2 w-[55px] h-[52px]"
                             src={preview}
                             key={preview}
-                            alt="Image Preview"
+                            alt="Preview"
                           />
                         ))}
                     </div>

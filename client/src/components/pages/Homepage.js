@@ -8,7 +8,7 @@ import { Carousel } from "react-responsive-carousel";
 import { useAlert } from "react-alert";
 import { useParams } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { addToCart, getCartItems } from "../../actions/cartActions";
+import { addToCart } from "../../actions/cartActions";
 import { lazy, Suspense } from "react";
 import { PuffLoader } from "react-spinners";
 import { Link } from "react-router-dom";
@@ -21,11 +21,11 @@ import { SelectAll, ThumbUp, HeadsetMic, Lock } from "@mui/icons-material";
 const LazyImage = lazy(() => import("../lazyloader/LazyImage"));
 
 const Homepage = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [minPrice, setMinPrice] = useState(1);
-  const [maxPrice, setMaxPrice] = useState(1500000);
-  const [rating, setRating] = useState(0);
-  const [isLoading, setIsLoading] = useState(false)
+  const [currentPage, ] = useState(1);
+  const [minPrice, ] = useState(1);
+  const [maxPrice, ] = useState(1500000);
+  const [rating, ] = useState(0);
+  const [, setIsLoading] = useState(false)
   const alert = useAlert();
 
   const dispatch = useDispatch();

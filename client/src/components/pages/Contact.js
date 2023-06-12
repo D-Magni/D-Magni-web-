@@ -1,8 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { useAlert } from "react-alert";
-import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
-import { useNavigate } from "react-router-dom";
 
 // import { sendMessage, clearErrors } from "../../actions/contactActions";
 
@@ -15,10 +12,7 @@ const Contact = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const navigate = useNavigate();
-  const alert = useAlert();
 
-  const dispatch = useDispatch();
 
 //   const { error, success, loading } = useSelector((state) => state.contact);
   

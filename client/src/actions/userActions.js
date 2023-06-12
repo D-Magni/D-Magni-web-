@@ -37,7 +37,7 @@ import {
   DELETE_USER_SUCCESS,
   CLEAR_ERRORS,
 } from "../constants/userConstants";
-import { getCartItems, addToCart, addCartLogout, getAllCart } from "./cartActions";
+import { getCartItems, addCartLogs, getAllCart } from "./cartActions";
 
 
 
@@ -65,12 +65,16 @@ export const login = (email, password) => async (dispatch) => {
       type: LOGIN_SUCCESS,
       payload: data.user,
     });
-    // Add local storage cart items to the server cart
+
+    // Add local storage cart items to the server cart concurrently
     const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-    for (const item of cartItems) {
-      const { productId, quantity, name, image, price } = item;
-      await dispatch(addToCart(productId, quantity, name, image, price));
-    }
+    const addCartLogsPromises = cartItems.map((item) => {
+      const { product, quantity, name, image, price } = item;
+      return dispatch(addCartLogs(product._id, quantity, name, image, price));
+    });
+
+    await Promise.all(addCartLogsPromises); // Add cart items concurrently
+
     dispatch(getAllCart());
 
   } catch (error) {
@@ -90,7 +94,6 @@ export const login = (email, password) => async (dispatch) => {
 };
 
 // Register user
-
 export const register = (userData) => async (dispatch) => {
   try {
     dispatch({
@@ -109,11 +112,16 @@ export const register = (userData) => async (dispatch) => {
       type: REGISTER_USER_SUCCESS,
       payload: data.user,
     });
+
+    // Add local storage cart items to the server cart concurrently
     const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-    for (const item of cartItems) {
-      const { productId, quantity, name, image, price } = item;
-      await dispatch(addCartLogout(item.productId, item.quantity, item.name, item.image, item.price));
-    }
+    const addCartLogsPromises = cartItems.map((item) => {
+      const { product, quantity, name, image, price } = item;
+      return dispatch(addCartLogs(product._id, quantity, name, image, price));
+    });
+
+    await Promise.all(addCartLogsPromises); // Add cart items concurrently
+
     dispatch(getCartItems());
   } catch (error) {
     dispatch({
@@ -347,14 +355,19 @@ export const logout = () => async (dispatch) => {
     });
 
     const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-    for (const item of cartItems) {
-      const { productId, quantity, name, image, price } = item;
-      await dispatch(addCartLogout(productId, quantity, name, image, price));
-    }
+
+    localStorage.removeItem("cartItems"); // Remove items from local storage immediately
+
+    const addCartLogsPromises = cartItems.map((item) => {
+      const { product, quantity, name, image, price } = item;
+      return dispatch(addCartLogs(product._id, quantity, name, image, price));
+    });
+
+    await Promise.all(addCartLogsPromises); // Add cart items concurrently
 
     await axios.get("/api/v1/logout");
-    localStorage.removeItem("cartItems");
-    await dispatch(getCartItems());
+    dispatch(getCartItems());
+
     dispatch({
       type: LOGOUT_SUCCESS,
     });

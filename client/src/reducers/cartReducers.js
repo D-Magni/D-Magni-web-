@@ -5,7 +5,7 @@ import {
   REMOVE_CART_ITEM,
   CLEAR_CART,
   SAVE_SHIPPING_INFO,
-  ADD_CART_LOGOUT,
+  ADD_CART_LOGS,
   GET_ALL_CART,
 } from "../constants/cartConstants";
 
@@ -52,14 +52,15 @@ const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action) => {
       return {
         ...state,
         cartItems: state.cartItems.filter(
-          (item) => item.product._id !== action.payload.id
+          (item) => item._id !== action.payload.id
         ),
       };
-      case ADD_CART_LOGOUT:
+      case ADD_CART_LOGS:
         return {
           ...state,
           cartItems: action.payload.cartItems,
         };
+     
     case CLEAR_CART:
       return {
         ...state,

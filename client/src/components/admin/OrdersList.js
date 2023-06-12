@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../layouts/Loader";
 import MetaData from "../layouts/MetaData";
@@ -19,7 +19,7 @@ const OrdersList = () => {
   const alert = useAlert();
   const dispatch = useDispatch();
   const { loading, error, orders } = useSelector((state) => state.allOrders);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [ , setSearchTerm] = useState("");
   const [filteredOrders, setFilteredOrders] = useState(orders);
 
   const { error: deleteError, isDeleted } = useSelector((state) => state.order);
@@ -42,7 +42,7 @@ const OrdersList = () => {
       alert.success("Order deleted successfully");
       dispatch({ type: DELETE_ORDER_RESET });
     }
-  }, [dispatch, alert, error, isDeleted]);
+  }, [dispatch, alert, error, isDeleted, deleteError]);
 
   useEffect(() => {
     setFilteredOrders(orders);

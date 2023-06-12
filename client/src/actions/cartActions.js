@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {
   ADD_TO_CART,
-  ADD_CART_LOGOUT,
+  ADD_CART_LOGS,
   GET_CART_ITEMS,
   UPDATE_CART_ITEM,
   REMOVE_CART_ITEM,
@@ -13,19 +13,12 @@ import {
 export const getAllCart = () => async (dispatch) => {
   try {
     const { data } = await axios.get('/api/v1/cart');
-    const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-    const mergedCartItems = [
-      ...cartItems,
-      ...data.cartItems.filter(
-        (item) => !cartItems.some((existingItem) => existingItem._id === item._id)
-      ),
-    ];
-
-    localStorage.setItem('cartItems', JSON.stringify(mergedCartItems));
+ 
+    localStorage.setItem('cartItems', JSON.stringify(data.cartItems));
 
     dispatch({
       type: GET_ALL_CART,
-      payload: { cartItems: mergedCartItems },
+      payload: data
     });
 
   } catch (error) {
@@ -52,16 +45,17 @@ export const addToCart = (productId, quantity) => async (dispatch, getState) => 
 
     const { data } = await axios.get(`/api/v1/product/${productId}`);
       const cartItem = {
-        productId,
+        productId: data.product._id,
         product: data.product,
         name: data.product.name,
         price: data.product.price,
         image: data.product.images[0].url,
         quantity,
+        _id: data.product._id
       };
 
       const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-      const existingItemIndex = cartItems.findIndex((item) => item.productId === productId);
+      const existingItemIndex = cartItems.findIndex((item) => item.product._id === productId);
       if (existingItemIndex !== -1) {
         cartItems[existingItemIndex].quantity += parseInt(quantity);
       } else {
@@ -79,30 +73,28 @@ export const addToCart = (productId, quantity) => async (dispatch, getState) => 
   }
 };
 
-export const addCartLogout = (productId, quantity) => async (dispatch) => {
+export const addCartLogs = (productId, quantity) => async (dispatch) => {
   try {
     const { data } = await axios.get(`/api/v1/product/${productId}`);
-    console.log('Product:', data.product); // Log the product details
 
     const cartItem = {
-      productId,
+      productId: data.product._id,
+      product: data.product,
       name: data.product.name,
       price: data.product.price,
       image: data.product.images[0].url,
       quantity,
     };
 
-    await axios.post('/api/v1/cart/add', cartItem);
-
+    await axios.post('/api/v1/cart/populate', cartItem, { version: false });
     dispatch({
-      type: ADD_CART_LOGOUT,
+      type: ADD_CART_LOGS,
       payload: { cartItems: [cartItem] }
     });
   } catch (error) {
     console.error('Error adding item to cart:', error);
   }
-}
-
+};
 export const updateCartItem = (_id, quantity) => async (dispatch, getState) => {
   try {
       const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
@@ -127,9 +119,10 @@ export const removeCartItem = (id) => async (dispatch, getState ) => {
         const { auth } = getState()
 ;
  if (auth.isAuthenticated) {
+  await axios.delete(`/api/v1/cart/item/${id}`);
  }    
    const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-      const updatedCartItems = cartItems.filter((item) => item.product._id !== id);
+      const updatedCartItems = cartItems.filter((item) => item._id !== id);
       localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
       dispatch({
         type: REMOVE_CART_ITEM,
@@ -140,6 +133,7 @@ export const removeCartItem = (id) => async (dispatch, getState ) => {
     console.error('Error removing item from cart:', error);
   }
 };
+
 
 export const clearCart = () => async (dispatch, getState) => {
   try {

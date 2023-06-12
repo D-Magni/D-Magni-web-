@@ -13,7 +13,7 @@ const ListOrders = () => {
   const dispatch = useDispatch();
   const { loading, error, orders } = useSelector((state) => state.myOrders);
   const [filteredOrders, setFilteredOrders] = useState(orders);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [, setSearchTerm] = useState("");
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);

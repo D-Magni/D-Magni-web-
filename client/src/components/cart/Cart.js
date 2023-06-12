@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import MetaData from "../layouts/MetaData";
 import {
-  addToCart,
   getCartItems,
   removeCartItem,
   updateCartItem,
@@ -47,30 +46,31 @@ const Cart = () => {
       [itemId]: newSize
     }));
   };
-  
   const checkoutHandler = () => {
-    if (isAuthenticated) {
-      const itemsWithoutShoeSize = cartItems.filter(
-        (item) => !shoeSizes[item._id] || shoeSizes[item._id].trim() === ""
-      );
-      if (itemsWithoutShoeSize.length > 0) {
-        alert.error("Please enter the shoe size for all items.");
-      } else {
-        const itemsWithSizes = cartItems.map((item) => ({
-          ...item,
-          shoeSize: shoeSizes[item._id] || "",
-        }));
+    const itemsWithoutShoeSize = cartItems.filter(
+      (item) => !shoeSizes[item._id] || shoeSizes[item._id].trim() === ""
+    );
   
-        // Save the items with sizes to local storage
-        localStorage.setItem("cartItems", JSON.stringify(itemsWithSizes));
-  
-        navigate("/shipping");
-      }
+    if (itemsWithoutShoeSize.length > 0) {
+      alert.error("Please enter the shoe size for all items.");
     } else {
-      navigate(`/register?redirect=/shipping`);
-      alert.error("Create an account to proceed with the payment");
+      const itemsWithSizes = cartItems.map((item) => ({
+        ...item,
+        shoeSize: shoeSizes[item.productId] || "",
+      }));
+  
+      localStorage.setItem("cartItems", JSON.stringify(itemsWithSizes));
+  
+      if (isAuthenticated) {
+        navigate("/shipping");
+      } else {
+        navigate(`/register?redirect=/shipping`);
+        alert.error("Create an account to proceed with the payment");
+      }
     }
   };
+  
+
   
   return (
     <Fragment>
@@ -161,7 +161,7 @@ const Cart = () => {
                           <button
                             id="delete_cart_item"
                             className="fa fa-trash text-red-600"
-                            onClick={() => removeCartItemHandler(item.product._id)}
+                            onClick={() => removeCartItemHandler(item._id)}
                           >
                             <DeleteForeverIcon />
                           </button>

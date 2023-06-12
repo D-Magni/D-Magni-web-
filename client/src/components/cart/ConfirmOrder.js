@@ -8,7 +8,6 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { useAlert } from "react-alert";
 import CheckoutSteps from "./CheckoutSteps";
 import { createOrder, clearErrors } from "../../actions/orderActions";
-import { clearCart } from "../../actions/cartActions";
 
 const ConfirmOrder = () => {
   const navigate = useNavigate();
@@ -124,11 +123,6 @@ const ConfirmOrder = () => {
           console.log(response);
           setLoading(false);
 
-          const axiosConfig = {
-            headers: {
-              "Content-type": "application/json",
-            },
-          };
 
           if (response.status === "completed") {
             try {

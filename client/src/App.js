@@ -75,7 +75,7 @@ function App() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [])
-  const [flutterwaveApiKey, setFlutterwaveKey] = useState(``);
+  const [, setFlutterwaveKey] = useState(``);
   useEffect(() => {
     store.dispatch(loadUser());
 

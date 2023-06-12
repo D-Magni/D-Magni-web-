@@ -13,7 +13,7 @@ const OrderDetails = () => {
 
     const { loading, error, order = {}} = useSelector(state => state.orderDetails)
 
-    const { shippingInfo, orderItems, paymentInfo, user, totalPrice, orderStatus} = order
+    const { shippingInfo, orderItems, user, totalPrice, orderStatus} = order
     useEffect(() => {
       window.scrollTo(0, 0);
     }, []);

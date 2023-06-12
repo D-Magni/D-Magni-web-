@@ -309,7 +309,10 @@ exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler(`User not found with id: ${req.params.id}`));
   }
 
-  await cloudinary.v2.uploader.destroy(user.avatar?.public_id);
+  // Check if user avatar exists and has a public_id
+  if (user.avatar && user.avatar.public_id) {
+    await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+  }
 
   await user.deleteOne();
 

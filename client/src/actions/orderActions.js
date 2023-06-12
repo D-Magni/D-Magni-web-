@@ -63,8 +63,7 @@ export const myOrders = () => async (dispatch) => {
 
     } catch (error) {
         dispatch({
-            type: MY_ORDERS_FAIL,
-            payload: error.response.data.message
+            type: MY_ORDERS_FAIL
         })
     }
 }
@@ -103,8 +102,7 @@ export const getOrderDetails = (id) => async (dispatch) => {
 
     } catch (error) {
         dispatch({
-            type: ORDER_DETAILS_FAIL,
-            payload: error.response.data.message
+            type: ORDER_DETAILS_FAIL
         })
     }
 }

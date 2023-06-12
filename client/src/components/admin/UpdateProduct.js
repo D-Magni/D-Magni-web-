@@ -9,7 +9,6 @@ import {
 } from "../../actions/productActions";
 import { useAlert } from "react-alert";
 import {
-  NEW_PRODUCT_RESET,
   UPDATE_PRODUCT_RESET,
 } from "../../constants/productConstants";
 import Sidebar from "./Sidebar";
@@ -68,7 +67,7 @@ const UpdateProduct = () => {
         dispatch({ type: UPDATE_PRODUCT_RESET })
     }
 
-}, [dispatch, alert, error, isUpdated, updateError, product, id])
+}, [dispatch, alert, error, isUpdated, updateError, product, id, navigate])
 
 
 const submitHandler = (e) => {
@@ -240,7 +239,7 @@ const submitHandler = (e) => {
                             className="mt-3 mr-2 w-[55px] h-[52px]"
                             src={img}
                             key={img}
-                            alt="Image Preview"
+                            alt="Preview"
                           />
                         ))}
                     </div>

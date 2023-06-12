@@ -1,5 +1,5 @@
 export const ADD_TO_CART = 'ADD_TO_CART';
-export const ADD_CART_LOGOUT ='ADD_CART_LOGOUT';
+export const ADD_CART_LOGS ='ADD_CART_LOGS';
 export const GET_CART_ITEMS = 'GET_CART_ITEMS';
 export const GET_ALL_CART = 'GET_ALL_CART';
 export const UPDATE_CART_ITEM = 'UPDATE_CART_ITEM';
