@@ -22,7 +22,6 @@ import { removeCartItem, getCartItems } from "../../actions/cartActions";
 import { useDispatch, useSelector } from "react-redux";
 import { useAlert } from "react-alert";
 import { logout } from "../../actions/userActions";
-import Loader from "../layouts/Loader";
 
 const Header = () => {
   //Handle cart
@@ -37,7 +36,6 @@ const Header = () => {
 
   const handleCartClick = () => {
     setShowCart(!showCart);
-
   };
   const closeCart = () => {
     setShowCart(false);
@@ -48,12 +46,8 @@ const Header = () => {
   const { cartItems } = useSelector((state) => state.cart);
 
   const removeCartItemHandler = async (id) => {
-    setIsLoading(true);
-
     await dispatch(removeCartItem(id));
     await dispatch(getCartItems());
-    setIsLoading(false); // Set loading state back to false after the request is complete
-
   };
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -67,7 +61,6 @@ const Header = () => {
 
   //Payment CheckOut
   const [loading, setLoading] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   //End here
 
@@ -98,8 +91,6 @@ const Header = () => {
 
   const logoutHandler = () => {
     dispatch(logout());
-    localStorage.removeItem("cartItems");
-    dispatch(getCartItems());
     alert.success("Logged out successfully");
   };
 
@@ -153,10 +144,7 @@ const Header = () => {
                   className="cursor-pointer absolute z-40 bg-black text-white text-xl top-5 right-6"
                 />
               </div>
-              {isLoading ? (
-      // Render the preloader when loading is true
-      <Loader />
-              ) : cartItems.length === 0 ? (
+              {cartItems.length === 0 ? (
                 <div className="text-center ">
                   <p className="text-black text-xl font-medium">
                     Your cart is empty.
@@ -199,7 +187,7 @@ const Header = () => {
                           <div className="flex-1 flex justify-end ">
                             <button
                               className="text-red-500"
-                              onClick={() => removeCartItemHandler(item._id)}
+                              onClick={() => removeCartItemHandler(item.product._id)}
                             >
                               <DeleteForeverIcon />
                             </button>
@@ -231,7 +219,6 @@ const Header = () => {
                         View Cart
                       </button>
                     </Link>
-          
                   </div>
                 </div>
               )}
@@ -419,7 +406,7 @@ const Header = () => {
                                   <button
                                     className="text-red-500"
                                     onClick={() =>
-                                      removeCartItemHandler(item._id)
+                                      removeCartItemHandler(item.product._id)
                                     }
                                   >
                                     <DeleteForeverIcon />
@@ -454,7 +441,6 @@ const Header = () => {
                               View Cart
                             </button>
                           </Link>
-              
                         </div>
                       </div>
                     )}

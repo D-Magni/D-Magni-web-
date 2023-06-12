@@ -106,7 +106,7 @@ const Homepage = () => {
           <MetaData title="High-Quality Shoes for Every Occassion" />
           {/* Hero Section */}
           <section className=" pt-40 pb-10 px-5 md:px-24 lg:h-screen md:grid place-items-center bg-gradient-to-b from-gray-400 to-gray-100">
-            <div className="flex lg:flex-row gap-10 lg:gap-20 flex-col-reverse   place-items-center">
+            <div className="flex lg:flex-row  lg:gap-20 flex-col-reverse  gap-10  place-items-center">
               <div className="flex-1">
                 <div className=" flex flex-col space-y-3 md:space-y-6">
                   <p className="text-xl md:text-4xl xl:text-6xl font-bold text-gray-700">
@@ -128,7 +128,7 @@ const Homepage = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex-1 ">
+              <div className="flex-1 bg-gray-400">
                 <Carousel
                   autoPlay
                   pause="hover"
@@ -140,21 +140,21 @@ const Homepage = () => {
                   infiniteLoop={true}
                   className="w-full h-full "
                 >
-                  <div className="bg-gray-400 h-full">
+                  <div className=" h-[300px] md:h-[400px]">
                     <img
                       src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604494/dmagni/ad/Ad2_ngybj4.jpg"
                       alt="adImage"
                       className="h-full"
                     />
                   </div>
-                  <div className="bg-gray-400 h-full">
+                  <div className=" h-[300px] md:h-[400px]">
                     <img
                       src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604490/dmagni/ad/Ad3_nykbno.jpg"
                       alt="adImage"
                       className="h-full"
                     />
                   </div>
-                  <div className="bg-gray-400 h-full">
+                  <div className=" h-[300px] md:h-[400px]">
                     <img
                       src="https://res.cloudinary.com/dwpebdy5z/image/upload/v1684604486/dmagni/ad/Ad1_v81yhc.jpg"
                       alt="adImage"

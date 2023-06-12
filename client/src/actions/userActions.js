@@ -37,7 +37,10 @@ import {
   DELETE_USER_SUCCESS,
   CLEAR_ERRORS,
 } from "../constants/userConstants";
-import { getCartItems, addToCart } from "./cartActions";
+import { getCartItems, addToCart, addCartLogout, getAllCart } from "./cartActions";
+
+
+
 
 // Login
 export const login = (email, password) => async (dispatch) => {
@@ -68,7 +71,8 @@ export const login = (email, password) => async (dispatch) => {
       const { productId, quantity, name, image, price } = item;
       await dispatch(addToCart(productId, quantity, name, image, price));
     }
-    dispatch(getCartItems());
+    dispatch(getAllCart());
+
   } catch (error) {
     let errorMessage = "";
 
@@ -108,7 +112,7 @@ export const register = (userData) => async (dispatch) => {
     const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
     for (const item of cartItems) {
       const { productId, quantity, name, image, price } = item;
-      await dispatch(addToCart(productId, quantity, name, image, price));
+      await dispatch(addCartLogout(item.productId, item.quantity, item.name, item.image, item.price));
     }
     dispatch(getCartItems());
   } catch (error) {
@@ -310,19 +314,22 @@ export const resetPassword = (token, passwords) => async (dispatch) => {
 
 // Load user
 
+
 export const loadUser = () => async (dispatch) => {
   try {
     dispatch({
       type: LOAD_USER_REQUEST,
     });
 
-    const { data } = await axios.get("/api/v1/me");
+    const { data } = await axios.get('/api/v1/me');
 
     dispatch({
       type: LOAD_USER_SUCCESS,
       payload: data.user,
     });
     dispatch(getCartItems());
+
+
   } catch (error) {
     dispatch({
       type: LOAD_USER_FAIL,
@@ -339,9 +346,15 @@ export const logout = () => async (dispatch) => {
       type: LOAD_USER_REQUEST,
     });
 
-    await axios.get("/api/v1/logout");
-    localStorage.removeItem("cartitems");
+    const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+    for (const item of cartItems) {
+      const { productId, quantity, name, image, price } = item;
+      await dispatch(addCartLogout(productId, quantity, name, image, price));
+    }
 
+    await axios.get("/api/v1/logout");
+    localStorage.removeItem("cartItems");
+    await dispatch(getCartItems());
     dispatch({
       type: LOGOUT_SUCCESS,
     });
@@ -352,6 +365,7 @@ export const logout = () => async (dispatch) => {
     });
   }
 };
+
 
 // Get all users
 

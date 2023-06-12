@@ -161,7 +161,7 @@ const Cart = () => {
                           <button
                             id="delete_cart_item"
                             className="fa fa-trash text-red-600"
-                            onClick={() => removeCartItemHandler(item._id)}
+                            onClick={() => removeCartItemHandler(item.product._id)}
                           >
                             <DeleteForeverIcon />
                           </button>

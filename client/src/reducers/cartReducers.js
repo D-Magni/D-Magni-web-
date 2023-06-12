@@ -5,6 +5,8 @@ import {
   REMOVE_CART_ITEM,
   CLEAR_CART,
   SAVE_SHIPPING_INFO,
+  ADD_CART_LOGOUT,
+  GET_ALL_CART,
 } from "../constants/cartConstants";
 
 const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action) => {
@@ -12,7 +14,7 @@ const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action) => {
       case ADD_TO_CART:
         const newItem = action.payload.cartItems[action.payload.cartItems.length - 1];
         const existingItemIndex = state.cartItems.findIndex(
-          (item) => item.productId === newItem.productId
+          (item) => item.product._id === newItem.product._id
         );
       
         if (existingItemIndex !== -1) {
@@ -30,7 +32,7 @@ const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action) => {
             cartItems: [...state.cartItems, newItem],
           };
         }
-      
+    case GET_ALL_CART:
     case GET_CART_ITEMS:
       return {
         ...state,
@@ -50,10 +52,14 @@ const cartReducer = (state = { cartItems: [], shippingInfo: {} }, action) => {
       return {
         ...state,
         cartItems: state.cartItems.filter(
-          (item) => item._id !== action.payload.itemId
+          (item) => item.product._id !== action.payload.id
         ),
       };
-
+      case ADD_CART_LOGOUT:
+        return {
+          ...state,
+          cartItems: action.payload.cartItems,
+        };
     case CLEAR_CART:
       return {
         ...state,
