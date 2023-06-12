@@ -1,8 +1,6 @@
 import { Rating } from '@mui/material'
 import React from 'react'
-import { useSelector } from 'react-redux';
 const ListReviews = ({ reviews }) => {
-    const { user } = useSelector((state) => state.auth);
 
   return (
     <div className="px-7 md:px-24 py-10">

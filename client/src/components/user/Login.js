@@ -37,7 +37,7 @@ const Login = () => {
       alert.error(error);
       dispatch(clearErrors());
     }
-  }, [dispatch, alert, isAuthenticated, error]);
+  }, [dispatch, alert, isAuthenticated, error, navigate, redirect]);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };

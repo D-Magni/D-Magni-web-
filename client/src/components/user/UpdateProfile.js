@@ -20,8 +20,8 @@ const UpdateProfile = () => {
   const [email, setEmail] = useState("");
   const [avatar, setAvatar] = useState("");
   const [avatarPreview, setAvatarPreview] = useState("");
-  const [buttonDisabled, setButtonDisabled] = useState(true);
-  const [uploading, setUploading] = useState(false);
+  const [, setButtonDisabled] = useState(true);
+  const [, setUploading] = useState(false);
   const navigate = useNavigate();
   const alert = useAlert();
 

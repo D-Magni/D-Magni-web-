@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MetaData from "../layouts/MetaData";
 import Pagination from "react-js-pagination";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,9 +12,9 @@ import { useParams } from "react-router-dom";
 
 const Shop = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [minPrice, setMinPrice] = useState(1);
-  const [maxPrice, setMaxPrice] = useState(1500000);
-  const [rating, setRating] = useState(0);
+  const [minPrice, ] = useState(1);
+  const [maxPrice, ] = useState(1500000);
+  const [rating, ] = useState(0);
 
   useEffect(() => {
     window.scrollTo(0, 0);

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import { Box } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addToCart } from "../../actions/cartActions";
 import { useAlert } from "react-alert";
 import { lazy, Suspense } from "react";

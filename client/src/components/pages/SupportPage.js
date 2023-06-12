@@ -1,24 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import MetaData from "../layouts/MetaData";
 
 const SupportPage = () => {
-  const [orderCancellationReason, setOrderCancellationReason] = useState("");
-  const [helpRequest, setHelpRequest] = useState("");
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleOrderCancellation = (e) => {
-    e.preventDefault();
-    console.log("Order Cancellation Requested:", orderCancellationReason);
-    setOrderCancellationReason("");
-  };
-
-  const handleHelpRequest = (e) => {
-    e.preventDefault();
-    console.log("Help Requested:", helpRequest);
-    setHelpRequest("");
-  };
 
   return (
     <div className="py-40 px-5 md:px-24">

@@ -75,7 +75,7 @@ const ProductDetails = () => {
     }
 
     dispatch(getProducts());
-  }, [dispatch, error]);
+  }, [dispatch, error, alert]);
 
   const increaseQty = () => {
     const count = document.querySelector(".count");
@@ -192,7 +192,7 @@ const ProductDetails = () => {
     }
 
     dispatch(getProducts());
-  }, [dispatch, error]);
+  }, [dispatch, error, alert]);
 
   // Limit the displayed recommended products to 6
   let recommendedProducts = products && [...products]; 
