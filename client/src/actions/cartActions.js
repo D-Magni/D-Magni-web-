@@ -95,6 +95,7 @@ export const addCartLogs = (productId, quantity) => async (dispatch) => {
     console.error('Error adding item to cart:', error);
   }
 };
+
 export const updateCartItem = (_id, quantity) => async (dispatch, getState) => {
   try {
       const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
@@ -114,21 +115,25 @@ export const updateCartItem = (_id, quantity) => async (dispatch, getState) => {
   }
 };
 
-export const removeCartItem = (id) => async (dispatch, getState ) => {
+export const removeCartItem = (id) => async (dispatch, getState) => {
   try {
-        const { auth } = getState()
-;
- if (auth.isAuthenticated) {
-  await axios.delete(`/api/v1/cart/item/${id}`);
- }    
-   const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
-      const updatedCartItems = cartItems.filter((item) => item._id !== id);
-      localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
-      dispatch({
-        type: REMOVE_CART_ITEM,
-        payload: { itemId: id },
-      });
-      dispatch(getCartItems());
+    const { auth } = getState();
+    const isAuthenticated = auth.isAuthenticated;
+
+    const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+    const updatedCartItems = cartItems.filter((item) => item._id !== id);
+    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+
+    dispatch({
+      type: REMOVE_CART_ITEM,
+      payload: { itemId: id },
+    });
+
+    dispatch(getCartItems());
+
+    if (isAuthenticated) {
+      await axios.delete(`/api/v1/cart/item/${id}`);
+    }
   } catch (error) {
     console.error('Error removing item from cart:', error);
   }

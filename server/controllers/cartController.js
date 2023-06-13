@@ -85,7 +85,6 @@ exports.addToCart = catchAsyncErrors(async (req, res, next) => {
     });
   }
 });
-
 exports.addCartLogs = catchAsyncErrors(async (req, res, next) => {
   const { productId, quantity } = req.body;
   const product = await Product.findById(productId);
@@ -132,6 +131,7 @@ exports.addCartLogs = catchAsyncErrors(async (req, res, next) => {
         price: product.price,
       });
     }
+
 
     await cart.save();
 
@@ -257,9 +257,9 @@ exports.removeCartItem = catchAsyncErrors(async (req, res, next) => {
     // User is authenticated
     cart = await Cart.findOne({ user: req.user._id });
 
-    if (!cart) {
-      return next(new ErrorHandler('Cart not found', 404));
-    }
+    // if (!cart) {
+    //   return next(new ErrorHandler('Cart not found', 404));
+    // }
 
     const itemIndex = cart.cartItems.findIndex(
       (item) => item._id.toString() === id
@@ -275,7 +275,7 @@ exports.removeCartItem = catchAsyncErrors(async (req, res, next) => {
         cartItems: cart.cartItems, // Return the updated cart items
       });
     } else {
-      return next(new ErrorHandler('Cart item not found', 404));
+      // return next(new ErrorHandler('Cart item not found', 404));
     }
   }
 });
