@@ -81,7 +81,7 @@ const UsersList = () => {
               type="text"
               name="search"
               className="w-full bg-transparent outline-none"
-              placeholder="Search for orders..."
+              placeholder="Search for users.."
               onChange={handleSearch}
             />
             <SearchIcon className="text-gray-400" />
