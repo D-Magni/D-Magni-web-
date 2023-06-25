@@ -177,6 +177,7 @@ const onChange = async (e) => {
                       >
                         <input
                           type="file"
+                          multiple
                           name="avatar"
                           id="customFile"
                           accept="image/*"

@@ -217,16 +217,16 @@ const ProductDetails = () => {
                   autoPlay
                   interval={5000}
                   className="w-full"
-                  style={{ height: "400px" }} // Set the desired height here (e.g., 400px)
                 >
                   {product.images &&
                     product.images.map((image) => (
-                      <img
-                        className="mx-auto h-full object-contain"
-                        src={image.url}
-                        alt={product.title}
-                        style={{ maxHeight: "100%", maxWidth: "100%" }}
-                      />
+                      <div className="h-56 md:h-80 w-full lg:h-96">
+                        <img
+                          className="mx-auto h-full w-full object-cover"
+                          src={image.url}
+                          alt={product.title}
+                        />
+                      </div>
                     ))}
                 </Carousel>
               </div>
@@ -237,9 +237,7 @@ const ProductDetails = () => {
                   {" "}
                   ₦{product.price}
                 </p>
-                <p className="text-gray-700 mb-2 text-sm">
-                  PRODUCT ID: {product._id}
-                </p>
+              
                 <hr className="my-4" />
 
                 <div className="flex items-center mb-4">
@@ -252,7 +250,9 @@ const ProductDetails = () => {
                 </div>
                 <h4 className="text-xl font-bold mb-2">Description:</h4>
                 <p className="text-gray-700 mb-4">{product.description}</p>
-
+                <p className="text-gray-700 mb-2 text-sm">
+                 <b>PRODUCT ID: </b> {product._id}
+                </p>
                 <hr className="my-4" />
 
                 <div className="flex items-center mb-4">
@@ -421,7 +421,9 @@ const ProductDetails = () => {
                     key={product._id}
                     className="bg-white p-3 rounded-lg shadow-md h-full w-36 md:w-64 sm:p-2 mb-7 "
                   >
-                    <Link to={`/products/${product._id}`}>
+                    <Link to={`/product/${product._id}`}
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    >
                       <Suspense
                         fallback={
                           <div className="flex justify-center items-center bg-gray-100">
@@ -441,8 +443,9 @@ const ProductDetails = () => {
                     </h3>
                     <p className="text-gray-700">${product.price}</p>
                     <Link
-                      to={`/products/${product._id}`}
+                      to={`/product/${product._id}`}
                       className="block mt-4 text-blue-500 hover:underline"
+                      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     >
                       View Product
                     </Link>

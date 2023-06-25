@@ -252,7 +252,7 @@ useEffect(() => {
                         name="avatar"
                         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer w-full"
                         id="customFile"
-                        accept="images/*"
+                        accept="image/*"
                         onChange={onChange}
                       />
                       <div className="flex  justify-between px-3 gap-2">
