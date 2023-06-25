@@ -26,8 +26,6 @@ import { PuffLoader } from "react-spinners";
 
 const LazyImage = lazy(() => import("../lazyloader/LazyImage"));
 
-
-
 const ProductDetails = () => {
   const [quantity, setQuantity] = useState(1);
   const [rating, setRating] = useState(0);
@@ -110,8 +108,6 @@ const ProductDetails = () => {
     setOpen(false);
   };
 
-
-
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -120,13 +116,13 @@ const ProductDetails = () => {
         console.log(error);
       }
     };
-  
+
     fetchOrders();
   }, [dispatch]);
-  
+
   useEffect(() => {
     const userOrders = orders;
-  
+
     // Check if the current product's ID is present in the user's orders
     if (userOrders && userOrders.length > 0) {
       const hasOrderedProduct = userOrders.some((order) =>
@@ -147,9 +143,7 @@ const ProductDetails = () => {
   };
   function setUserRatings(event, newValue) {
     const ratingIcons = document.querySelectorAll(".reviewrating");
-  
- 
-  
+
     if (event === "click" || event === "mouseover") {
       ratingIcons.forEach((icon, index) => {
         if (index < newValue) {
@@ -159,12 +153,11 @@ const ProductDetails = () => {
         }
       });
     }
-  
+
     if (event === "click") {
       setRating(newValue);
     }
   }
-  
 
   const reviewHandler = () => {
     const formData = new FormData();
@@ -183,7 +176,6 @@ const ProductDetails = () => {
     handleClose(true);
     dispatch(newReview(formData));
     dispatch(getProductDetails(id));
-
   };
 
   useEffect(() => {
@@ -195,15 +187,16 @@ const ProductDetails = () => {
   }, [dispatch, error, alert]);
 
   // Limit the displayed recommended products to 6
-  let recommendedProducts = products && [...products]; 
+  let recommendedProducts = products && [...products];
 
   const particularProductPrice = product.price;
 
   recommendedProducts &&
-  recommendedProducts.sort(
-    (a, b) => Math.abs(a.price - particularProductPrice) - Math.abs(b.price - particularProductPrice)
-  );
-
+    recommendedProducts.sort(
+      (a, b) =>
+        Math.abs(a.price - particularProductPrice) -
+        Math.abs(b.price - particularProductPrice)
+    );
 
   return (
     <Fragment>
@@ -212,37 +205,41 @@ const ProductDetails = () => {
       ) : (
         <Fragment>
           <MetaData title={product.name} />
-
-          <div className="mx-auto pt-12 md:pt-36 pb-4 px-7 md:px-24">
+          <div className="mx-auto pt-20 md:pt-36 pb-14 px-7 md:px-24">
             <div className="flex flex-col md:flex-row justify-center">
-            <div className="md:w-1/2 lg:w-1/3 p-4 flex-1 bg-red-600">
-  <Carousel
-    pause="hover"
-    showArrows={true}
-    showStatus={true}
-    showThumbs={false}
-    showIndicators={false}
-    autoPlay
-    interval={5000}
-    className="w-full"
-  >
-    {product.images &&
-      product.images.map((image) => (
-        <img
-          className="mx-auto h-64 object-contain md:h-64 w-96"
-          src={image.url}
-          alt={product.title}
-        />
-      ))}
-  </Carousel>
-</div>
-
+              <div className="pt-20 md:w-1/2 lg:w-1/3 p-4 flex-1">
+                <Carousel
+                  pause="hover"
+                  showArrows={true}
+                  showStatus={true}
+                  showThumbs={false}
+                  showIndicators={false}
+                  autoPlay
+                  interval={5000}
+                  className="w-full"
+                  style={{ height: "400px" }} // Set the desired height here (e.g., 400px)
+                >
+                  {product.images &&
+                    product.images.map((image) => (
+                      <img
+                        className="mx-auto h-full object-contain"
+                        src={image.url}
+                        alt={product.title}
+                        style={{ maxHeight: "100%", maxWidth: "100%" }}
+                      />
+                    ))}
+                </Carousel>
+              </div>
 
               <div className="md:w-1/2 lg:w-2/3 p-4 flex-1">
                 <h3 className="text-2xl font-bold mb-2">{product.name}</h3>
-                <p className="text-xl md:3xl font-bold mb-4"> ₦{product.price}</p>
-                <p className="text-gray-700 mb-2">PRODUCT ID: {product._id}</p>
-
+                <p className="text-xl md:text-3xl font-bold mb-4">
+                  {" "}
+                  ₦{product.price}
+                </p>
+                <p className="text-gray-700 mb-2 text-sm">
+                  PRODUCT ID: {product._id}
+                </p>
                 <hr className="my-4" />
 
                 <div className="flex items-center mb-4">
@@ -253,10 +250,10 @@ const ProductDetails = () => {
                     {product.numOfReviews} review(s)
                   </span>
                 </div>
+                <h4 className="text-xl font-bold mb-2">Description:</h4>
+                <p className="text-gray-700 mb-4">{product.description}</p>
 
                 <hr className="my-4" />
-
-            
 
                 <div className="flex items-center mb-4">
                   <span
@@ -308,10 +305,8 @@ const ProductDetails = () => {
 
                 <hr className="my-4" />
 
-                <h4 className="text-xl font-bold mb-2">Description:</h4>
-                <p className="text-gray-700 mb-4">{product.description}</p>
                 {user ? (
-                  hasOrdered ? ( 
+                  hasOrdered ? (
                     <button
                       type="button"
                       id="review_btn"
@@ -414,47 +409,48 @@ const ProductDetails = () => {
               </div>
             </div>
           </div>
-
           {product.reviews && product.reviews.length > 0 && (
             <ListReviews reviews={product.reviews} />
           )}
-    <div className="py-10 px-7 md:px-24 ">
-      <h2 className="text-2xl font-bold mb-4">You may also like</h2>
-      <div className="flex flex-wrap gap-4 md:gap-8">
-        {recommendedProducts &&
-          recommendedProducts.map((product) => (
-            <div
-              key={product._id}
-              className="bg-white p-3 rounded-lg shadow-md h-full w-36 md:w-64 sm:p-2 mb-7 "
-            >
-
-              <Link to={`/products/${product._id}`}>
-              <Suspense
-                            fallback={
-                              <div className="flex justify-center items-center bg-gray-100">
-                                <PuffLoader color="gray" size={100} />
-                              </div>
-                            }
-                          >
-                            <LazyImage
-                              src={product.images[0].url}
-                              alt={product.name}
-                              className="w-full h-36 object-cover rounded-md"
-                            />
-                          </Suspense>
-              </Link>
-              <h3 className="text-lg font-bold mb-2 truncate">{product.name}</h3>
-              <p className="text-gray-700">${product.price}</p>
-              <Link
-                to={`/products/${product._id}`}
-                className="block mt-4 text-blue-500 hover:underline"
-              >
-                View Product
-              </Link>
+          <div className="py-10 px-7 md:px-24 ">
+            <h2 className="text-2xl font-bold mb-4">You may also like</h2>
+            <div className="flex flex-wrap gap-4 md:gap-8">
+              {recommendedProducts &&
+                recommendedProducts.map((product) => (
+                  <div
+                    key={product._id}
+                    className="bg-white p-3 rounded-lg shadow-md h-full w-36 md:w-64 sm:p-2 mb-7 "
+                  >
+                    <Link to={`/products/${product._id}`}>
+                      <Suspense
+                        fallback={
+                          <div className="flex justify-center items-center bg-gray-100">
+                            <PuffLoader color="gray" size={100} />
+                          </div>
+                        }
+                      >
+                        <LazyImage
+                          src={product.images[0].url}
+                          alt={product.name}
+                          className="w-full h-36 object-cover rounded-md"
+                        />
+                      </Suspense>
+                    </Link>
+                    <h3 className="text-lg font-bold mb-2 truncate">
+                      {product.name}
+                    </h3>
+                    <p className="text-gray-700">${product.price}</p>
+                    <Link
+                      to={`/products/${product._id}`}
+                      className="block mt-4 text-blue-500 hover:underline"
+                    >
+                      View Product
+                    </Link>
+                  </div>
+                ))}
             </div>
-          ))}
-      </div>
-    </div>        </Fragment>
+          </div>{" "}
+        </Fragment>
       )}
     </Fragment>
   );

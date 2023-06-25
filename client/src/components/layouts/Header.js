@@ -481,15 +481,15 @@ const Header = () => {
         {openMenu && (
           <div className="bg-overlay absolute h-screen w-full z-40 ">
             <div className="h-screen fixed bg-zinc-800 w-5/6 navMenu overflow-y-scroll pb-5">
-              <div className="flex justify-end pr-5 py-10">
-                <CloseIcon onClick={closeMenu} />
-              </div>
+          
 
               <div className="text-neutral-400">
-                <div className="py-4 pl-3">
+                <div className="py-4 pt-20 px-3 flex justify-between ">
                   <Link to="/" onClick={closeMenu}>
                     <p>Home</p>
                   </Link>
+                  <CloseIcon onClick={closeMenu}  />
+
                 </div>
                 <hr className="border border-neutral-700" />
                 <div className="py-4 pl-3">
