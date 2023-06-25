@@ -7,18 +7,21 @@ import TwitterIcon from "@mui/icons-material/Twitter";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 const Footer = () => {
+  const { user } = useSelector((state) => state.auth);
   const currentDate = new Date();
   const newDate = currentDate.getFullYear();
   const isAdminPage =
     window.location.pathname.startsWith("/admin") ||
     window.location.pathname.startsWith("/dashboard");
-    if (isAdminPage) {
-      return null
-    }
+  if (isAdminPage) {
+    return null;
+  }
   return (
-    <footer className={`${isAdminPage ? "hidden" : "block"} bg-black text-white z-40`}>
+    <footer
+      className={`${isAdminPage ? "hidden" : "block"} bg-black text-white z-40`}
+    >
       <div className="container mx-auto py-10 px-4 md:px-24">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           <div className="col-span-1 flex flex-col gap-4" id="about">
@@ -27,10 +30,10 @@ const Footer = () => {
             <p className="text-white text-sm opacity-30 leading-relaxed">
               At D'Magni, we believe that fashion is an expression of
               individuality. Discover new pieces that perfectly match your
-              personal style and empower you to stay ahead of the fashion
-              curve. With our diverse range of high-quality products, you'll
-              find everything you need to create a wardrobe that exudes
-              confidence and elegance.
+              personal style and empower you to stay ahead of the fashion curve.
+              With our diverse range of high-quality products, you'll find
+              everything you need to create a wardrobe that exudes confidence
+              and elegance.
             </p>
           </div>
           <div className="col-span-1 flex flex-col gap-4">
@@ -70,19 +73,36 @@ const Footer = () => {
             </ul>
           </div>
           <div className="col-span-1 flex flex-col gap-4">
-            <p className="font-bold">MY ACCOUNT</p>
+            <p className="font-bold">LINKS</p>
             <hr className="opacity-20" />
             <ul className="text-white text-sm flex flex-col gap-2">
-              <Link to="/me">
-                <li className="opacity-30 hover:opacity-100 cursor-pointer">
-                  My Account
-                </li>
-              </Link>
-              <Link to="/orders/me">
-                <li className="opacity-30 hover:opacity-100 cursor-pointer">
-                  Order History
-                </li>
-              </Link>
+              {user ? (
+                <div className=" flex flex-col gap-2">
+                  <Link to="/me">
+                    <li className="opacity-30 hover:opacity-100 cursor-pointer">
+                      My Account
+                    </li>
+                  </Link>
+                  <Link to="/orders/me">
+                    <li className="opacity-30 hover:opacity-100 cursor-pointer">
+                    Order History                    </li>
+                  </Link>
+                </div>
+              ) : (
+                <div className=" flex flex-col gap-2">
+                  <Link to="/me">
+                    <li className="opacity-30 hover:opacity-100 cursor-pointer">
+                    Sign Up
+                    </li>
+                  </Link>
+                  <Link to="/orders/me">
+                    <li className="opacity-30 hover:opacity-100 cursor-pointer">
+                     Login
+                    </li>
+                  </Link>
+                </div>
+              )}
+
               <Link to="/help">
                 <li className="opacity-30 hover:opacity-100 cursor-pointer">
                   Help

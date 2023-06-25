@@ -637,17 +637,16 @@ const Header = () => {
                 ) : (
                   !loading && (
                     <div>
-                      <p className="py-4 pl-4">ACCOUNT</p>
-
                       <div className="py-4 pl-3">
                         <Link to="/register" onClick={closeMenu}>
-                          Sign Up
+                          <p>Sign Up</p>
+                   
                         </Link>
                       </div>
                       <hr className="border border-neutral-700" />
                       <div className="py-4 pl-3">
                         <Link to="/login" onClick={closeMenu}>
-                          Login
+                          <p>Login</p>
                         </Link>
                       </div>
                     </div>

@@ -213,31 +213,34 @@ const ProductDetails = () => {
         <Fragment>
           <MetaData title={product.name} />
 
-          <div className="mx-auto pt-20 md:pt-36 pb-14 px-7 md:px-24">
+          <div className="mx-auto pt-12 md:pt-36 pb-4 px-7 md:px-24">
             <div className="flex flex-col md:flex-row justify-center">
-              <div className="md:w-1/2 lg:w-1/3 p-4 flex-1">
-                <Carousel
-                  pause="hover"
-                  showArrows={true}
-                  showStatus={true}
-                  showThumbs={false}
-                  autoPlay
-                  interval={5000}
-                  className="w-full"
-                >
-                  {product.images &&
-                    product.images.map((image) => (
-                      <img
-                        className="mx-auto h-96 object-contain md:h-96 w-96"
-                        src={image.url}
-                        alt={product.title}
-                      />
-                    ))}
-                </Carousel>
-              </div>
+            <div className="md:w-1/2 lg:w-1/3 p-4 flex-1 bg-red-600">
+  <Carousel
+    pause="hover"
+    showArrows={true}
+    showStatus={true}
+    showThumbs={false}
+    showIndicators={false}
+    autoPlay
+    interval={5000}
+    className="w-full"
+  >
+    {product.images &&
+      product.images.map((image) => (
+        <img
+          className="mx-auto h-64 object-contain md:h-64 w-96"
+          src={image.url}
+          alt={product.title}
+        />
+      ))}
+  </Carousel>
+</div>
+
 
               <div className="md:w-1/2 lg:w-2/3 p-4 flex-1">
                 <h3 className="text-2xl font-bold mb-2">{product.name}</h3>
+                <p className="text-xl md:3xl font-bold mb-4"> ₦{product.price}</p>
                 <p className="text-gray-700 mb-2">PRODUCT ID: {product._id}</p>
 
                 <hr className="my-4" />
@@ -253,7 +256,7 @@ const ProductDetails = () => {
 
                 <hr className="my-4" />
 
-                <p className="text-3xl font-bold mb-4"> ₦{product.price}</p>
+            
 
                 <div className="flex items-center mb-4">
                   <span

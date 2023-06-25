@@ -244,7 +244,7 @@ const Homepage = () => {
             {/* Best Selling Products Section */}
             <section>
               <h3 className="text-xl md:text-3xl pb-5 md:py-10 font-bold text-gray-700">
-                HOT PRODUCTS
+                TRENDING PRODUCTS
               </h3>
 
               <div className="flex flex-wrap justify-center gap-8 md:justify-center lg:justify-start">
