@@ -79,9 +79,9 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   // Create reset password url
-  const resetUrl = `${req.protocol}://${req.get('host')}/password/reset/${resetToken}`;
+  const resetUrl = `www.dmagni.com/password/reset/${resetToken}`;
 
-  const message = `Your password reset token is as follow:\n\n${resetUrl}\n\nIf you have not requested for this email, then ignore it.`;
+  const message = `Click on the link to reset your password:\n\n${resetUrl}\n\nIf you have not requested for this email, then ignore it.`;
 
   try {
     await sendEmail({
@@ -92,7 +92,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: `Email sent to: ${user.email}`,
+      message: `Reset Email sent to: ${user.email}, check your email to proceed`,
     });
   } catch (error) {
     user.resetPasswordToken = undefined;
